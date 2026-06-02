@@ -14,16 +14,20 @@ AI agents that perform paid work, buy services, or coordinate tasks may need tem
 
 ## Product Concept
 
-An agent can:
+The main interface is not a conventional app screen. The project ships one or more `SKILL.md` files that can be installed into an AI coding/agent environment. Those skills teach agents how to participate in the lending network: check balance, inspect requests, post requests, evaluate opportunities, and act through Stellar.
+
+An agent using the skill can:
 
 - Check its wallet balance.
-- Post a lending request with amount, repayment target, expected return, and purpose.
+- Post a lending request with amount, time-based fee model, expected return, and purpose.
 - Browse active lending requests from other agents.
 - Decide to lend to an existing request to earn profit.
 - Track requests it created and loans it funded.
 - Set an investment policy that controls how much it can lend, what return it expects, what risk it accepts, and when it should stay idle.
 
 The platform should make each request understandable enough for an agent to evaluate: how much is needed, what return is offered, when repayment is expected, what the requesting agent claims it will use the funds for, and whether the request fits the lender's risk preference.
+
+The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what is happening onchain. It can show public network statistics such as open request count, funded loans, repayments, total XLM lent, and lending request volume over time.
 
 ## Loan Lifecycle
 
@@ -87,19 +91,21 @@ The threat model is practical: competing agents should not be able to copy anoth
 
 ## Demo Narrative
 
-The demo can show a chatbot-led lending flow:
+The demo can show the skill-led lending flow:
 
-1. A borrower agent explains in chat that it has low balance and posts a request for short-term XLM.
-2. A lender agent explains in chat how its investment heartbeat found the request.
-3. The lender agent reviews the request against its investment policy and decides whether to fund it.
-4. The borrower agent tracks the obligation and repays the lender with a fee that reflects how long the loan stayed open.
+1. The presenter shows the landing page and installs or opens the Agent Lending skill.
+2. A borrower agent uses the skill to check its balance and post a request for short-term XLM.
+3. A lender agent uses its heartbeat instructions to discover the request.
+4. The lender agent evaluates the request against its investment policy and funds it.
+5. The borrower agent tracks the obligation and repays the lender with a fee that reflects how long the loan stayed open.
+6. The landing page updates public stats from the blockchain.
 
-The audience should see agents reasoning through chat UIs while still taking real financial actions on Stellar.
+The audience should see that the product is usable by agents directly through skills, while the public frontend explains installation and visualizes network activity.
 
 ## Open Product Questions
 
+- Should the first skill package be one unified skill or separate borrower/lender skills?
 - How should agent reputation be represented without overbuilding the first version?
 - Should the borrower show a need signal, or is repayment history more useful than a need score?
 - Should the time-based fee be linear, tiered, or capped for the first MVP?
-- What level of privacy is most compelling to demonstrate live in five minutes?
-- Should the first MVP focus on fixed-return loans, auction-style funding, or a simple request-and-accept flow?
+- Should selective reputation eligibility use a signed attestation, offchain proof reference, or onchain verifier in the live demo?

@@ -87,7 +87,7 @@ pub enum AgentStatus {
 }
 ```
 
-`public_metadata_hash` can point to offchain agent context without forcing the contract to store long text. For the chatbot UI, the readable name and narrative can live offchain while the contract stores only the verifiable reference.
+`public_metadata_hash` can point to offchain agent context without forcing the contract to store long text. For the skill and landing-page UI, the readable name and narrative can live offchain while the contract stores only the verifiable reference.
 
 ## Investment Policy
 
@@ -148,6 +148,7 @@ pub struct LendingRequest {
     pub min_lender_reputation: u32,
     pub purpose_hash: BytesN<32>,
     pub privacy_mode: PrivacyMode,
+    pub reputation_proof: Option<ReputationProofRef>,
     pub status: RequestStatus,
     pub created_at: u64,
     pub funded_loan_id: Option<u64>,
@@ -238,13 +239,23 @@ pub struct PrivacyMode {
     pub hide_borrower: bool,
     pub hide_lender: bool,
     pub hide_purpose: bool,
-    pub reputation_proof_hash: Option<BytesN<32>>,
+    pub require_reputation_proof: bool,
+}
+
+#[contracttype]
+pub struct ReputationProofRef {
+    pub proof_hash: BytesN<32>,
+    pub statement_hash: BytesN<32>,
+    pub nonce: BytesN<32>,
+    pub expires_at: u64,
 }
 ```
 
 This is a placeholder for the privacy track, not a full privacy implementation. It gives the product a place to express private receiving and private providing.
 
 For the MVP, the contract can keep public fields where required and use hashes or proof references for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, counterparty, or full repayment history.
+
+`ReputationProofRef` supports the selective reputation privacy story. It can point to either a signed eligibility attestation or a zero-knowledge proof. `statement_hash` binds the proof to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `nonce` and `expires_at` prevent stale proof reuse.
 
 ## Events
 
