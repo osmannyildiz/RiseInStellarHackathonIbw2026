@@ -8,7 +8,7 @@ ClawLoan lets AI agents borrow and lend XLM to each other through a real Stellar
 
 ClawLoan is a Stellar-based lending marketplace built for autonomous AI agents. Each agent has its own wallet and XLM balance, can ask for short-term capital, and can fund another agent's request when the expected fee and risk fit its goals.
 
-The product treats AI agents as independent economic actors. Instead of relying on a human to manually inspect every opportunity, agents periodically check their balance, review open lending requests, monitor their own posted requests, and decide whether to borrow or lend. The experience should feel like a small capital market where agents can coordinate liquidity with clear terms, visible incentives, and bounded risk.
+The product treats AI agents as independent economic actors. Instead of relying on a human to manually inspect every opportunity, agents periodically check their balance, review open Loan Requests, monitor their own posted requests, and decide whether to borrow or lend. The experience should feel like a small capital market where agents can coordinate liquidity with clear terms, visible incentives, and bounded risk.
 
 The agentic concept is similar to a heartbeat system: each agent has recurring standing instructions that tell it when to wake up, what market conditions to inspect, and when it is allowed to act. The heartbeat is not just a reminder; it is the mechanism that turns the platform from a passive lending board into autonomous investment behavior.
 
@@ -32,20 +32,20 @@ The product is intentionally narrow. It does not try to become a full DeFi lendi
 
 ## Product Concept
 
-The main interface is not a conventional app screen. The project ships one unified `SKILL.md` file that can be installed into an AI coding/agent environment. The skill teaches agents how to participate in the lending network: check balance, inspect requests, post requests, evaluate opportunities, and act through Stellar.
+The main interface is not a conventional app screen. The project ships one unified `SKILL.md` file that can be installed into an AI coding/agent environment. The skill teaches agents how to participate in the lending network: check balance, inspect requests, post Loan Requests, evaluate opportunities, and act through Stellar.
 
 An agent using the skill can:
 
 - Check its wallet balance.
-- Post a lending request with amount, time-based fee model, expected fee, and purpose.
-- Browse active lending requests from other agents.
+- Post a Loan Request with amount, time-based fee model, expected fee, and purpose.
+- Browse active Loan Requests from other agents.
 - Decide to lend to an existing request for a fee opportunity if the borrower repays.
 - Track requests it created and loans it funded.
-- Set an investment policy that controls how much it can lend, what fee it expects, what risk it accepts, and when it should stay idle.
+- Set a Lender Policy that controls how much it can lend, what fee it expects, what risk it accepts, and when it should stay idle.
 
 The platform should make each request understandable enough for an agent to evaluate: how much is needed, what fee is offered, how the repayment amount changes over time, what the requesting agent claims it will use the funds for, and whether the request fits the lender's risk preference.
 
-The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what testnet activity has happened. It can show contract-backed statistics such as open request count, funded loans, repayments, total XLM lent, and lending request volume over time. If a local indexer is used for charts, it should index real testnet contract events or transactions.
+The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what testnet activity has happened. It can show contract-backed statistics such as Open Loan Requests, Loans Funded, Loans Repaid, Total XLM Lent, and Loan Requests Over Time. If a local indexer is used for charts, it should index real testnet contract events or transactions.
 
 This makes ClawLoan easy to understand from two angles: agents use the skill to participate, while humans use the landing page to inspect the network and install the skill.
 
@@ -53,12 +53,12 @@ This makes ClawLoan easy to understand from two angles: agents use the skill to 
 
 ClawLoan should be pitched and built around a functional Stellar testnet MVP:
 
-- A Soroban contract for lending requests, funding, repayment, time-based fees, simple reputation, and events.
+- A Soroban contract for Loan Requests, funding, repayment, time-based fees, simple reputation, and events.
 - One unified skill that teaches real agents how to use the contract and apply borrower/lender workflows.
-- A lender heartbeat that can evaluate open requests and act within configured testnet wallet limits.
+- A lender heartbeat that can evaluate open Loan Requests and act within configured testnet wallet limits.
 - Automation and convenience scripts that make the live run reliable, repeatable, and recoverable.
 - A landing page that explains the skill and shows contract-backed stats from testnet activity.
-- A signed eligibility attestation or proof reference for selective reputation disclosure.
+- An Eligibility Attestation for selective reputation disclosure.
 
 ClawLoan should not claim these as MVP deliverables:
 
@@ -90,11 +90,11 @@ For the MVP, the core story is simple: one agent has XLM, another agent needs XL
 
 ## Autonomous Agent Behavior
 
-Agents are not just passive accounts. They can periodically observe market state, compare opportunities, and take delegated financial actions using configured testnet wallets and limits. A lending agent can decide when to fund a request based on available balance, expected fee, request size, repayment timing, and risk settings. A borrowing agent can decide when to post or update a request based on its current balance and capital need.
+Agents are not just passive accounts. They can periodically observe market state, compare opportunities, and take delegated financial actions using configured testnet wallets and limits. A lending agent can decide when to fund a Loan Request based on available balance, expected fee, request size, repayment timing, and risk settings. A borrowing agent can decide when to post or update a request based on its current balance and capital need.
 
-Each agent has an investment heartbeat: a recurring decision loop that checks its XLM balance, reviews open requests, checks the status of loans it already funded, and decides whether the next best action is to lend, wait, or reduce exposure. This is the core Agentic track claim: the agent is autonomously investing to increase its balance, not merely receiving instructions to send a payment.
+Each agent has an Investment Heartbeat: a recurring decision loop that checks its XLM balance, reviews open Loan Requests, checks the status of loans it already funded, and decides whether the next best action is to lend, wait, or reduce exposure. This is the core Agentic track claim: the agent is autonomously investing to increase its balance, not merely receiving instructions to send a payment.
 
-The investment policy is the agent's guardrail. It can define maximum lend size, maximum total exposure, minimum expected fee, acceptable repayment windows, minimum borrower reputation, and whether the agent is allowed to fund repeat borrowers. The goal is autonomy with bounded financial risk, not uncontrolled trading.
+The Lender Policy is the agent's guardrail. It can define maximum lend size, maximum total exposure, minimum expected fee, acceptable repayment windows, minimum borrower reputation, and whether the agent is allowed to fund repeat borrowers. The goal is autonomy with bounded financial risk, not uncontrolled trading.
 
 ## Trust And Repayment
 
@@ -105,8 +105,8 @@ For the MVP, the clearest trust model is progressive agent credit:
 - Every borrowing agent starts with a small lending limit.
 - Successful repayments increase the amount that other agents are willing to lend.
 - Late or missed repayments lower the agent's reputation and reduce or block future borrowing.
-- Lender agents can require a minimum reputation level in their investment policy.
-- A lending request clearly states the amount requested, the base repayment amount, how the fee grows over time, and the reputation impact of late or missing repayment.
+- Lender agents can require a minimum reputation level in their Lender Policy.
+- A Loan Request clearly states the amount requested, the base repayment amount, how the fee grows over time, and the reputation impact of late or missing repayment.
 
 This creates a practical answer to the trust question: the first version is not collateralized lending; it is reputation-gated micro-lending between autonomous agents. The platform does not eliminate default risk, but it makes the risk visible, bounded, and part of each lender agent's autonomous decision.
 
@@ -126,7 +126,7 @@ The threat model is practical: competing agents should not get unnecessary acces
 
 **Main Track: Hack On Stellar.** ClawLoan is a useful Stellar testnet MVP where autonomous wallets request, fund, repay, and track loans using XLM as the working asset. It uses Stellar for the part that matters: fast value movement and verifiable shared state.
 
-**Hack Agentic.** The core user is an AI agent. Agents use recurring investment heartbeats to check balances, inspect open requests, post capital requests, and lend when an opportunity matches their configured goals and safeguards. The agent's objective is to increase its XLM balance through autonomous lending decisions.
+**Hack Agentic.** The core user is an AI agent. Agents use recurring Investment Heartbeats to check balances, inspect open Loan Requests, post Loan Requests, and lend when an opportunity matches their configured goals and safeguards. The agent's objective is to increase its XLM balance through autonomous lending decisions.
 
 **Hack Privacy.** ClawLoan uses selective reputation eligibility so a borrower can show enough to qualify for funding without exposing full repayment history or every prior loan to the lender or public UI. The privacy story is narrow, relevant, and tied directly to the trust problem judges will ask about. Full private settlement is out of scope for the hackathon MVP.
 
@@ -147,9 +147,9 @@ ClawLoan is designed to be easy to judge:
 The demo can show the skill-led lending flow:
 
 1. The presenter shows the landing page and installs or opens the ClawLoan skill.
-2. A borrower agent uses the skill to check its balance and post a request for short-term XLM.
+2. A borrower agent uses the skill to check its balance and post a Loan Request for short-term XLM.
 3. A lender agent uses its heartbeat instructions to discover the request.
-4. The lender agent evaluates the request against its investment policy and funds it.
+4. The lender agent evaluates the request against its Lender Policy and funds it.
 5. The borrower agent tracks the obligation and repays the lender with a fee that reflects how long the loan stayed open.
 6. The landing page updates public stats from contract data, with any local indexer reading real testnet activity.
 
@@ -164,11 +164,11 @@ The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle
 - **Reputation model:** simple score, credit limit, repayment count, late count, default count, and open borrowed amount.
 - **Borrower need signal:** purpose text or purpose hash only, not a separate need score.
 - **Fee model:** tiered time-based fee with a maximum cap.
-- **Privacy MVP:** signed eligibility attestation or proof reference for selective reputation disclosure.
+- **Privacy MVP:** Eligibility Attestation for selective reputation disclosure.
 - **ZK verifier:** stretch only; do not pitch as committed unless implemented and tested.
 
 ## Remaining Implementation Decisions
 
-- Who issues the signed eligibility attestation in the demo: a local indexer script or a dedicated reputation agent?
+- Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
 - Which exact OpenClaw/Hermes wallet setup will be used for testnet signing?
 - Which landing-page stats will be direct contract reads versus indexed testnet event summaries?

@@ -2,7 +2,7 @@
 
 ## Elevator Pitch
 
-ClawLoan is autonomous XLM lending for AI agents. Agents install one skill, check their balances, post short-term loan requests, and lend idle XLM when an opportunity matches their policy. The core lending lifecycle runs on Stellar testnet.
+ClawLoan is autonomous XLM lending for AI agents. Agents install one skill, check their balances, post short-term Loan Requests, and lend idle XLM when an opportunity matches their policy. The core lending lifecycle runs on Stellar testnet.
 
 ## Problem
 
@@ -15,8 +15,8 @@ Some agents will need temporary XLM to keep operating. Other agents will have id
 ClawLoan turns agent liquidity into a market.
 
 - Borrower agents request short-term XLM.
-- Lender agents run an investment heartbeat.
-- The heartbeat checks open requests, balance, reputation, exposure, and expected fee.
+- Lender agents run an Investment Heartbeat.
+- The heartbeat checks open Loan Requests, balance, reputation, exposure, and expected fee.
 - If the request matches policy, the lender funds it.
 - The borrower repays with a time-based fee.
 - Repayment improves reputation and future credit access.
@@ -38,7 +38,7 @@ ClawLoan does not pretend unsecured lending has no risk. The first version is re
 - new agents start with small credit limits;
 - successful repayment increases reputation and future limits;
 - late or missing repayment reduces access;
-- lender agents apply their own investment policy before funding;
+- lender agents apply their own Lender Policy before funding;
 - the requested amount, fee model, and repayment state are visible.
 
 This is a credible MVP because risk is bounded and explicit.
@@ -51,9 +51,9 @@ This is privacy with a purpose: it helps lenders make trust decisions while prot
 
 ## Track Fit
 
-**Main Track:** ClawLoan is a real Stellar testnet MVP with XLM lending requests, funding, repayment, reputation, and contract events.
+**Main Track:** ClawLoan is a real Stellar testnet MVP with XLM Loan Requests, funding, repayment, reputation, and contract events.
 
-**Hack Agentic:** The lender agent autonomously invests idle XLM through a recurring heartbeat and bounded investment policy.
+**Hack Agentic:** The lender agent autonomously invests idle XLM through a recurring Investment Heartbeat and bounded Lender Policy.
 
 **Hack Privacy:** The borrower can selectively disclose reputation eligibility rather than exposing full repayment history. Full private settlement is out of scope for the MVP.
 

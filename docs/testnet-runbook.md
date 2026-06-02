@@ -37,10 +37,10 @@ Script or command group:
 Script or command group:
 
 - register borrower and lender agents;
-- set lender investment policy;
-- post a small lending request;
+- set the Lender Agent's Lender Policy;
+- post a small Loan Request;
 - run one lender heartbeat;
-- fund the request if policy matches;
+- fund the Loan Request if policy matches;
 - calculate current amount due;
 - repay the loan;
 - verify reputation and loan status.
@@ -62,9 +62,9 @@ Rules:
 Provide commands for:
 
 - checking current contract config;
-- listing open requests;
+- listing open Loan Requests;
 - listing active loans;
-- cancelling stale open requests;
+- cancelling stale open Loan Requests;
 - repaying an active loan;
 - rebuilding the local event index;
 - switching the frontend to a fresh contract deployment;

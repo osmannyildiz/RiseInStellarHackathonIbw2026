@@ -42,12 +42,12 @@ It does not hide:
 
 ## What Is Revealed
 
-The borrower reveals only the facts needed for the lender's investment policy:
+The borrower reveals only the facts needed for the lender's Lender Policy:
 
 - reputation score is above the lender threshold;
 - current credit limit is enough for the requested amount;
 - default count is within the accepted range;
-- the proof or attestation is bound to this request and cannot be replayed elsewhere.
+- the Eligibility Attestation is bound to this request and cannot be replayed elsewhere.
 
 ## Threat Model
 
@@ -65,16 +65,16 @@ This is the committed hackathon path.
 
 1. Reputation is derived from onchain repayment events.
 2. A local reputation script or reputation agent computes private eligibility facts from testnet repayment history.
-3. The script signs a narrow eligibility statement, such as "score >= 50 and defaults == 0 for request #7."
-4. The borrower includes a `ReputationProofRef` for that signed statement with the lending request.
+3. The script signs a narrow eligibility statement, such as "score >= 50 and defaults == 0 for Loan Request #7."
+4. The borrower includes an `EligibilityAttestation` for that signed statement with the Loan Request.
 5. The lender skill verifies that the statement satisfies its policy.
-6. The contract stores only the proof reference and public request state.
+6. The contract stores only the Eligibility Attestation and public Loan Request state.
 
-This is not full ZK, but it demonstrates selective disclosure cleanly: the lender gets the eligibility fact, not the full history. The pitch must call it a signed eligibility attestation or proof reference, not an onchain zero-knowledge proof.
+This is not full ZK, but it demonstrates selective disclosure cleanly: the lender gets the eligibility fact, not the full history. The pitch must call it an Eligibility Attestation, not an onchain zero-knowledge proof.
 
 ### Level 2: Onchain ZK Verifier Stretch
 
-Only attempt this after the lending contract, skill flow, real-agent demo, and signed-attestation privacy flow are working. The proof statement should be narrow:
+Only attempt this after the lending contract, skill flow, real-agent demo, and Eligibility Attestation flow are working. The proof statement should be narrow:
 
 ```text
 I know repayment-history records committed under this reputation root,
@@ -82,13 +82,13 @@ and for this request:
 - my reputation score is >= required_score;
 - my credit limit is >= requested_amount;
 - my default count is <= max_defaults;
-- this proof is bound to request_id and nonce.
+- this proof is bound to the Loan Request id and nonce.
 ```
 
 Public inputs:
 
 - reputation root or commitment;
-- request id;
+- Loan Request id;
 - requested amount;
 - lender threshold;
 - nonce;
@@ -121,19 +121,19 @@ This means an onchain ZK path may be plausible, but it is not part of the commit
 
 Existing structures already support the privacy path:
 
-- `LendingRequest.reputation_proof`
-- `LendingRequest.purpose_hash`
+- `LoanRequest.eligibility_attestation`
+- `LoanRequest.purpose_hash`
 - `AgentProfile.public_metadata_hash`
-- `PrivacyMode.require_reputation_proof`
+- `PrivacyMode.require_eligibility_attestation`
 
-The planned proof-reference structure is:
+The planned Eligibility Attestation structure is:
 
 ```rust
-pub struct ReputationProofRef {
-    pub proof_hash: BytesN<32>,
+pub struct EligibilityAttestation {
+    pub attestation_hash: BytesN<32>,
     pub statement_hash: BytesN<32>,
-    pub expires_at: u64,
     pub nonce: BytesN<32>,
+    pub expires_at: u64,
 }
 ```
 
@@ -146,7 +146,7 @@ The privacy demo can be simple:
 1. Borrower agent wants 10 XLM.
 2. Lender policy requires reputation score >= 50 and no defaults.
 3. Borrower does not reveal full repayment history to the lender UI.
-4. Borrower provides a signed eligibility proof reference.
+4. Borrower provides an Eligibility Attestation.
 5. Lender skill verifies the reference and funds the request.
 6. Landing page explains that the full history was not exposed.
 

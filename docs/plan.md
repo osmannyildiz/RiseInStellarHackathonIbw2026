@@ -13,9 +13,9 @@ Deliverables:
 - Finalize the main demo flow:
   1. Presenter opens the landing page and shows how to install the skill.
   2. Borrower agent uses the skill to check balance and ask for short-term XLM.
-  3. Borrower posts a lending request.
+  3. Borrower posts a Loan Request.
   4. Lender agent heartbeat discovers the request.
-  5. Lender agent evaluates the request against its investment policy.
+  5. Lender agent evaluates the request against its Lender Policy.
   6. Lender funds the request.
   7. Borrower repays with a time-based fee.
   8. Reputation and landing-page stats update after repayment, using contract data or indexed testnet events.
@@ -42,10 +42,10 @@ Deliverables:
 - Define contract types from `docs/data-structures.md`.
 - Add core functions:
   - Register or update an agent.
-  - Set an investment policy.
-  - Post a lending request.
-  - Cancel an open request.
-  - Fund an open request.
+  - Set a Lender Policy.
+  - Post a Loan Request.
+  - Cancel an open Loan Request.
+  - Fund an open Loan Request.
   - Calculate current amount due.
   - Repay a loan.
   - Read agent reputation.
@@ -57,7 +57,7 @@ Deliverables:
 
 Exit criteria:
 
-- A borrower can post a request.
+- A borrower can post a Loan Request.
 - A lender can fund it.
 - The borrower can repay with a fee that changes over time.
 - Reputation and open borrowed amount update correctly.
@@ -73,9 +73,9 @@ Deliverables:
 - Use `docs/skill-interface.md` as the source plan.
 - Include concise workflows for:
   - Checking wallet balance.
-  - Posting a lending request.
-  - Reviewing open requests.
-  - Evaluating a request against an investment policy.
+  - Posting a Loan Request.
+  - Reviewing open Loan Requests.
+  - Evaluating a Loan Request against a Lender Policy.
   - Funding a request.
   - Checking active loans.
   - Repaying a loan.
@@ -100,12 +100,12 @@ Deliverables:
 - Implement a recurring heartbeat loop for lender agents.
 - On each heartbeat, the lender agent checks:
   - Its XLM balance.
-  - Open lending requests.
-  - Its investment policy.
+  - Open Loan Requests.
+  - Its Lender Policy.
   - Borrower reputation.
   - Existing loan exposure.
 - Let the lender agent autonomously decide to fund, wait, or reject.
-- Implement a borrower-side heartbeat that can notice low balance, post a request, and track repayment obligations.
+- Implement a borrower-side heartbeat that can notice low balance, post a Loan Request, and track repayment obligations.
 - Log heartbeat decisions in chat so the audience sees the autonomous reasoning.
 
 Exit criteria:
@@ -126,12 +126,12 @@ Deliverables:
   - How borrower and lender agents use it.
   - How the project fits the three hackathon tracks.
 - Add network stats from contract events, contract read methods, or a local indexer that reads real testnet activity:
-  - Open lending requests.
-  - Total requests posted.
-  - Total funded loans.
-  - Total repayments.
-  - Total XLM lent.
-  - Request count over time graph.
+  - Open Loan Requests.
+  - Loan Requests Posted.
+  - Loans Funded.
+  - Loans Repaid.
+  - Total XLM Lent.
+  - Loan Requests Over Time.
 - Link to contract address, repo, docs, and skill files.
 - Use `docs/landing-page.md` as the source plan.
 
@@ -149,7 +149,7 @@ Deliverables:
 
 - Implement the recommended first privacy feature: selective reputation eligibility.
 - Use `docs/privacy-strategy.md` as the source plan.
-- Borrower presents a signed attestation or proof reference for a limited statement, such as:
+- Borrower presents an Eligibility Attestation for a limited statement, such as:
   - reputation score is above the lender's threshold;
   - current credit limit is enough for the requested amount;
   - default count is zero or below an accepted threshold.
@@ -157,7 +157,7 @@ Deliverables:
 - Represent privacy intent with `PrivacyMode`.
 - Keep sensitive narrative fields offchain and reference them with hashes.
 - Add a clear explanation of what is hidden, from whom, and what is still public.
-- Use a proof-reference or signed-attestation path for the MVP and document the exact limitation.
+- Use an Eligibility Attestation path for the MVP and document the exact limitation.
 - Treat an onchain ZK verifier as stretch only after the core lending lifecycle works.
 
 Exit criteria:
@@ -182,7 +182,7 @@ Deliverables:
   - seed or reset testnet agent accounts;
   - deploy or redeploy the contract;
   - configure skill references with current contract IDs;
-  - post a known-good lending request;
+  - post a known-good Loan Request;
   - run a lender heartbeat once;
   - repay an active loan;
   - rebuild local stats from contract events;
@@ -226,7 +226,7 @@ Build in this order:
 3. Agent skill package.
 4. Heartbeat automation.
 5. Landing page and network stats.
-6. Privacy proof-reference or signed-attestation path.
+6. Privacy Eligibility Attestation path.
 7. Testnet deployment.
 8. Pitch and docs.
 
@@ -237,13 +237,13 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 - Use one unified ClawLoan skill.
 - Use tiered capped time-based fees.
 - Use reputation-gated unsecured micro-lending, not collateral.
-- Use signed eligibility attestation/proof reference for the privacy MVP.
+- Use an Eligibility Attestation for the privacy MVP.
 - Treat onchain ZK verification as stretch only.
 - Use contract-backed testnet stats; local indexes are acceptable only when built from real testnet activity.
 
 ## Remaining Planning Questions
 
-- Who issues the signed eligibility attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
+- Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
 - Should the borrower repay automatically as part of the demo, or should its agent explain and trigger repayment after receiving funds?
 - How much of the heartbeat should be deterministic rules versus LLM-generated reasoning?
 - What is the smallest testnet flow that still proves all three tracks?

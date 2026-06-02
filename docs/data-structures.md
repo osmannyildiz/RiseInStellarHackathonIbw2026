@@ -1,6 +1,6 @@
 # Soroban Data Structures
 
-This draft defines the first contract data model for ClawLoan. It is intentionally focused on the MVP: agent wallets, lending requests, funded loans, time-based repayment fees, investment policies, and simple reputation-gated borrowing.
+This draft defines the first contract data model for ClawLoan. It is intentionally focused on the MVP: agent wallets, Loan Requests, funded loans, time-based repayment fees, Lender Policies, and simple reputation-gated borrowing.
 
 The structures below are written in Rust-like Soroban terms, but this is still a design document. Field names and exact types can change once the contract implementation starts.
 
@@ -11,7 +11,7 @@ The structures below are written in Rust-like Soroban terms, but this is still a
 - Amounts are stored as `i128`, matching Soroban token contract conventions.
 - Time-based fees use ledger timestamps in seconds.
 - The first MVP is unsecured micro-lending: no collateral data structure is required.
-- The privacy MVP starts with purpose commitments and reputation proof references. It does not claim to hide public token transfers or public contract counterparties.
+- The privacy MVP starts with purpose commitments and reputation Eligibility Attestations. It does not claim to hide public token transfers or public contract counterparties.
 
 ## Storage Keys
 
@@ -20,14 +20,14 @@ The structures below are written in Rust-like Soroban terms, but this is still a
 pub enum DataKey {
     Config,
     Agent(Address),
-    AgentPolicy(Address),
+    LenderPolicy(Address),
     AgentReputation(Address),
-    Request(u64),
+    LoanRequest(u64),
     Loan(u64),
-    RequestCounter,
+    LoanRequestCounter,
     LoanCounter,
-    ActiveRequestIds,
-    AgentRequestIds(Address),
+    ActiveLoanRequestIds,
+    AgentLoanRequestIds(Address),
     AgentLoanIds(Address),
 }
 ```
@@ -36,11 +36,11 @@ pub enum DataKey {
 
 - `Config` stores global contract settings.
 - `Agent(Address)` stores the public agent profile.
-- `AgentPolicy(Address)` stores lender-side guardrails for autonomous investment.
+- `LenderPolicy(Address)` stores lender-side guardrails for autonomous investment.
 - `AgentReputation(Address)` stores borrower repayment stats.
-- `Request(u64)` stores an open or closed lending request.
-- `Loan(u64)` stores the lifecycle of a funded request.
-- `ActiveRequestIds`, `AgentRequestIds`, and `AgentLoanIds` are useful for the MVP UI. If they become too large later, indexing can move offchain through events.
+- `LoanRequest(u64)` stores an open or closed Loan Request.
+- `Loan(u64)` stores the lifecycle of a funded Loan Request.
+- `ActiveLoanRequestIds`, `AgentLoanRequestIds`, and `AgentLoanIds` are useful for the MVP UI. If they become too large later, indexing can move offchain through events.
 
 ## Config
 
@@ -89,11 +89,11 @@ pub enum AgentStatus {
 
 `public_metadata_hash` can point to offchain agent context without forcing the contract to store long text. For the skill and landing-page UI, the readable name and narrative can live offchain while the contract stores only the verifiable reference.
 
-## Investment Policy
+## Lender Policy
 
 ```rust
 #[contracttype]
-pub struct InvestmentPolicy {
+pub struct LenderPolicy {
     pub lender: Address,
     pub enabled: bool,
     pub max_single_loan_amount: i128,
@@ -105,11 +105,11 @@ pub struct InvestmentPolicy {
 }
 ```
 
-This is the core Agentic track structure. It gives each lender agent a policy that its investment heartbeat can apply before funding a request.
+This is the core Agentic track structure. It gives each Lender Agent a Lender Policy that its Investment Heartbeat can apply before funding a Loan Request.
 
 Key product meaning:
 
-- `max_single_loan_amount`: largest request this agent may fund.
+- `max_single_loan_amount`: largest Loan Request this agent may fund.
 - `max_total_exposure`: total currently open loans this agent may carry.
 - `min_reputation_score`: minimum borrower reputation before the agent will lend.
 - `min_fee_bps`: minimum acceptable fee return.
@@ -136,11 +136,11 @@ Example:
 - `step_fee_bps = 100`, so every step adds another `0.1 XLM`.
 - `max_fee_bps` prevents the repayment amount from growing without bound.
 
-## Lending Request
+## Loan Request
 
 ```rust
 #[contracttype]
-pub struct LendingRequest {
+pub struct LoanRequest {
     pub id: u64,
     pub borrower: Address,
     pub amount: i128,
@@ -148,14 +148,14 @@ pub struct LendingRequest {
     pub min_lender_reputation: u32,
     pub purpose_hash: BytesN<32>,
     pub privacy_mode: PrivacyMode,
-    pub reputation_proof: Option<ReputationProofRef>,
-    pub status: RequestStatus,
+    pub eligibility_attestation: Option<EligibilityAttestation>,
+    pub status: LoanRequestStatus,
     pub created_at: u64,
     pub funded_loan_id: Option<u64>,
 }
 
 #[contracttype]
-pub enum RequestStatus {
+pub enum LoanRequestStatus {
     Open,
     Funded,
     Cancelled,
@@ -163,7 +163,7 @@ pub enum RequestStatus {
 }
 ```
 
-A lending request describes what the borrower wants and how the lender can earn a fee if the borrower repays. It does not store long purpose text directly. The UI can show purpose text from offchain data and use `purpose_hash` as the verifiable reference.
+A Loan Request describes what the borrower wants and how the lender can earn a fee if the borrower repays. It does not store long purpose text directly. The UI can show purpose text from offchain data and use `purpose_hash` as the verifiable reference.
 
 `min_lender_reputation` is optional product depth and can be omitted from the first implementation if it does not serve the demo.
 
@@ -173,7 +173,7 @@ A lending request describes what the borrower wants and how the lender can earn 
 #[contracttype]
 pub struct Loan {
     pub id: u64,
-    pub request_id: u64,
+    pub loan_request_id: u64,
     pub borrower: Address,
     pub lender: Address,
     pub principal: i128,
@@ -225,7 +225,7 @@ The first reputation model should stay simple:
 - Successful repayment increases `score` and may increase `current_credit_limit`.
 - Late repayment increases `late_repayments` and may reduce future access.
 - Missing repayment increases `defaults` and can block borrowing.
-- Lender investment policies can require a minimum `score`.
+- Lender Policies can require a minimum `score`.
 
 This supports the trust story without requiring collateral or an external trust-score protocol.
 
@@ -237,12 +237,12 @@ Soroban contract storage is public. The MVP privacy mode must not claim to hide 
 #[contracttype]
 pub struct PrivacyMode {
     pub hide_purpose: bool,
-    pub require_reputation_proof: bool,
+    pub require_eligibility_attestation: bool,
 }
 
 #[contracttype]
-pub struct ReputationProofRef {
-    pub proof_hash: BytesN<32>,
+pub struct EligibilityAttestation {
+    pub attestation_hash: BytesN<32>,
     pub statement_hash: BytesN<32>,
     pub nonce: BytesN<32>,
     pub expires_at: u64,
@@ -251,9 +251,9 @@ pub struct ReputationProofRef {
 
 This is a placeholder for the privacy track, not a full privacy implementation. It gives the product a place to express selective disclosure for purpose and reputation.
 
-For the MVP, the contract can keep public fields where required and use hashes or proof references for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, or full repayment history.
+For the MVP, the contract can keep public fields where required and use hashes or Eligibility Attestations for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a Loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, or full repayment history.
 
-`ReputationProofRef` supports the selective reputation privacy story. In the MVP, it should point to a signed eligibility attestation or an offchain proof artifact. `statement_hash` binds the proof to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `nonce` and `expires_at` prevent stale proof reuse. A true onchain ZK verifier is stretch work, not required for the MVP.
+`EligibilityAttestation` supports the selective reputation privacy story. In the MVP, it points to a signed eligibility statement or offchain proof artifact. `statement_hash` binds the attestation to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `nonce` and `expires_at` prevent stale attestation reuse. A true onchain ZK verifier is stretch work, not required for the MVP.
 
 ## Events
 
@@ -268,14 +268,14 @@ PolicyUpdated {
     lender: Address,
 }
 
-RequestPosted {
-    request_id: u64,
+LoanRequestPosted {
+    loan_request_id: u64,
     borrower: Address,
     amount: i128,
 }
 
-RequestFunded {
-    request_id: u64,
+LoanRequestFunded {
+    loan_request_id: u64,
     loan_id: u64,
     lender: Address,
 }
@@ -299,13 +299,13 @@ ReputationUpdated {
 The data model implies these contract actions:
 
 - Register or update an agent profile.
-- Set a lender investment policy.
-- Post a lending request.
-- Cancel an open request.
-- Fund an open request.
+- Set a Lender Policy.
+- Post a Loan Request.
+- Cancel an open Loan Request.
+- Fund an open Loan Request.
 - Calculate the current repayment amount for a loan.
 - Repay an active loan.
 - Read agent reputation.
-- Read open requests and loan status for the UI.
+- Read open Loan Requests and loan status for the UI.
 
 The first implementation should avoid advanced matching, auctions, collateral, external trust scoring, or complex risk pricing. The data model should prove the central story: agents can request XLM, autonomously lend XLM under a policy, repay with a time-based fee, and build reputation from repayment behavior.

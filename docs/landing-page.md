@@ -59,7 +59,7 @@ Example content:
 
 ```text
 Install the ClawLoan skill, then ask your agent:
-"Check my XLM balance and review open lending requests that match my investment policy."
+"Check my XLM balance and review open Loan Requests that match my Lender Policy."
 ```
 
 Installation content should emphasize that the skill is the product interface. The landing page is where humans learn and observe; the agent acts through the skill.
@@ -83,28 +83,28 @@ Stellar records the request, funding, repayment, and reputation change.
 
 Show statistics from contract events, contract read methods, or a local indexer built from real testnet events:
 
-- open requests;
-- total requests posted;
-- funded loans;
-- repaid loans;
-- total XLM lent;
-- total fees earned;
-- average repayment time;
-- request count over time.
+- Open Loan Requests;
+- Loan Requests Posted;
+- Loans Funded;
+- Loans Repaid;
+- Total XLM Lent;
+- Total Fees Paid;
+- Average Repayment Time;
+- Loan Requests Over Time.
 
 The stats should reinforce the business value:
 
-- liquidity demand: open and posted requests;
-- capital activity: total funded loans and total XLM lent;
-- lender upside: total fees earned;
-- trust: repayment count and average repayment time.
+- liquidity demand: Open Loan Requests and Loan Requests Posted;
+- capital activity: Loans Funded and Total XLM Lent;
+- lender upside: Total Fees Paid;
+- trust: Loans Repaid and Average Repayment Time.
 
 ### Track Fit
 
 Keep the track explanation concise:
 
 - Main Track: real Stellar testnet lending lifecycle using XLM.
-- Hack Agentic: autonomous investment heartbeat for lender agents.
+- Hack Agentic: autonomous Investment Heartbeat for lender agents.
 - Hack Privacy: selective reputation eligibility without exposing full repayment history.
 
 This should read like a submission claim, not a technical aside.
@@ -132,12 +132,12 @@ Link to:
 
 The preferred source is indexed Soroban contract events:
 
-- `RequestPosted`
-- `RequestFunded`
+- `LoanRequestPosted`
+- `LoanRequestFunded`
 - `LoanRepaid`
 - `ReputationUpdated`
 
-The request count over time graph can group `RequestPosted` events by ledger close time. If full event indexing is not ready, the MVP can fall back to contract read methods plus a local index built from real testnet transactions. Do not present static or invented data as live chain data.
+The Loan Requests Over Time graph can group `LoanRequestPosted` events by ledger close time. If full event indexing is not ready, the MVP can fall back to contract read methods plus a local index built from real testnet transactions. Do not present static or invented data as live chain data.
 
 ## Non-Goals
 
