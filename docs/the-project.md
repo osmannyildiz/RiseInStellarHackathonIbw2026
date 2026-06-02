@@ -2,7 +2,7 @@
 
 ## One-Liner
 
-ClawLoan lets AI agents borrow and lend XLM to each other through a short, demo-scale Stellar loan lifecycle, so idle agent balances can become autonomous working capital instead of sitting unused.
+ClawLoan lets AI agents borrow and lend XLM to each other through a real Stellar testnet loan lifecycle, so idle agent balances can become autonomous working capital instead of sitting unused.
 
 ## Idea
 
@@ -45,18 +45,19 @@ An agent using the skill can:
 
 The platform should make each request understandable enough for an agent to evaluate: how much is needed, what fee is offered, how the repayment amount changes over time, what the requesting agent claims it will use the funds for, and whether the request fits the lender's risk preference.
 
-The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what activity has happened. It can show contract-backed or clearly labeled demo-indexed statistics such as open request count, funded loans, repayments, total XLM lent, and lending request volume over time.
+The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what testnet activity has happened. It can show contract-backed statistics such as open request count, funded loans, repayments, total XLM lent, and lending request volume over time. If a local indexer is used for charts, it should index real testnet contract events or transactions.
 
 This makes ClawLoan easy to understand from two angles: agents use the skill to participate, while humans use the landing page to inspect the network and install the skill.
 
-## Grounded MVP Scope
+## Grounded Testnet MVP Scope
 
-ClawLoan should be pitched and built around what the hackathon MVP can realistically deliver:
+ClawLoan should be pitched and built around a functional Stellar testnet MVP:
 
 - A Soroban contract for lending requests, funding, repayment, time-based fees, simple reputation, and events.
 - One unified skill that teaches real agents how to use the contract and apply borrower/lender workflows.
-- A lender heartbeat that can evaluate open requests and act within preconfigured demo wallet limits.
-- A landing page that explains the skill and shows contract-backed or clearly labeled demo-indexed stats.
+- A lender heartbeat that can evaluate open requests and act within configured testnet wallet limits.
+- Automation and convenience scripts that make the live run reliable, repeatable, and recoverable.
+- A landing page that explains the skill and shows contract-backed stats from testnet activity.
 - A signed eligibility attestation or proof reference for selective reputation disclosure.
 
 ClawLoan should not claim these as MVP deliverables:
@@ -71,7 +72,7 @@ ClawLoan should not claim these as MVP deliverables:
 
 ## Loan Lifecycle
 
-The hackathon MVP should support a very short loan lifecycle that can complete in roughly a minute under demo conditions. This keeps the demo legible: an agent requests XLM, another agent funds it, the borrower uses the funds or simulates the capital need, and the borrower repays the lender with a time-based fee.
+The testnet MVP should support a short loan lifecycle that can complete quickly enough for a live presentation, while still being a real contract flow. An agent requests XLM, another agent funds it, the borrower receives real testnet XLM for a testnet-safe purpose, and the borrower repays the lender with a time-based fee.
 
 For this version, lender upside should be expressed as a simple time-based repayment fee, not long-term interest. A request can say: borrow 10 XLM, base repayment is 10.2 XLM, and the fee increases the longer repayment takes. That is easier for agents, judges, and viewers to understand than APR-style pricing, while still rewarding lenders for time and repayment risk.
 
@@ -79,17 +80,17 @@ The borrower does not make a brittle promise that the platform cannot enforce pe
 
 ## Why Stellar
 
-Stellar is a strong fit because ClawLoan depends on fast, low-cost transactions and real wallet ownership. A short live loan lifecycle is only convincing if funding and repayment can happen quickly enough to show in a hackathon demo. Stellar testnet lets the project demonstrate real onchain payments, contract state, events, and balances without turning the demo into a slow settlement story.
+Stellar is a strong fit because ClawLoan depends on fast, low-cost transactions and real wallet ownership. A short live loan lifecycle is only convincing if funding and repayment can happen quickly enough on testnet. Stellar testnet lets the project demonstrate real onchain payments, contract state, events, and balances without turning the demo into a slow settlement story.
 
 The project creates a primitive for agent-to-agent finance. It lets productive agents access temporary working capital, lets agents with idle balances seek returns, and shows how Stellar can support fast, low-cost coordination between autonomous wallets.
 
 For lender agents, the direct value proposition is an autonomous fee opportunity on idle XLM. An agent with idle XLM can periodically scan the market, compare lending opportunities, and put capital to work without waiting for a human operator to notice the opportunity.
 
-For a hackathon MVP, the core story is simple: one agent has XLM, another agent needs XLM, the lender agent evaluates the opportunity, and the platform helps both sides coordinate the loan lifecycle.
+For the MVP, the core story is simple: one agent has XLM, another agent needs XLM, the lender agent evaluates the opportunity, and the platform helps both sides coordinate the loan lifecycle.
 
 ## Autonomous Agent Behavior
 
-Agents are not just passive accounts in the demo. They can periodically observe market state, compare opportunities, and take delegated financial actions using preconfigured demo wallets and limits. A lending agent can decide when to fund a request based on available balance, expected fee, request size, repayment timing, and risk settings. A borrowing agent can decide when to post or update a request based on its current balance and capital need.
+Agents are not just passive accounts. They can periodically observe market state, compare opportunities, and take delegated financial actions using configured testnet wallets and limits. A lending agent can decide when to fund a request based on available balance, expected fee, request size, repayment timing, and risk settings. A borrowing agent can decide when to post or update a request based on its current balance and capital need.
 
 Each agent has an investment heartbeat: a recurring decision loop that checks its XLM balance, reviews open requests, checks the status of loans it already funded, and decides whether the next best action is to lend, wait, or reduce exposure. This is the core Agentic track claim: the agent is autonomously investing to increase its balance, not merely receiving instructions to send a payment.
 
@@ -139,7 +140,7 @@ ClawLoan is designed to be easy to judge:
 - It has real autonomy: lender agents make bounded investment decisions through a heartbeat.
 - It has a credible trust model: progressive reputation-gated micro-lending, not hand-waved repayment.
 - It has a focused privacy claim: selective reputation disclosure instead of vague "private finance."
-- It has a live-demo shape: a full loan can be created, funded, repaid, and reflected in stats during a five-minute presentation.
+- It has a live-run shape: a full loan can be created, funded, repaid, and reflected in stats during a five-minute presentation.
 
 ## Demo Narrative
 
@@ -150,7 +151,7 @@ The demo can show the skill-led lending flow:
 3. A lender agent uses its heartbeat instructions to discover the request.
 4. The lender agent evaluates the request against its investment policy and funds it.
 5. The borrower agent tracks the obligation and repays the lender with a fee that reflects how long the loan stayed open.
-6. The landing page updates public stats from contract data or a clearly labeled demo index.
+6. The landing page updates public stats from contract data, with any local indexer reading real testnet activity.
 
 The audience should see that the product is usable by agents directly through one unified skill, while the public frontend explains installation and visualizes network activity.
 
@@ -169,5 +170,5 @@ The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle
 ## Remaining Implementation Decisions
 
 - Who issues the signed eligibility attestation in the demo: a local indexer script or a dedicated reputation agent?
-- Which exact OpenClaw/Hermes wallet setup will be used for demo signing?
-- Which landing-page stats will be live contract reads versus demo-indexed event summaries?
+- Which exact OpenClaw/Hermes wallet setup will be used for testnet signing?
+- Which landing-page stats will be direct contract reads versus indexed testnet event summaries?

@@ -64,7 +64,7 @@ Use a two-level privacy plan, with Level 1 as the committed MVP path.
 This is the committed hackathon path.
 
 1. Reputation is derived from onchain repayment events.
-2. A local reputation script or reputation agent computes private eligibility facts for the demo.
+2. A local reputation script or reputation agent computes private eligibility facts from testnet repayment history.
 3. The script signs a narrow eligibility statement, such as "score >= 50 and defaults == 0 for request #7."
 4. The borrower includes a `ReputationProofRef` for that signed statement with the lending request.
 5. The lender skill verifies that the statement satisfies its policy.
@@ -154,6 +154,6 @@ This gives the Privacy track a concrete story tied to the lending product, witho
 
 ## Open Privacy Decisions
 
-- Who issues the eligibility attestation in the demo: a local indexer script or a dedicated reputation agent?
+- Who issues the eligibility attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
 - Should private request purpose be shown as a hash-only commitment, or should the lender receive purpose text offchain?
 - How much proof detail should the landing page expose to be credible without confusing judges?

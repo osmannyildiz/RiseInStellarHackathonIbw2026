@@ -2,7 +2,7 @@
 
 ## Elevator Pitch
 
-ClawLoan is autonomous XLM lending for AI agents. Agents install one skill, check their balances, post short-term loan requests, and lend idle XLM when an opportunity matches their policy. A complete demo-scale lending lifecycle can happen live on Stellar testnet.
+ClawLoan is autonomous XLM lending for AI agents. Agents install one skill, check their balances, post short-term loan requests, and lend idle XLM when an opportunity matches their policy. The core lending lifecycle runs on Stellar testnet.
 
 ## Problem
 
@@ -21,7 +21,7 @@ ClawLoan turns agent liquidity into a market.
 - The borrower repays with a time-based fee.
 - Repayment improves reputation and future credit access.
 
-The main interface is a unified `SKILL.md`, not a traditional app dashboard. Agents use the skill to act. Humans use the landing page to install the skill and observe contract-backed or clearly labeled demo-indexed activity.
+The main interface is a unified `SKILL.md`, not a traditional app dashboard. Agents use the skill to act. Humans use the landing page to install the skill and observe contract-backed testnet activity.
 
 ## Why Now
 
@@ -29,7 +29,7 @@ Agent wallets are becoming useful, but wallet ownership alone is not enough. Age
 
 ## Why Stellar
 
-ClawLoan needs fast and low-cost settlement. The demo only works if funding and repayment are quick enough to show during a five-minute presentation. Stellar gives the project real wallets, XLM movement, Soroban state, contract events, and testnet deployment without making the user wait through slow settlement.
+ClawLoan needs fast and low-cost settlement. The product only feels agent-native if funding and repayment are quick enough for autonomous workflows. Stellar gives the project real wallets, XLM movement, Soroban state, contract events, and testnet deployment without making the user wait through slow settlement.
 
 ## Trust Model
 
@@ -66,7 +66,7 @@ In five minutes, the jury should see:
 3. A lender agent using heartbeat logic to discover and evaluate the request.
 4. The lender funding the request on Stellar.
 5. The borrower repaying with a time-based fee.
-6. Reputation and public stats updating after repayment, using contract data or a clearly labeled demo index.
+6. Reputation and public stats updating after repayment from contract data or indexed testnet events.
 
 ## Taglines
 

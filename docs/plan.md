@@ -1,12 +1,12 @@
 # Phased Plan
 
-This plan is for building a hackathon MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous investment behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around selective reputation disclosure.
+This plan is for building a functional Stellar testnet MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous investment behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around selective reputation disclosure.
 
-The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes contract-backed or clearly labeled demo-indexed statistics. The priority is a clear five-minute demo, not a production lending protocol.
+The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes contract-backed testnet statistics. Automation, seed scripts, local indexing, and recovery commands are part of the delivery because they make the real testnet flow reliable and error-tolerant.
 
 ## Phase 0: Lock The Demo Shape
 
-Goal: make the product story precise enough that every build decision supports the same demo.
+Goal: make the product story precise enough that every build decision supports the same testnet flow.
 
 Deliverables:
 
@@ -18,18 +18,18 @@ Deliverables:
   5. Lender agent evaluates the request against its investment policy.
   6. Lender funds the request.
   7. Borrower repays with a time-based fee.
-  8. Reputation and landing-page stats update after repayment, using live contract data or a clearly labeled demo index.
+  8. Reputation and landing-page stats update after repayment, using contract data or indexed testnet events.
 - Pick the demo agents and their personalities.
-- Pick demo-scale XLM amounts and fee tiers.
+- Pick testnet-safe XLM amounts and fee tiers.
 - Use selective reputation eligibility as the live privacy claim.
 - Decide what will be onchain, what will be offchain, and what will be clearly labeled as future privacy depth.
 - Use one unified skill package.
-- Use `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, and `docs/agent-targets.md` as the working docs for those decisions.
+- Use `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, `docs/agent-targets.md`, and `docs/testnet-runbook.md` as the working docs for those decisions.
 
 Exit criteria:
 
-- One written demo script exists.
-- We know the exact happy path to build.
+- One written testnet runbook exists.
+- We know the exact happy path and recovery paths to build.
 - We have a crisp answer to the trust question: reputation-gated micro-lending with bounded limits, not collateralized lending.
 
 ## Phase 1: Soroban Contract MVP
@@ -82,7 +82,7 @@ Deliverables:
 - Add a heartbeat workflow for autonomous lender behavior.
 - Add safety rules: max exposure, max single loan, minimum reputation, minimum fee, and when to ask the operator for confirmation.
 - Add examples of borrower-agent and lender-agent prompts.
-- Add references for contract function names, expected arguments, and demo values.
+- Add references for contract function names, expected arguments, configured testnet values, and recovery commands.
 - Validate the skill against OpenClaw, Hermes Agent, and PicoClaw as initial targets.
 
 Exit criteria:
@@ -116,7 +116,7 @@ Exit criteria:
 
 ## Phase 4: Landing Page And Network Stats
 
-Goal: provide the public-facing project page and show contract-backed or clearly labeled demo-indexed network activity.
+Goal: provide the public-facing project page and show contract-backed testnet network activity.
 
 Deliverables:
 
@@ -125,7 +125,7 @@ Deliverables:
   - How to install the skill.
   - How borrower and lender agents use it.
   - How the project fits the three hackathon tracks.
-- Add network stats from contract events, contract read methods, or a clearly labeled demo index:
+- Add network stats from contract events, contract read methods, or a local indexer that reads real testnet activity:
   - Open lending requests.
   - Total requests posted.
   - Total funded loans.
@@ -139,7 +139,7 @@ Exit criteria:
 
 - A visitor understands the project without needing the presenter.
 - The landing page reinforces that the skill is the primary interface.
-- Stats are read from chain data or contract events where feasible; any fallback demo index is labeled clearly.
+- Stats are read from chain data or contract events where feasible; any local indexer must use real testnet transactions/events and must not present static data as live chain data.
 
 ## Phase 5: Privacy Track MVP
 
@@ -178,12 +178,22 @@ Deliverables:
 - Connect frontend actions to the deployed contract.
 - Seed demo agents with testnet XLM.
 - Run the full demo flow against testnet.
+- Add automation and convenience scripts:
+  - seed or reset testnet agent accounts;
+  - deploy or redeploy the contract;
+  - configure skill references with current contract IDs;
+  - post a known-good lending request;
+  - run a lender heartbeat once;
+  - repay an active loan;
+  - rebuild local stats from contract events;
+  - recover from a failed or stale run.
+- Use `docs/testnet-runbook.md` as the source plan for these scripts and recovery steps.
 
 Exit criteria:
 
 - Public repo has deployable contract code.
 - README explains how to run the frontend and contract.
-- Demo can run end-to-end on testnet.
+- The end-to-end flow can run on testnet repeatedly with documented recovery paths.
 
 ## Phase 7: Submission Package
 
@@ -229,11 +239,11 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 - Use reputation-gated unsecured micro-lending, not collateral.
 - Use signed eligibility attestation/proof reference for the privacy MVP.
 - Treat onchain ZK verification as stretch only.
-- Use contract-backed or clearly labeled demo-indexed stats.
+- Use contract-backed testnet stats; local indexes are acceptable only when built from real testnet activity.
 
 ## Remaining Planning Questions
 
-- Who issues the signed eligibility attestation for the live demo: a local indexer script or a dedicated reputation agent?
+- Who issues the signed eligibility attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
 - Should the borrower repay automatically as part of the demo, or should its agent explain and trigger repayment after receiving funds?
 - How much of the heartbeat should be deterministic rules versus LLM-generated reasoning?
 - What is the smallest testnet flow that still proves all three tracks?

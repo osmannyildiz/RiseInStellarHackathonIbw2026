@@ -98,7 +98,7 @@ Heartbeat result:
 - Decision: fund request #7
 ```
 
-This decision log is important for the demo. It shows the jury that the agent is not just executing a button click; it is applying a policy to decide whether lending idle XLM is worth the risk.
+This decision log is important for the live run. It shows the jury that the agent is not just executing a button click; it is applying a policy to decide whether lending idle XLM is worth the risk.
 
 ## Investment Policy Fields
 
@@ -124,7 +124,7 @@ The skill should never lend just because a request exists. It must check:
 - The fee model meets the lender's minimum.
 - The borrower reputation or proof satisfies policy.
 
-For hackathon demo mode, the skill may use predefined agent wallets and demo values. For non-demo mode, it should ask the operator before changing wallet configuration or raising exposure limits.
+For the hackathon run, the skill may use predefined testnet agent wallets, configured limits, and recovery commands. It should ask the operator before changing wallet configuration, raising exposure limits, or using non-testnet credentials.
 
 ## Frontend Relationship
 
@@ -158,4 +158,4 @@ See `docs/agent-targets.md` for the support matrix and demo recommendation.
 
 ## First Skill Draft Scope
 
-The first `SKILL.md` should include only the core workflows and safety rules. Put contract function signatures, demo values, and privacy details in references so the skill stays concise.
+The first `SKILL.md` should include only the core workflows and safety rules. Put contract function signatures, configured testnet values, recovery commands, and privacy details in references so the skill stays concise.

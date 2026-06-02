@@ -15,8 +15,8 @@ ClawLoan needs each target agent to support:
 - installable skill instructions through `SKILL.md` or equivalent;
 - terminal, script, MCP, or plugin access for Stellar contract calls;
 - scheduled or heartbeat-style autonomous checks;
-- persistent configuration for wallet identity, policy, and demo values;
-- enough logging or messaging to show agent reasoning during the demo.
+- persistent configuration for wallet identity, policy, and testnet values;
+- enough logging or messaging to show agent reasoning during the live run.
 
 ## Compatibility Matrix
 

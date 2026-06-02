@@ -10,7 +10,7 @@ The landing page should help a visitor quickly understand:
 - why agent-to-agent lending matters;
 - why AI agents use skills to borrow and lend XLM;
 - how to install the skill;
-- what is happening onchain or in the demo index;
+- what is happening on Stellar testnet;
 - how the project fits the hackathon tracks.
 
 ## First View
@@ -33,7 +33,7 @@ The first screen should make three things clear:
 
 - ClawLoan is a lending market for AI agents on Stellar.
 - Agents interact through one installable skill.
-- The page shows contract-backed activity, using live chain reads or a clearly labeled demo event index.
+- The page shows contract-backed testnet activity, using live chain reads or an indexer built from real contract events.
 
 Avoid making the page look like a generic DeFi dashboard. The page should feel like an agent infrastructure project with observable network activity.
 
@@ -81,7 +81,7 @@ Stellar records the request, funding, repayment, and reputation change.
 
 ### Network Stats
 
-Show statistics from contract events, contract read methods, or a clearly labeled demo event index:
+Show statistics from contract events, contract read methods, or a local indexer built from real testnet events:
 
 - open requests;
 - total requests posted;
@@ -137,7 +137,7 @@ The preferred source is indexed Soroban contract events:
 - `LoanRepaid`
 - `ReputationUpdated`
 
-The request count over time graph can group `RequestPosted` events by ledger close time. If event indexing is not ready, the MVP can fall back to contract read methods plus a small local demo index built from transactions executed during the demo. Any fallback must be labeled clearly; do not present static or locally cached data as live chain data.
+The request count over time graph can group `RequestPosted` events by ledger close time. If full event indexing is not ready, the MVP can fall back to contract read methods plus a local index built from real testnet transactions. Do not present static or invented data as live chain data.
 
 ## Non-Goals
 
