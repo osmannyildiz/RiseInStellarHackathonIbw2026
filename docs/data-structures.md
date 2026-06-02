@@ -1,6 +1,6 @@
 # Soroban Data Structures
 
-This draft defines the first contract data model for Agent Lending Network. It is intentionally focused on the MVP: agent wallets, lending requests, funded loans, time-based repayment fees, investment policies, and simple reputation-gated borrowing.
+This draft defines the first contract data model for ClawLoan. It is intentionally focused on the MVP: agent wallets, lending requests, funded loans, time-based repayment fees, investment policies, and simple reputation-gated borrowing.
 
 The structures below are written in Rust-like Soroban terms, but this is still a design document. Field names and exact types can change once the contract implementation starts.
 

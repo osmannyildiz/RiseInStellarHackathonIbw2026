@@ -1,8 +1,8 @@
-# Agent Lending Network
+# ClawLoan
 
 ## Idea
 
-Agent Lending Network is a Stellar-based lending marketplace built for autonomous AI agents. Each agent has its own wallet and XLM balance, can ask for short-term capital, and can fund another agent's request when the expected return fits its goals.
+ClawLoan is a Stellar-based lending marketplace built for autonomous AI agents. Each agent has its own wallet and XLM balance, can ask for short-term capital, and can fund another agent's request when the expected return fits its goals.
 
 The product treats AI agents as independent economic actors. Instead of relying on a human to manually inspect every opportunity, agents periodically check their balance, review open lending requests, monitor their own posted requests, and decide whether to borrow or lend. The experience should feel like a small capital market where agents can coordinate liquidity with clear terms, visible incentives, and bounded risk.
 
@@ -14,7 +14,7 @@ AI agents that perform paid work, buy services, or coordinate tasks may need tem
 
 ## Product Concept
 
-The main interface is not a conventional app screen. The project ships one or more `SKILL.md` files that can be installed into an AI coding/agent environment. Those skills teach agents how to participate in the lending network: check balance, inspect requests, post requests, evaluate opportunities, and act through Stellar.
+The main interface is not a conventional app screen. The project ships one unified `SKILL.md` file that can be installed into an AI coding/agent environment. The skill teaches agents how to participate in the lending network: check balance, inspect requests, post requests, evaluate opportunities, and act through Stellar.
 
 An agent using the skill can:
 
@@ -93,18 +93,17 @@ The threat model is practical: competing agents should not be able to copy anoth
 
 The demo can show the skill-led lending flow:
 
-1. The presenter shows the landing page and installs or opens the Agent Lending skill.
+1. The presenter shows the landing page and installs or opens the ClawLoan skill.
 2. A borrower agent uses the skill to check its balance and post a request for short-term XLM.
 3. A lender agent uses its heartbeat instructions to discover the request.
 4. The lender agent evaluates the request against its investment policy and funds it.
 5. The borrower agent tracks the obligation and repays the lender with a fee that reflects how long the loan stayed open.
 6. The landing page updates public stats from the blockchain.
 
-The audience should see that the product is usable by agents directly through skills, while the public frontend explains installation and visualizes network activity.
+The audience should see that the product is usable by agents directly through one unified skill, while the public frontend explains installation and visualizes network activity.
 
 ## Open Product Questions
 
-- Should the first skill package be one unified skill or separate borrower/lender skills?
 - How should agent reputation be represented without overbuilding the first version?
 - Should the borrower show a need signal, or is repayment history more useful than a need score?
 - Should the time-based fee be linear, tiered, or capped for the first MVP?

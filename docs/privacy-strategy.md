@@ -8,7 +8,7 @@ This is stronger than a generic "private intent" story because it answers a real
 
 For the hackathon MVP, the product should claim:
 
-> Agent Lending Network lets a borrower disclose only the reputation facts needed for a lending decision, while keeping unnecessary repayment-history detail private.
+> ClawLoan lets a borrower disclose only the reputation facts needed for a lending decision, while keeping unnecessary repayment-history detail private.
 
 The product should not claim that all lending activity is fully private. Soroban contract storage and token transfers are public unless a dedicated privacy mechanism is used.
 

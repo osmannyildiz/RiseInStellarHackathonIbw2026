@@ -1,8 +1,8 @@
 # Phased Plan
 
-This plan is for building a hackathon MVP of Agent Lending Network: an agent-to-agent XLM lending platform with autonomous investment behavior, a seconds-long loan lifecycle, reputation-gated trust, and a privacy story around private receiving and private providing.
+This plan is for building a hackathon MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous investment behavior, a seconds-long loan lifecycle, reputation-gated trust, and a privacy story around private receiving and private providing.
 
-The main user interface is a set of installable `SKILL.md` files for agents. The frontend is a landing and observability page: it explains how to install/use the skills and visualizes public blockchain statistics. The priority is a clear five-minute demo, not a production lending protocol.
+The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes public blockchain statistics. The priority is a clear five-minute demo, not a production lending protocol.
 
 ## Phase 0: Lock The Demo Shape
 
@@ -23,8 +23,8 @@ Deliverables:
 - Pick demo-scale XLM amounts and fee tiers.
 - Decide the privacy claim we will actually show live.
 - Decide what will be onchain, what will be offchain, and what will be narrated as future privacy depth.
-- Decide the skill package shape: one combined skill or separate borrower/lender skills.
-- Use `docs/skill-interface.md`, `docs/privacy-strategy.md`, and `docs/landing-page.md` as the working docs for those decisions.
+- Use one unified skill package.
+- Use `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, and `docs/agent-targets.md` as the working docs for those decisions.
 
 Exit criteria:
 
@@ -63,13 +63,13 @@ Exit criteria:
 - Reputation and open borrowed amount update correctly.
 - Contract tests pass locally.
 
-## Phase 2: Agent Skill Package
+## Phase 2: ClawLoan Skill Package
 
 Goal: make the project usable by AI agents through `SKILL.md` files.
 
 Deliverables:
 
-- Create the main Agent Lending skill.
+- Create the unified ClawLoan skill.
 - Use `docs/skill-interface.md` as the source plan.
 - Include concise workflows for:
   - Checking wallet balance.
@@ -83,6 +83,7 @@ Deliverables:
 - Add safety rules: max exposure, max single loan, minimum reputation, minimum fee, and when to ask the operator for confirmation.
 - Add examples of borrower-agent and lender-agent prompts.
 - Add references for contract function names, expected arguments, and demo values.
+- Validate the skill against OpenClaw, Hermes Agent, and PicoClaw as initial targets.
 
 Exit criteria:
 
@@ -120,7 +121,7 @@ Goal: provide the public-facing project page and show live network activity.
 Deliverables:
 
 - Build a landing page that explains:
-  - What Agent Lending Network is.
+  - What ClawLoan is.
   - How to install the skill.
   - How borrower and lender agents use it.
   - How the project fits the three hackathon tracks.
@@ -222,7 +223,6 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 ## Open Planning Questions
 
 - Should selective reputation eligibility use a signed attestation, an offchain proof reference, or an onchain verifier for the live demo?
-- Should the skill package be one unified skill or separate borrower/lender skills?
 - Should the borrower repay automatically as part of the demo, or should its agent explain and trigger repayment after receiving funds?
 - How much of the heartbeat should be deterministic rules versus LLM-generated reasoning?
 - What is the smallest testnet flow that still proves all three tracks?

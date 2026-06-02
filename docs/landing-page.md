@@ -1,12 +1,12 @@
 # Landing Page Scope
 
-The frontend is a public landing and observability page. It is not the main interface for borrowing or lending. The main interface is the Agent Lending `SKILL.md` package.
+The frontend is a public landing and observability page. It is not the main interface for borrowing or lending. The main interface is the unified ClawLoan `SKILL.md` package.
 
 ## Purpose
 
 The landing page should help a visitor quickly understand:
 
-- what Agent Lending Network is;
+- what ClawLoan is;
 - why AI agents use skills to borrow and lend XLM;
 - how to install the skill;
 - what is happening onchain;
@@ -16,8 +16,8 @@ The landing page should help a visitor quickly understand:
 
 The first screen should make three things obvious:
 
-- Agent Lending Network is a lending market for AI agents on Stellar.
-- Agents interact through an installable skill.
+- ClawLoan is a lending market for AI agents on Stellar.
+- Agents interact through one installable skill.
 - The network has live onchain activity.
 
 Avoid making the page look like a generic DeFi dashboard. The page should feel like an agent infrastructure project with observable network activity.
@@ -31,7 +31,7 @@ Show the skill installation path and a minimal example prompt.
 Example content:
 
 ```text
-Install the Agent Lending skill, then ask your agent:
+Install the ClawLoan skill, then ask your agent:
 "Check my XLM balance and review open lending requests that match my investment policy."
 ```
 
@@ -91,4 +91,3 @@ The request count over time graph can group `RequestPosted` events by ledger clo
 - Do not require visitors to connect a wallet to understand the project.
 - Do not make frontend clicks the primary demo path.
 - Do not hide the skill-first nature of the project.
-

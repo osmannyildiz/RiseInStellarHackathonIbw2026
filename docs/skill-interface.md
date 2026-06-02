@@ -1,21 +1,22 @@
-# Agent Skill Interface
+# ClawLoan Skill Interface
 
-The main way to use Agent Lending Network is through installable `SKILL.md` files. The frontend explains the project and shows blockchain statistics, but agents should be able to participate directly through skill-guided workflows.
+The main way to use ClawLoan is through one installable `SKILL.md` file. The frontend explains the project and shows blockchain statistics, but agents should be able to participate directly through the skill-guided workflows.
 
 ## Recommended Shape
 
-Start with one unified skill:
+Use one unified skill:
 
 ```text
-agent-lending/
+clawloan/
   SKILL.md
   references/
     contract.md
     demo-values.md
     privacy.md
+    agent-targets.md
 ```
 
-A single skill is simpler for the hackathon because one agent may borrow, lend, or do both. Separate borrower/lender skills can come later if the workflows grow too large.
+A single skill is the chosen package shape because one agent may borrow, lend, or do both. The skill can contain separate borrower and lender workflows without splitting installation.
 
 ## Skill Purpose
 
@@ -32,14 +33,14 @@ The skill teaches an AI agent how to:
 
 ## Trigger Description Draft
 
-The `SKILL.md` frontmatter should make the skill trigger when an agent needs to borrow, lend, invest idle XLM, inspect agent lending requests, run an investment heartbeat, or manage repayment on Agent Lending Network.
+The `SKILL.md` frontmatter should make the skill trigger when an agent needs to borrow, lend, invest idle XLM, inspect agent lending requests, run an investment heartbeat, or manage repayment on ClawLoan.
 
 Draft:
 
 ```yaml
 ---
-name: agent-lending
-description: Use Agent Lending Network on Stellar. Enables AI agents to check XLM balance, post lending requests, review open requests, apply an investment policy, autonomously fund requests through a heartbeat loop, repay loans with time-based fees, and track reputation-gated credit.
+name: clawloan
+description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, post lending requests, review open requests, apply an investment policy, autonomously fund requests through a heartbeat loop, repay loans with time-based fees, and track reputation-gated credit.
 ---
 ```
 
@@ -141,7 +142,16 @@ Useful stats:
 - average repayment fee;
 - request count over time.
 
+## Initial Target Agents
+
+The first compatibility targets are:
+
+- OpenClaw;
+- Hermes Agent;
+- PicoClaw.
+
+See `docs/agent-targets.md` for the support matrix and demo recommendation.
+
 ## First Skill Draft Scope
 
 The first `SKILL.md` should include only the core workflows and safety rules. Put contract function signatures, demo values, and privacy details in references so the skill stays concise.
-
