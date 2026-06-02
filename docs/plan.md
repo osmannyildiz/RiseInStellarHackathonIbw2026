@@ -1,8 +1,8 @@
 # Phased Plan
 
-This plan is for building a hackathon MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous investment behavior, a seconds-long loan lifecycle, reputation-gated trust, and a privacy story around private receiving and private providing.
+This plan is for building a hackathon MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous investment behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around selective reputation disclosure.
 
-The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes public blockchain statistics. The priority is a clear five-minute demo, not a production lending protocol.
+The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes contract-backed or clearly labeled demo-indexed statistics. The priority is a clear five-minute demo, not a production lending protocol.
 
 ## Phase 0: Lock The Demo Shape
 
@@ -18,11 +18,11 @@ Deliverables:
   5. Lender agent evaluates the request against its investment policy.
   6. Lender funds the request.
   7. Borrower repays with a time-based fee.
-  8. Reputation and landing-page stats update after repayment.
+  8. Reputation and landing-page stats update after repayment, using live contract data or a clearly labeled demo index.
 - Pick the demo agents and their personalities.
 - Pick demo-scale XLM amounts and fee tiers.
-- Decide the privacy claim we will actually show live.
-- Decide what will be onchain, what will be offchain, and what will be narrated as future privacy depth.
+- Use selective reputation eligibility as the live privacy claim.
+- Decide what will be onchain, what will be offchain, and what will be clearly labeled as future privacy depth.
 - Use one unified skill package.
 - Use `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, and `docs/agent-targets.md` as the working docs for those decisions.
 
@@ -114,9 +114,9 @@ Exit criteria:
 - The heartbeat reasoning is visible in chat.
 - The autonomous action remains bounded by the lender's policy.
 
-## Phase 4: Landing Page And Blockchain Stats
+## Phase 4: Landing Page And Network Stats
 
-Goal: provide the public-facing project page and show live network activity.
+Goal: provide the public-facing project page and show contract-backed or clearly labeled demo-indexed network activity.
 
 Deliverables:
 
@@ -125,7 +125,7 @@ Deliverables:
   - How to install the skill.
   - How borrower and lender agents use it.
   - How the project fits the three hackathon tracks.
-- Add blockchain-derived stats:
+- Add network stats from contract events, contract read methods, or a clearly labeled demo index:
   - Open lending requests.
   - Total requests posted.
   - Total funded loans.
@@ -139,7 +139,7 @@ Exit criteria:
 
 - A visitor understands the project without needing the presenter.
 - The landing page reinforces that the skill is the primary interface.
-- Stats are read from chain data or contract events where feasible.
+- Stats are read from chain data or contract events where feasible; any fallback demo index is labeled clearly.
 
 ## Phase 5: Privacy Track MVP
 
@@ -149,21 +149,22 @@ Deliverables:
 
 - Implement the recommended first privacy feature: selective reputation eligibility.
 - Use `docs/privacy-strategy.md` as the source plan.
-- Borrower proves or presents a proof reference for a limited statement, such as:
+- Borrower presents a signed attestation or proof reference for a limited statement, such as:
   - reputation score is above the lender's threshold;
   - current credit limit is enough for the requested amount;
   - default count is zero or below an accepted threshold.
-- Avoid exposing full repayment history, prior counterparties, or all prior loan amounts.
+- Avoid exposing full repayment history or all prior loan amounts to the lender-facing UI.
 - Represent privacy intent with `PrivacyMode`.
 - Keep sensitive narrative fields offchain and reference them with hashes.
 - Add a clear explanation of what is hidden, from whom, and what is still public.
-- If time allows, add an onchain verifier path. If not, use a proof-reference or signed-attestation path and document the exact limitation.
+- Use a proof-reference or signed-attestation path for the MVP and document the exact limitation.
+- Treat an onchain ZK verifier as stretch only after the core lending lifecycle works.
 
 Exit criteria:
 
 - The privacy demo is honest and narrow.
 - The pitch can explain public storage limits.
-- The product still clearly fits the Hack Privacy track.
+- The product still clearly fits the Hack Privacy track without claiming full private settlement.
 
 ## Phase 6: Testnet Deployment And Integration
 
@@ -198,7 +199,7 @@ Deliverables:
 - Track-specific explanation:
   - Main Track: useful Stellar testnet MVP.
   - Hack Agentic: heartbeat-driven autonomous investment.
-  - Hack Privacy: private receiving/providing with selective disclosure.
+  - Hack Privacy: selective reputation disclosure.
 
 Exit criteria:
 
@@ -214,16 +215,25 @@ Build in this order:
 2. Contract tests.
 3. Agent skill package.
 4. Heartbeat automation.
-5. Landing page and blockchain stats.
-6. Privacy proof-of-concept.
+5. Landing page and network stats.
+6. Privacy proof-reference or signed-attestation path.
 7. Testnet deployment.
 8. Pitch and docs.
 
 The main risk is trying to make privacy too ambitious before the lending lifecycle works. The lending loop and skill interface must work first; privacy should be narrow, honest, and easy to explain.
 
-## Open Planning Questions
+## Resolved Planning Decisions
 
-- Should selective reputation eligibility use a signed attestation, an offchain proof reference, or an onchain verifier for the live demo?
+- Use one unified ClawLoan skill.
+- Use tiered capped time-based fees.
+- Use reputation-gated unsecured micro-lending, not collateral.
+- Use signed eligibility attestation/proof reference for the privacy MVP.
+- Treat onchain ZK verification as stretch only.
+- Use contract-backed or clearly labeled demo-indexed stats.
+
+## Remaining Planning Questions
+
+- Who issues the signed eligibility attestation for the live demo: a local indexer script or a dedicated reputation agent?
 - Should the borrower repay automatically as part of the demo, or should its agent explain and trigger repayment after receiving funds?
 - How much of the heartbeat should be deterministic rules versus LLM-generated reasoning?
 - What is the smallest testnet flow that still proves all three tracks?

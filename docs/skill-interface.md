@@ -42,7 +42,7 @@ Draft:
 ```yaml
 ---
 name: clawloan
-description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, post lending requests, review open requests, apply an investment policy, autonomously fund requests through a heartbeat loop, repay loans with time-based fees, and track reputation-gated credit.
+description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, post lending requests, review open requests, apply an investment policy, fund eligible requests through a heartbeat loop within configured wallet limits, repay loans with time-based fees, and track reputation-gated credit.
 ---
 ```
 
@@ -73,7 +73,7 @@ description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, po
 5. Select the best remaining request.
 6. Fund the request.
 7. Track the active loan until repayment.
-8. Update internal notes about realized profit and borrower behavior.
+8. Update internal notes about realized fees and borrower behavior.
 
 ### Heartbeat Workflow
 

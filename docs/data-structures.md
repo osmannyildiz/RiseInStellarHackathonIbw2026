@@ -11,7 +11,7 @@ The structures below are written in Rust-like Soroban terms, but this is still a
 - Amounts are stored as `i128`, matching Soroban token contract conventions.
 - Time-based fees use ledger timestamps in seconds.
 - The first MVP is unsecured micro-lending: no collateral data structure is required.
-- The privacy MVP can start with commitments or opaque references, while public fields remain minimal and demo-friendly.
+- The privacy MVP starts with purpose commitments and reputation proof references. It does not claim to hide public token transfers or public contract counterparties.
 
 ## Storage Keys
 
@@ -163,9 +163,9 @@ pub enum RequestStatus {
 }
 ```
 
-A lending request describes what the borrower wants and how the lender can profit. It does not store long purpose text directly. The UI can show purpose text from offchain data and use `purpose_hash` as the verifiable reference.
+A lending request describes what the borrower wants and how the lender can earn a fee if the borrower repays. It does not store long purpose text directly. The UI can show purpose text from offchain data and use `purpose_hash` as the verifiable reference.
 
-`min_lender_reputation` is optional product depth: a borrower can avoid unknown lenders if private receiving becomes important.
+`min_lender_reputation` is optional product depth and can be omitted from the first implementation if it does not serve the demo.
 
 ## Loan
 
@@ -231,13 +231,11 @@ This supports the trust story without requiring collateral or an external trust-
 
 ## Privacy Mode
 
-Soroban contract storage is public. A boolean field cannot hide a borrower or lender if the same public record stores their address. For the MVP, these fields should be treated as privacy intent and UI/indexer guidance unless the implementation also uses commitments, proof references, separate settlement addresses, or another privacy mechanism.
+Soroban contract storage is public. The MVP privacy mode must not claim to hide borrower or lender addresses while the public request and loan records store those addresses. Private settlement and hidden counterparties are future work, not part of the first contract model.
 
 ```rust
 #[contracttype]
 pub struct PrivacyMode {
-    pub hide_borrower: bool,
-    pub hide_lender: bool,
     pub hide_purpose: bool,
     pub require_reputation_proof: bool,
 }
@@ -251,15 +249,15 @@ pub struct ReputationProofRef {
 }
 ```
 
-This is a placeholder for the privacy track, not a full privacy implementation. It gives the product a place to express private receiving and private providing.
+This is a placeholder for the privacy track, not a full privacy implementation. It gives the product a place to express selective disclosure for purpose and reputation.
 
-For the MVP, the contract can keep public fields where required and use hashes or proof references for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, counterparty, or full repayment history.
+For the MVP, the contract can keep public fields where required and use hashes or proof references for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, or full repayment history.
 
-`ReputationProofRef` supports the selective reputation privacy story. It can point to either a signed eligibility attestation or a zero-knowledge proof. `statement_hash` binds the proof to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `nonce` and `expires_at` prevent stale proof reuse.
+`ReputationProofRef` supports the selective reputation privacy story. In the MVP, it should point to a signed eligibility attestation or an offchain proof artifact. `statement_hash` binds the proof to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `nonce` and `expires_at` prevent stale proof reuse. A true onchain ZK verifier is stretch work, not required for the MVP.
 
 ## Events
 
-Events should make the chatbot UI and demo easy to follow.
+Events should make the landing page, skill logs, and demo easy to follow.
 
 ```rust
 AgentRegistered {

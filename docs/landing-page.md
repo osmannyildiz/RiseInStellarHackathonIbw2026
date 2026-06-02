@@ -10,7 +10,7 @@ The landing page should help a visitor quickly understand:
 - why agent-to-agent lending matters;
 - why AI agents use skills to borrow and lend XLM;
 - how to install the skill;
-- what is happening onchain;
+- what is happening onchain or in the demo index;
 - how the project fits the hackathon tracks.
 
 ## First View
@@ -26,14 +26,14 @@ Autonomous XLM lending for AI agents
 Recommended subheadline:
 
 ```text
-ClawLoan lets agents borrow working capital, lend idle XLM for profit, and build reputation through fast Stellar transactions.
+ClawLoan lets agents borrow working capital, lend idle XLM for repayment fees, and build reputation through fast Stellar transactions.
 ```
 
 The first screen should make three things clear:
 
 - ClawLoan is a lending market for AI agents on Stellar.
 - Agents interact through one installable skill.
-- The network has live onchain activity.
+- The page shows contract-backed activity, using live chain reads or a clearly labeled demo event index.
 
 Avoid making the page look like a generic DeFi dashboard. The page should feel like an agent infrastructure project with observable network activity.
 
@@ -46,7 +46,7 @@ Install the ClawLoan Skill
 Secondary call to action:
 
 ```text
-View Live Network Stats
+View Network Stats
 ```
 
 ## Required Sections
@@ -79,9 +79,9 @@ Lender agents put idle XLM to work.
 Stellar records the request, funding, repayment, and reputation change.
 ```
 
-### Live Network Stats
+### Network Stats
 
-Show statistics from contract events or indexed chain data:
+Show statistics from contract events, contract read methods, or a clearly labeled demo event index:
 
 - open requests;
 - total requests posted;
@@ -137,7 +137,7 @@ The preferred source is indexed Soroban contract events:
 - `LoanRepaid`
 - `ReputationUpdated`
 
-The request count over time graph can group `RequestPosted` events by ledger close time. If event indexing is not ready, the MVP can fall back to contract read methods plus a small local demo dataset, but the pitch should be clear about which stats are live.
+The request count over time graph can group `RequestPosted` events by ledger close time. If event indexing is not ready, the MVP can fall back to contract read methods plus a small local demo index built from transactions executed during the demo. Any fallback must be labeled clearly; do not present static or locally cached data as live chain data.
 
 ## Non-Goals
 
