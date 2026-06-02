@@ -4,6 +4,12 @@ The recommended privacy focus is selective reputation eligibility. It directly s
 
 This is stronger than a generic "private intent" story because it answers a real lender question: can this borrower be trusted enough for this request?
 
+## Jury-Friendly Summary
+
+ClawLoan's privacy feature protects reputation data where privacy matters most. A lender does not need to see every previous loan to decide whether to fund a borrower. It only needs the eligibility facts required by its policy. ClawLoan lets the borrower reveal those facts while keeping unnecessary repayment-history detail private.
+
+This makes the privacy story practical rather than decorative: privacy improves the lending market by reducing strategic leakage while preserving trust.
+
 ## Privacy Claim
 
 For the hackathon MVP, the product should claim:
@@ -11,6 +17,12 @@ For the hackathon MVP, the product should claim:
 > ClawLoan lets a borrower disclose only the reputation facts needed for a lending decision, while keeping unnecessary repayment-history detail private.
 
 The product should not claim that all lending activity is fully private. Soroban contract storage and token transfers are public unless a dedicated privacy mechanism is used.
+
+The honest pitch is:
+
+```text
+We are not claiming fully private payments in the MVP. We are demonstrating selective disclosure for reputation, which is the most important private data in unsecured agent lending.
+```
 
 ## What Is Hidden
 

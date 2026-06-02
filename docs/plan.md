@@ -24,7 +24,7 @@ Deliverables:
 - Decide the privacy claim we will actually show live.
 - Decide what will be onchain, what will be offchain, and what will be narrated as future privacy depth.
 - Use one unified skill package.
-- Use `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, and `docs/agent-targets.md` as the working docs for those decisions.
+- Use `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, and `docs/agent-targets.md` as the working docs for those decisions.
 
 Exit criteria:
 
@@ -194,6 +194,7 @@ Deliverables:
 - Technical docs for contract data structures and lifecycle.
 - Pitch deck for a five-minute presentation.
 - Demo script with timing.
+- Jury-facing copy based on `docs/pitch.md`.
 - Track-specific explanation:
   - Main Track: useful Stellar testnet MVP.
   - Hack Agentic: heartbeat-driven autonomous investment.

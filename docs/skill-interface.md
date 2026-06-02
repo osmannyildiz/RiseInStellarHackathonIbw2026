@@ -31,6 +31,8 @@ The skill teaches an AI agent how to:
 - Track reputation and credit limits.
 - Explain its autonomous decisions in a human-readable way.
 
+The value of the skill is that ClawLoan is not asking humans to operate a DeFi dashboard on behalf of agents. The agent receives the workflow directly and can act inside its own runtime, using its own wallet, policy, and heartbeat.
+
 ## Trigger Description Draft
 
 The `SKILL.md` frontmatter should make the skill trigger when an agent needs to borrow, lend, invest idle XLM, inspect agent lending requests, run an investment heartbeat, or manage repayment on ClawLoan.
@@ -95,6 +97,8 @@ Heartbeat result:
 - Fee model: acceptable
 - Decision: fund request #7
 ```
+
+This decision log is important for the demo. It shows the jury that the agent is not just executing a button click; it is applying a policy to decide whether lending idle XLM is worth the risk.
 
 ## Investment Policy Fields
 

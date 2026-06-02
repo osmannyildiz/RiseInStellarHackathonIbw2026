@@ -1,5 +1,9 @@
 # ClawLoan
 
+## One-Liner
+
+ClawLoan lets AI agents borrow and lend XLM to each other in seconds, so idle agent balances can become autonomous working capital instead of sitting unused.
+
 ## Idea
 
 ClawLoan is a Stellar-based lending marketplace built for autonomous AI agents. Each agent has its own wallet and XLM balance, can ask for short-term capital, and can fund another agent's request when the expected return fits its goals.
@@ -8,9 +12,23 @@ The product treats AI agents as independent economic actors. Instead of relying 
 
 The agentic concept is similar to a heartbeat system: each agent has recurring standing instructions that tell it when to wake up, what market conditions to inspect, and when it is allowed to act. The heartbeat is not just a reminder; it is the mechanism that turns the platform from a passive lending board into autonomous investment behavior.
 
+In the demo, the audience should understand the product in one sentence: one agent needs XLM, another agent has idle XLM, and ClawLoan lets them coordinate a short loan on Stellar without a human manually choosing every transaction.
+
 ## User Problem
 
 AI agents that perform paid work, buy services, or coordinate tasks may need temporary liquidity before they receive revenue. At the same time, other agents may hold idle XLM and want to earn yield without leaving the agent economy. Today there is no simple agent-native place where one agent can request funding and another agent can autonomously decide to provide it.
+
+This becomes more important as agents start using wallets for real tasks. Wallet balances will not always line up perfectly with an agent's immediate need. Some agents will be temporarily short on XLM; others will be overfunded and idle. ClawLoan creates a simple market between those two states.
+
+## Value Proposition
+
+ClawLoan creates three clear forms of value:
+
+- **For borrower agents:** instant short-term XLM when they need working capital.
+- **For lender agents:** a way to grow idle XLM through autonomous lending decisions.
+- **For builders:** a reusable primitive for agent-to-agent finance on Stellar.
+
+The product is intentionally narrow. It does not try to become a full DeFi lending protocol in one hackathon. It proves a new agent-native behavior: agents can manage liquidity, evaluate risk, lend for profit, repay, and build reputation through onchain activity.
 
 ## Product Concept
 
@@ -29,6 +47,8 @@ The platform should make each request understandable enough for an agent to eval
 
 The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what is happening onchain. It can show public network statistics such as open request count, funded loans, repayments, total XLM lent, and lending request volume over time.
 
+This makes ClawLoan easy to understand from two angles: agents use the skill to participate, while humans use the landing page to inspect the network and install the skill.
+
 ## Loan Lifecycle
 
 The hackathon MVP should support a very short loan lifecycle that can complete in under a minute. This keeps the demo legible: an agent requests XLM, another agent funds it, the borrower uses the funds or simulates the capital need, and the borrower repays the lender with a time-based fee within seconds.
@@ -37,7 +57,9 @@ For this version, profit should be expressed as a simple time-based repayment fe
 
 The borrower does not make a brittle promise that the platform cannot enforce perfectly at a future timestamp. Instead, repayment is flexible: paying sooner is cheaper, paying later is more expensive, and very late or missing repayment damages reputation. Risk should influence whether an agent is eligible for funding and how much it can borrow, more than it influences complex pricing in the first version. A borrower with stronger repayment history may receive a higher credit limit or qualify for lower fees. A new or weaker borrower may only qualify for tiny requests or higher requested fees if it wants lenders to accept the risk.
 
-## Why This Is Useful
+## Why Stellar
+
+Stellar is a strong fit because ClawLoan depends on fast, low-cost transactions and real wallet ownership. A seconds-long loan lifecycle is only convincing if funding and repayment can happen quickly enough to show live. Stellar testnet lets the project demonstrate real onchain payments, contract state, events, and balances without turning the demo into a slow settlement story.
 
 The project creates a primitive for agent-to-agent finance. It lets productive agents access temporary working capital, lets agents with idle balances seek returns, and shows how Stellar can support fast, low-cost coordination between autonomous wallets.
 
@@ -83,11 +105,23 @@ The threat model is practical: competing agents should not be able to copy anoth
 
 ## Hackathon Track Fit
 
-**Main Track: Hack On Stellar.** The platform is a useful Stellar testnet MVP where autonomous wallets request, fund, and track loans using XLM as the working asset.
+**Main Track: Hack On Stellar.** ClawLoan is a useful Stellar testnet MVP where autonomous wallets request, fund, repay, and track loans using XLM as the working asset. It uses Stellar for the part that matters: fast value movement and verifiable shared state.
 
 **Hack Agentic.** The core user is an AI agent. Agents use recurring investment heartbeats to check balances, inspect open requests, post capital requests, and lend when an opportunity matches their configured goals and safeguards. The agent's objective is to increase its XLM balance through autonomous lending decisions.
 
-**Hack Privacy.** The product includes private receiving and private providing, with selective disclosure for agent balances, strategies, request context, counterparties, and reputation so agents can coordinate capital without revealing unnecessary financial intelligence.
+**Hack Privacy.** ClawLoan uses selective reputation eligibility so a borrower can prove enough to qualify for funding without exposing full repayment history, counterparties, or every prior loan. The privacy story is narrow, relevant, and tied directly to the trust problem judges will ask about.
+
+## Jury Appeal
+
+ClawLoan is designed to be easy to judge:
+
+- It has a concrete user: autonomous agents with wallets.
+- It has a clear financial action: borrow and lend XLM.
+- It has visible utility: idle agent balances can earn, underfunded agents can access working capital.
+- It has real autonomy: lender agents make bounded investment decisions through a heartbeat.
+- It has a credible trust model: progressive reputation-gated micro-lending, not hand-waved repayment.
+- It has a focused privacy claim: selective reputation disclosure instead of vague "private finance."
+- It has a live-demo shape: a full loan can be created, funded, repaid, and reflected in stats within minutes.
 
 ## Demo Narrative
 
@@ -101,6 +135,8 @@ The demo can show the skill-led lending flow:
 6. The landing page updates public stats from the blockchain.
 
 The audience should see that the product is usable by agents directly through one unified skill, while the public frontend explains installation and visualizes network activity.
+
+The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle XLM, finds a borrower request, checks reputation and policy, funds the loan, and later sees its balance grow after repayment. That is the Agentic track story in one flow.
 
 ## Open Product Questions
 
