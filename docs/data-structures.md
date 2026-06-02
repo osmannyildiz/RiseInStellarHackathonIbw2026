@@ -244,16 +244,17 @@ pub struct PrivacyMode {
 pub struct EligibilityAttestation {
     pub attestation_hash: BytesN<32>,
     pub statement_hash: BytesN<32>,
+    pub issuer: Address,
     pub nonce: BytesN<32>,
     pub expires_at: u64,
 }
 ```
 
-This is a placeholder for the privacy track, not a full privacy implementation. It gives the product a place to express selective disclosure for purpose and reputation.
+This is an attestation reference, not a full privacy implementation. It gives the product a place to express selective disclosure for purpose and reputation.
 
 For the MVP, the contract can keep public fields where required and use hashes or Eligibility Attestations for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a Loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, or full repayment history.
 
-`EligibilityAttestation` supports the selective reputation privacy story. In the MVP, it points to a signed eligibility statement or offchain proof artifact. `statement_hash` binds the attestation to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `nonce` and `expires_at` prevent stale attestation reuse. A true onchain ZK verifier is stretch work, not required for the MVP.
+`EligibilityAttestation` supports the selective reputation privacy story. In the MVP, it points to a signed eligibility statement verified by the lender skill or helper script before funding. `statement_hash` binds the attestation to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `issuer`, `nonce`, and `expires_at` make issuer tracking and replay protection explicit. A true onchain ZK verifier is stretch work, not required for the MVP.
 
 ## Events
 

@@ -24,11 +24,11 @@ This becomes more important as agents start using wallets for real tasks. Wallet
 
 ClawLoan creates three clear forms of value:
 
-- **For borrower agents:** instant short-term XLM when they need working capital.
+- **For borrower agents:** short-term XLM when they need working capital.
 - **For lender agents:** a way to put idle XLM to work through bounded autonomous lending decisions.
-- **For builders:** a reusable primitive for agent-to-agent finance on Stellar.
+- **For builders:** a focused example of agent-to-agent finance on Stellar.
 
-The product is intentionally narrow. It does not try to become a full DeFi lending protocol in one hackathon. It proves a new agent-native behavior: agents can manage liquidity, evaluate risk, lend with a fee incentive, repay, and build reputation through onchain activity.
+The product is intentionally narrow. It does not try to become a full DeFi lending protocol in one hackathon. It demonstrates a useful agent-native behavior: agents can manage liquidity, evaluate risk, lend with a fee incentive, repay, and build reputation through onchain activity.
 
 ## Product Concept
 
@@ -54,7 +54,7 @@ This makes ClawLoan easy to understand from two angles: agents use the skill to 
 ClawLoan should be pitched and built around a functional Stellar testnet MVP:
 
 - A Soroban contract for Loan Requests, funding, repayment, time-based fees, simple reputation, and events.
-- One unified skill that teaches real agents how to use the contract and apply borrower/lender workflows.
+- One unified skill that teaches compatible agents how to use the contract and apply borrower/lender workflows.
 - A lender heartbeat that can evaluate open Loan Requests and act within configured testnet wallet limits.
 - Automation and convenience scripts that make the live run reliable, repeatable, and recoverable.
 - A landing page that explains the skill and shows contract-backed stats from testnet activity.
@@ -82,7 +82,7 @@ The borrower does not make a brittle promise that the platform cannot enforce pe
 
 Stellar is a strong fit because ClawLoan depends on fast, low-cost transactions and real wallet ownership. A short live loan lifecycle is only convincing if funding and repayment can happen quickly enough on testnet. Stellar testnet lets the project demonstrate real onchain payments, contract state, events, and balances without turning the demo into a slow settlement story.
 
-The project creates a primitive for agent-to-agent finance. It lets productive agents access temporary working capital, lets agents with idle balances seek returns, and shows how Stellar can support fast, low-cost coordination between autonomous wallets.
+The project explores a practical primitive for agent-to-agent finance. It lets productive agents access temporary working capital, lets agents with idle balances earn repayment fees, and shows how Stellar can support fast, low-cost coordination between autonomous wallets.
 
 For lender agents, the direct value proposition is an autonomous fee opportunity on idle XLM. An agent with idle XLM can periodically scan the market, compare lending opportunities, and put capital to work without waiting for a human operator to notice the opportunity.
 
@@ -98,7 +98,7 @@ The Lender Policy is the agent's guardrail. It can define maximum lend size, max
 
 ## Trust And Repayment
 
-The product should be honest about unsecured lending: if an agent receives XLM and there is no collateral or custody constraint, the platform cannot magically force repayment after the funds leave the lender. The trust mechanism should therefore be based on incentives, limits, and reputation rather than pretending repayment risk does not exist.
+The product should be honest about unsecured lending: if an agent receives XLM and there is no collateral or custody constraint, the platform cannot force repayment after the funds leave the lender. The trust mechanism should therefore be based on incentives, limits, and reputation rather than pretending repayment risk does not exist.
 
 For the MVP, the clearest trust model is progressive agent credit:
 
@@ -114,7 +114,7 @@ This creates a practical answer to the trust question: the first version is not 
 
 The privacy track centers on selective disclosure for reputation and request context, not fully private payments. Soroban storage and token transfers are public in the MVP, so ClawLoan should not claim to hide all counterparties or settlement activity. The grounded privacy claim is that a borrower can disclose only the eligibility facts needed for a lending decision, while keeping unnecessary repayment-history detail and private purpose text out of public contract storage.
 
-The product should aim to hide or selectively reveal:
+The product should selectively reveal:
 
 - Agent lending strategy, such as fee thresholds and risk limits, by keeping policy local to the lender skill unless voluntarily disclosed.
 - Sensitive request purpose or business context, while still sharing enough for a lender to evaluate the request.
@@ -124,9 +124,9 @@ The threat model is practical: competing agents should not get unnecessary acces
 
 ## Hackathon Track Fit
 
-**Main Track: Hack On Stellar.** ClawLoan is a useful Stellar testnet MVP where autonomous wallets request, fund, repay, and track loans using XLM as the working asset. It uses Stellar for the part that matters: fast value movement and verifiable shared state.
+**Main Track: Hack On Stellar.** ClawLoan is a Stellar testnet MVP where autonomous wallets request, fund, repay, and track loans using XLM as the working asset. It uses Stellar for fast value movement and verifiable shared state.
 
-**Hack Agentic.** The core user is an AI agent. Agents use recurring Investment Heartbeats to check balances, inspect open Loan Requests, post Loan Requests, and lend when an opportunity matches their configured goals and safeguards. The agent's objective is to increase its XLM balance through autonomous lending decisions.
+**Hack Agentic.** The core user is an AI agent. Agents use recurring Investment Heartbeats to check balances, inspect open Loan Requests, post Loan Requests, and lend when an opportunity matches their configured goals and safeguards. The lender agent's objective is to increase its XLM balance through bounded autonomous lending decisions.
 
 **Hack Privacy.** ClawLoan uses selective reputation eligibility so a borrower can show enough to qualify for funding without exposing full repayment history or every prior loan to the lender or public UI. The privacy story is narrow, relevant, and tied directly to the trust problem judges will ask about. Full private settlement is out of scope for the hackathon MVP.
 
@@ -137,7 +137,7 @@ ClawLoan is designed to be easy to judge:
 - It has a concrete user: autonomous agents with wallets.
 - It has a clear financial action: borrow and lend XLM.
 - It has visible utility: idle agent balances can find fee opportunities, and underfunded agents can access working capital.
-- It has real autonomy: lender agents make bounded investment decisions through a heartbeat.
+- It has real autonomy: lender agents make bounded lending decisions through a heartbeat.
 - It has a credible trust model: progressive reputation-gated micro-lending, not hand-waved repayment.
 - It has a focused privacy claim: selective reputation disclosure instead of vague "private finance."
 - It has a live-run shape: a full loan can be created, funded, repaid, and reflected in stats during a five-minute presentation.
@@ -155,7 +155,7 @@ The demo can show the skill-led lending flow:
 
 The audience should see that the product is usable by agents directly through one unified skill, while the public frontend explains installation and visualizes network activity.
 
-The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle XLM, finds a borrower request, checks reputation and policy, funds the loan, and later sees repayment with a fee. That is the Agentic track story in one flow.
+The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle XLM, finds a Loan Request, checks reputation and policy, funds the loan, and later sees repayment with a fee. That is the Agentic track story in one flow.
 
 ## MVP Decisions
 

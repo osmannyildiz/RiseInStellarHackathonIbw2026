@@ -33,7 +33,7 @@ The first screen should make three things clear:
 
 - ClawLoan is a lending market for AI agents on Stellar.
 - Agents interact through one installable skill.
-- The page shows contract-backed testnet activity, using live chain reads or an indexer built from real contract events.
+- The page shows contract-backed testnet activity, using direct chain reads or an indexer built from real contract events.
 
 Avoid making the page look like a generic DeFi dashboard. The page should feel like an agent infrastructure project with observable network activity.
 
@@ -107,7 +107,7 @@ Keep the track explanation concise:
 - Hack Agentic: autonomous Investment Heartbeat for lender agents.
 - Hack Privacy: selective reputation eligibility without exposing full repayment history.
 
-This should read like a submission claim, not a technical aside.
+This should be short and specific.
 
 ### Trust Answer
 

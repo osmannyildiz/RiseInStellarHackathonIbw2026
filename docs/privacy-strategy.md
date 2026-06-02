@@ -1,18 +1,18 @@
 # Privacy Strategy
 
-The recommended privacy focus is selective reputation eligibility. It directly supports the trust mechanism: a borrower should be able to present an eligibility attestation for a loan without exposing its full repayment history, prior loan amounts, or strategy to the lender-facing UI.
+The recommended privacy focus is selective reputation eligibility. It directly supports the trust mechanism: a borrower should be able to present an Eligibility Attestation for a loan without exposing its full repayment history, prior loan amounts, or strategy to the lender-facing UI.
 
 This is stronger than a generic "private intent" story because it answers a real lender question: can this borrower be trusted enough for this request?
 
-## Jury-Friendly Summary
+## Summary
 
-ClawLoan's MVP privacy feature protects reputation data where privacy matters most. A lender does not need to see every previous loan to decide whether to fund a borrower. It only needs the eligibility facts required by its policy. ClawLoan lets the borrower reveal those facts while keeping unnecessary repayment-history detail out of public contract storage and out of the lender-facing UI.
+ClawLoan's MVP privacy feature protects reputation data. A lender does not need to see every previous loan to decide whether to fund a borrower. It only needs the eligibility facts required by its policy. ClawLoan lets the borrower reveal those facts while keeping unnecessary repayment-history detail out of public contract storage and out of the lender-facing UI.
 
-This makes the privacy story practical rather than decorative: privacy improves the lending market by reducing strategic leakage while preserving trust.
+This makes the privacy story practical rather than decorative: selective disclosure can reduce strategic leakage while preserving enough trust for the lending decision.
 
 ## Privacy Claim
 
-For the hackathon MVP, the product should claim:
+For the MVP, the product should claim:
 
 > ClawLoan lets a borrower disclose only the reputation facts needed for a lending decision, while keeping unnecessary repayment-history detail private.
 
@@ -61,20 +61,20 @@ Use a two-level privacy plan, with Level 1 as the committed MVP path.
 
 ### Level 1: Signed Eligibility Attestation
 
-This is the committed hackathon path.
+This is the committed MVP path.
 
 1. Reputation is derived from onchain repayment events.
-2. A local reputation script or reputation agent computes private eligibility facts from testnet repayment history.
+2. A local reputation script computes eligibility facts from testnet repayment history.
 3. The script signs a narrow eligibility statement, such as "score >= 50 and defaults == 0 for Loan Request #7."
-4. The borrower includes an `EligibilityAttestation` for that signed statement with the Loan Request.
-5. The lender skill verifies that the statement satisfies its policy.
-6. The contract stores only the Eligibility Attestation and public Loan Request state.
+4. The borrower includes an `EligibilityAttestation` reference with the Loan Request.
+5. The lender skill verifies the signed statement offchain before funding.
+6. The contract stores the attestation reference and public Loan Request state.
 
 This is not full ZK, but it demonstrates selective disclosure cleanly: the lender gets the eligibility fact, not the full history. The pitch must call it an Eligibility Attestation, not an onchain zero-knowledge proof.
 
 ### Level 2: Onchain ZK Verifier Stretch
 
-Only attempt this after the lending contract, skill flow, real-agent demo, and Eligibility Attestation flow are working. The proof statement should be narrow:
+Only attempt this after the lending contract, skill flow, target-agent validation, and Eligibility Attestation flow are working. The proof statement should be narrow:
 
 ```text
 I know repayment-history records committed under this reputation root,
@@ -104,18 +104,9 @@ Private inputs:
 
 The verifier should only answer whether the statement is valid. Business logic should remain separate: the lending contract decides whether a valid proof satisfies the lender policy.
 
-## Stellar ZK Capability Notes
+## ZK Capability Notes
 
-ZK implementation must be capability-gated. Before relying on a proof system, verify the target network protocol, SDK support, and examples.
-
-Current planning notes as of June 3, 2026:
-
-- BLS12-381 host functions are specified in CAP-0059 with status `Final` and protocol version 22.
-- BN254 host functions are specified in CAP-0074 with status `Final` and protocol version 25.
-- Poseidon/Poseidon2 host functions are specified in CAP-0075 with status `Final` and protocol version 25.
-- Stellar software versions list Protocol 25 on testnet and mainnet, with SDK and host environment versions for Protocol 25.
-
-This means an onchain ZK path may be plausible, but it is not part of the committed MVP until the project verifies local tooling, deployed network support, proof generation, verifier cost, and end-to-end demo reliability.
+Do not commit to an onchain ZK verifier until the team has verified the target Stellar network, SDK support, proof tooling, verifier cost, and end-to-end reliability. The MVP does not need onchain ZK verification. Its privacy claim is selective disclosure through an Eligibility Attestation.
 
 ## Product Data Mapping
 
@@ -126,18 +117,19 @@ Existing structures already support the privacy path:
 - `AgentProfile.public_metadata_hash`
 - `PrivacyMode.require_eligibility_attestation`
 
-The planned Eligibility Attestation structure is:
+The planned Eligibility Attestation reference is:
 
 ```rust
 pub struct EligibilityAttestation {
     pub attestation_hash: BytesN<32>,
     pub statement_hash: BytesN<32>,
+    pub issuer: Address,
     pub nonce: BytesN<32>,
     pub expires_at: u64,
 }
 ```
 
-This makes replay protection and statement binding explicit.
+This makes issuer tracking, replay protection, and statement binding explicit. The MVP can verify the signed statement in the skill or helper script before funding; the contract does not need to verify the signature unless that becomes a later implementation goal.
 
 ## Demo Script
 
@@ -147,13 +139,13 @@ The privacy demo can be simple:
 2. Lender policy requires reputation score >= 50 and no defaults.
 3. Borrower does not reveal full repayment history to the lender UI.
 4. Borrower provides an Eligibility Attestation.
-5. Lender skill verifies the reference and funds the request.
+5. Lender skill verifies the signed statement and funds the request if policy matches.
 6. Landing page explains that the full history was not exposed.
 
 This gives the Privacy track a concrete story tied to the lending product, without overclaiming full confidential payments.
 
 ## Open Privacy Decisions
 
-- Who issues the eligibility attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
+- Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
 - Should private request purpose be shown as a hash-only commitment, or should the lender receive purpose text offchain?
 - How much proof detail should the landing page expose to be credible without confusing judges?

@@ -1,6 +1,6 @@
 # Phased Plan
 
-This plan is for building a functional Stellar testnet MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous investment behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around selective reputation disclosure.
+This plan is for building a functional Stellar testnet MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous lending behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around selective reputation disclosure.
 
 The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes contract-backed testnet statistics. Automation, seed scripts, local indexing, and recovery commands are part of the delivery because they make the real testnet flow reliable and error-tolerant.
 
@@ -19,7 +19,7 @@ Deliverables:
   6. Lender funds the request.
   7. Borrower repays with a time-based fee.
   8. Reputation and landing-page stats update after repayment, using contract data or indexed testnet events.
-- Pick the demo agents and their personalities.
+- Pick the target agents and test their setup.
 - Pick testnet-safe XLM amounts and fee tiers.
 - Use selective reputation eligibility as the live privacy claim.
 - Decide what will be onchain, what will be offchain, and what will be clearly labeled as future privacy depth.
@@ -83,7 +83,7 @@ Deliverables:
 - Add safety rules: max exposure, max single loan, minimum reputation, minimum fee, and when to ask the operator for confirmation.
 - Add examples of borrower-agent and lender-agent prompts.
 - Add references for contract function names, expected arguments, configured testnet values, and recovery commands.
-- Validate the skill against OpenClaw, Hermes Agent, and PicoClaw as initial targets.
+- Validate the skill against the selected target agents.
 
 Exit criteria:
 
@@ -93,7 +93,7 @@ Exit criteria:
 
 ## Phase 3: Agent Heartbeat
 
-Goal: make the Agentic track credible by showing autonomous investment behavior.
+Goal: make the Agentic track credible by showing bounded autonomous lending behavior.
 
 Deliverables:
 
@@ -208,7 +208,7 @@ Deliverables:
 - Jury-facing copy based on `docs/pitch.md`.
 - Track-specific explanation:
   - Main Track: useful Stellar testnet MVP.
-  - Hack Agentic: heartbeat-driven autonomous investment.
+  - Hack Agentic: heartbeat-driven autonomous lending.
   - Hack Privacy: selective reputation disclosure.
 
 Exit criteria:
@@ -245,5 +245,5 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 
 - Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
 - Should the borrower repay automatically as part of the demo, or should its agent explain and trigger repayment after receiving funds?
-- How much of the heartbeat should be deterministic rules versus LLM-generated reasoning?
-- What is the smallest testnet flow that still proves all three tracks?
+- How much of the heartbeat should be deterministic rules versus agent-generated reasoning?
+- What is the smallest testnet flow that still supports all three track claims?

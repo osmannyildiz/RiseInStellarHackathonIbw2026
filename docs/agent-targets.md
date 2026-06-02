@@ -1,81 +1,79 @@
-# Initial Agent Targets
+# Candidate Agent Targets
 
-ClawLoan should initially target real agents that can load a `SKILL.md`, run periodic or scheduled checks, and call the tooling needed to interact with Stellar.
+ClawLoan should target agents that can read an installed `SKILL.md`, keep wallet/config values available, run Stellar commands or helper scripts, and produce a visible decision log.
 
-Recommended initial targets:
+The initial candidates are:
 
 - OpenClaw;
 - Hermes Agent;
 - PicoClaw.
 
+These are candidates, not guaranteed integrations. Each one must pass the validation checklist before the project depends on it for the live run.
+
 ## Required Agent Features
 
 ClawLoan needs each target agent to support:
 
-- installable skill instructions through `SKILL.md` or equivalent;
+- installable skill instructions through `SKILL.md` or an equivalent mechanism;
 - terminal, script, MCP, or plugin access for Stellar contract calls;
-- scheduled or heartbeat-style autonomous checks;
-- persistent configuration for wallet identity, policy, and testnet values;
-- enough logging or messaging to show agent reasoning during the live run.
+- a way to run the Investment Heartbeat periodically or on operator trigger;
+- persistent configuration for wallet identity, Lender Policy, and testnet values;
+- visible logs or chat output for the lending decision.
 
-## Compatibility Matrix
+## Current Recommendation
 
-| Agent | Skill support | Heartbeat / schedule | Tooling surface | Fit | Notes |
-| --- | --- | --- | --- | --- | --- |
-| OpenClaw | Yes. Skills are directories containing `SKILL.md`, loaded globally or from a workspace. | Yes. `HEARTBEAT.md` supports periodic awareness. | Strong. Runtime tools, files, web, browser, messaging, automation, plugins, and tool policy are documented. | Primary target. | Best match for the ClawLoan concept because the heartbeat model maps directly to autonomous investment checks. |
-| Hermes Agent | Yes. Skills live under `~/.hermes/skills/`, support progressive disclosure, slash commands, references, scripts, required env vars, and external skill dirs. | Yes, through built-in cron and scheduled automations rather than the exact OpenClaw `HEARTBEAT.md` pattern. | Strong. Terminal/files, cronjob, messaging, MCP, and container backends are documented. | Primary target. | Good for a polished real-agent demo because skills, terminal access, cron, MCP, and messaging are all first-class. |
-| PicoClaw | Likely yes. Public docs and repo references show skill installation and `SKILL.md`-style skill usage, but the documentation is thinner than OpenClaw/Hermes. | Yes. Heartbeat reads `workspace/HEARTBEAT.md`; minimum documented interval is 5 minutes. | Moderate. Repo references MCP commands and skill commands; docs emphasize lightweight operation and early-stage status. | Secondary target until tested. | Good hackathon story because it is lightweight, but we should validate install, skill loading, wallet command execution, and heartbeat behavior before relying on it live. |
+Use one primary target first, then add a second target only after the contract and skill flow work end to end.
 
-## Target Recommendation
+Recommended order:
 
-Use OpenClaw and Hermes Agent as the first demo targets. They both have enough documented support for skills, scheduled/autonomous behavior, and tool execution.
+1. Validate OpenClaw first if its `HEARTBEAT.md` flow is available in the local setup.
+2. Validate Hermes Agent as the second target if it can load the unified skill and run the helper scripts.
+3. Treat PicoClaw as secondary until install, skill loading, wallet command execution, and heartbeat behavior are tested hands-on.
 
-Treat PicoClaw as a stretch or secondary demo target until we run a hands-on compatibility test. It appears to support the core concepts, but its public docs are less complete and the project warns that it is still pre-1.0.
+The project should not claim broad agent interoperability until at least two agents complete the same Loan Request, funding, and repayment flow on Stellar testnet.
+
+## Compatibility Notes
+
+| Agent | Status | What To Validate |
+| --- | --- | --- |
+| OpenClaw | Candidate primary target. | Skill loading, `HEARTBEAT.md` behavior, command execution, wallet config, decision logging. |
+| Hermes Agent | Candidate secondary target. | Skill loading, scheduled or operator-triggered heartbeat, helper script execution, wallet config, decision logging. |
+| PicoClaw | Candidate stretch target. | Skill installation, skill discovery, heartbeat behavior, command execution, and current project maturity. |
 
 ## Skill Packaging Implication
 
-The ClawLoan skill should be portable:
+The ClawLoan skill should stay portable:
 
 - Keep `SKILL.md` concise and mostly plain Markdown.
 - Put runtime-specific setup in `references/agent-targets.md`.
-- Avoid relying on one agent's proprietary frontmatter unless optional.
-- Provide separate setup snippets for OpenClaw, Hermes Agent, and PicoClaw.
-- Keep contract calls behind small scripts or clearly named commands so each agent can execute them through its available terminal/tooling surface.
+- Avoid required frontmatter or commands that only one agent supports.
+- Put contract calls behind small scripts or clearly named commands.
+- Keep wallet setup, contract IDs, and testnet values in references that agents can read.
 
-## Demo Recommendation
-
-For the live demo:
-
-1. Start with OpenClaw because the `HEARTBEAT.md` analogy is central to the Agentic track.
-2. Show that the same unified ClawLoan skill can also be installed in Hermes Agent.
-3. Mention PicoClaw as a planned lightweight target if we have not completed hands-on validation.
-
-If time permits, use two real agents:
-
-- Borrower: Hermes Agent using the ClawLoan skill to post and repay.
-- Lender: OpenClaw using the ClawLoan skill plus `HEARTBEAT.md` to discover and fund.
-
-This makes interoperability visible without forcing us to support three live runtimes in a five-minute presentation.
-
-## Hands-On Validation Checklist
+## Validation Checklist
 
 For each target agent:
 
 - Install the unified ClawLoan skill.
 - Confirm the agent can discover and load the skill.
 - Confirm the agent can read the skill references.
-- Confirm environment variables or config values can be set for wallet and contract details.
+- Confirm wallet and contract config values can be set without exposing mainnet credentials.
 - Confirm the agent can run a contract read command.
-- Confirm the agent can run a contract write command with explicit approval or demo credentials.
-- Confirm heartbeat or schedule can trigger request scanning.
-- Confirm the agent can produce a visible decision log.
+- Confirm the agent can run a contract write command with explicit approval or testnet-only credentials.
+- Confirm heartbeat or operator-triggered scanning can inspect open Loan Requests.
+- Confirm the agent can produce a visible decision log before funding.
+- Confirm the full borrow, fund, repay flow works on Stellar testnet.
 
-## Source Notes
+## Demo Recommendation
 
-Research checked on June 3, 2026:
+For the first reliable live run, use the smallest setup that demonstrates the product:
 
-- OpenClaw Skills docs: skills are `SKILL.md` directories under global or workspace paths, with safety constraints and debugging commands.
-- OpenClaw Heartbeat docs: heartbeat reads `HEARTBEAT.md` and runs periodic awareness checks.
-- OpenClaw tools overview: tools include runtime command execution, files, web, browser, messaging, automation, and plugins.
-- Hermes Agent docs: skills live under `~/.hermes/skills/`, support progressive disclosure, references, scripts, external skill directories, slash commands, required environment variables, terminal/files, cronjob, MCP, and container backends.
-- PicoClaw docs and repo: heartbeat reads `workspace/HEARTBEAT.md`; repo command list includes `picoclaw skills install`, `picoclaw skills list`, and MCP commands. PicoClaw also warns it is still early-stage and should not be treated as production-ready before v1.0.
+- one Borrower Agent;
+- one Lender Agent;
+- one unified ClawLoan skill;
+- one Loan Request;
+- one funding transaction;
+- one repayment transaction;
+- visible decision logs and contract-backed stats.
+
+If two agent runtimes pass validation, use two real agents. If only one runtime is stable, use two configured agents inside that runtime and describe multi-runtime support as future validation work.

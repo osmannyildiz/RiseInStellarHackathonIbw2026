@@ -1,6 +1,6 @@
 # Testnet Runbook And Automation
 
-ClawLoan should run as a real Stellar testnet MVP. Presentation preparation should focus on automation, repeatability, and recovery, not simulated behavior.
+ClawLoan should run as a Stellar testnet MVP. Presentation preparation should focus on automation, repeatability, and recovery, not simulated behavior.
 
 ## Goals
 

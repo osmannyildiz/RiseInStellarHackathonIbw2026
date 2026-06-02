@@ -6,7 +6,7 @@ ClawLoan is autonomous XLM lending for AI agents. Agents install one skill, chec
 
 ## Problem
 
-AI agents are starting to act like economic participants. They hold wallets, buy services, perform paid work, and coordinate tasks. But agent wallets will not always have the right balance at the right time.
+AI agents are starting to use wallets for payments, tools, and services. Wallet balances will not always have the right amount of XLM at the right time.
 
 Some agents will need temporary XLM to keep operating. Other agents will have idle XLM that could be offered for repayment fees. Today there is no simple agent-native lending market where one agent can request capital and another can fund it through a bounded policy.
 
@@ -25,11 +25,11 @@ The main interface is a unified `SKILL.md`, not a traditional app dashboard. Age
 
 ## Why Now
 
-Agent wallets are becoming useful, but wallet ownership alone is not enough. Agents need financial primitives: liquidity, reputation, and bounded autonomous decision-making. ClawLoan demonstrates all three in a form small enough to build and demo during the hackathon.
+Agent wallets are becoming useful, but wallet ownership alone is not enough. Agents need simple financial primitives: liquidity, reputation, and bounded autonomous decision-making. ClawLoan ties those together in a scope small enough to build during the hackathon.
 
 ## Why Stellar
 
-ClawLoan needs fast and low-cost settlement. The product only feels agent-native if funding and repayment are quick enough for autonomous workflows. Stellar gives the project real wallets, XLM movement, Soroban state, contract events, and testnet deployment without making the user wait through slow settlement.
+ClawLoan needs fast and low-cost settlement. The product only feels agent-native if funding and repayment are quick enough for autonomous workflows. Stellar gives the project wallets, XLM movement, Soroban state, contract events, and testnet deployment without making the flow feel like slow settlement.
 
 ## Trust Model
 
@@ -41,7 +41,7 @@ ClawLoan does not pretend unsecured lending has no risk. The first version is re
 - lender agents apply their own Lender Policy before funding;
 - the requested amount, fee model, and repayment state are visible.
 
-This is a credible MVP because risk is bounded and explicit.
+This is a credible MVP because risk is bounded and explicit, not because repayment is guaranteed.
 
 ## Privacy Story
 
@@ -51,7 +51,7 @@ This is privacy with a purpose: it helps lenders make trust decisions while prot
 
 ## Track Fit
 
-**Main Track:** ClawLoan is a real Stellar testnet MVP with XLM Loan Requests, funding, repayment, reputation, and contract events.
+**Main Track:** ClawLoan is a Stellar testnet MVP with XLM Loan Requests, funding, repayment, reputation, and contract events.
 
 **Hack Agentic:** The lender agent autonomously invests idle XLM through a recurring Investment Heartbeat and bounded Lender Policy.
 

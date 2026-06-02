@@ -42,7 +42,7 @@ Draft:
 ```yaml
 ---
 name: clawloan
-description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, post Loan Requests, review open Loan Requests, apply a Lender Policy, fund eligible requests through a heartbeat loop within configured wallet limits, repay loans with time-based fees, and track reputation-gated credit.
+description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, post Loan Requests, review open Loan Requests, apply a Lender Policy, fund eligible requests within configured wallet limits, repay loans with time-based fees, and track reputation-gated credit.
 ---
 ```
 
@@ -77,7 +77,7 @@ description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, po
 
 ### Heartbeat Workflow
 
-The heartbeat is the Agentic track centerpiece. It runs periodically and asks:
+The heartbeat is the Agentic track centerpiece. It runs periodically or on operator trigger and asks:
 
 1. Do I have idle XLM above my reserve?
 2. Are there open Loan Requests that match my policy?
@@ -98,7 +98,7 @@ Heartbeat result:
 - Decision: fund Loan Request #7
 ```
 
-This decision log is important for the live run. It shows the jury that the agent is not just executing a button click; it is applying a policy to decide whether lending idle XLM is worth the risk.
+This decision log matters because it shows that the agent is applying a policy before taking a financial action.
 
 ## Lender Policy Fields
 
@@ -124,7 +124,7 @@ The skill should never lend just because a request exists. It must check:
 - The fee model meets the lender's minimum.
 - The borrower reputation or Eligibility Attestation satisfies policy.
 
-For the hackathon run, the skill may use predefined testnet agent wallets, configured limits, and recovery commands. It should ask the operator before changing wallet configuration, raising exposure limits, or using non-testnet credentials.
+For the hackathon run, the skill may use predefined testnet agent wallets, configured limits, and recovery commands. It must ask the operator before changing wallet configuration, raising exposure limits, or using non-testnet credentials.
 
 ## Frontend Relationship
 
@@ -149,13 +149,13 @@ Useful stats:
 
 ## Initial Target Agents
 
-The first compatibility targets are:
+Candidate compatibility targets are:
 
 - OpenClaw;
 - Hermes Agent;
 - PicoClaw.
 
-See `docs/agent-targets.md` for the support matrix and demo recommendation.
+See `docs/agent-targets.md` for the validation checklist and current target recommendation.
 
 ## First Skill Draft Scope
 
