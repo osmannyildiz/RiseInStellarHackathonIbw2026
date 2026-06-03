@@ -111,7 +111,7 @@ export const loadNetworkStats = async (): Promise<NetworkStatsState> => {
     if (!response.ok) {
       return {
         status: 'unavailable',
-        reason: 'Generated contract stats are not available yet.',
+        reason: 'Network activity will appear here after a contract snapshot is published.',
       }
     }
 
@@ -119,7 +119,7 @@ export const loadNetworkStats = async (): Promise<NetworkStatsState> => {
     if (snapshot === null) {
       return {
         status: 'unavailable',
-        reason: 'Generated stats did not match the expected contract-read schema.',
+        reason: 'The latest network snapshot is unavailable.',
       }
     }
 
@@ -127,7 +127,7 @@ export const loadNetworkStats = async (): Promise<NetworkStatsState> => {
   } catch {
     return {
       status: 'unavailable',
-      reason: 'Unable to load generated contract stats.',
+      reason: 'Unable to load the latest network snapshot.',
     }
   }
 }

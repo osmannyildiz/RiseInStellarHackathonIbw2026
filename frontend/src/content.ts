@@ -5,61 +5,61 @@ export const installCommand =
   'cp -R skills/clawloan ~/.codex/skills/clawloan'
 
 export const examplePrompt =
-  'Check my XLM balance and review open Loan Requests that match my Lender Policy.'
+  'Use the ClawLoan skill to check this wallet balance, then review Loan Requests that fit the agent Lender Policy.'
 
 export const agentFlows = [
   {
     name: 'Borrower agent',
-    steps: ['Check balance', 'Post request', 'Track due', 'Repay'],
+    steps: ['Check balance', 'Request XLM', 'Track amount due', 'Repay'],
   },
   {
     name: 'Lender agent',
-    steps: ['Run heartbeat', 'Check policy', 'Fund match', 'Monitor'],
+    steps: ['Run heartbeat', 'Review policy', 'Fund a match', 'Monitor'],
   },
 ]
 
-export const tracks = [
+export const productPillars = [
   {
-    name: 'Main Track',
-    body: 'Real Stellar testnet lifecycle for XLM requests, funding, repayment, reputation, and contract stats.',
+    name: 'Working capital',
+    body: 'Borrower agents can request short-term XLM when their wallet balance falls below the task ahead.',
   },
   {
-    name: 'Hack Agentic',
-    body: 'Lender agents use an Investment Heartbeat to evaluate requests and act inside a bounded policy.',
+    name: 'Idle balance yield',
+    body: 'Lender agents can put unused XLM to work when the offered fee, duration, and borrower history fit policy.',
   },
   {
-    name: 'Hack Privacy',
-    body: 'Borrowers prove eligibility with cryptographic public inputs, commitments, nullifiers, and a Groth16/BLS12-381 verifier path.',
-  },
-]
-
-export const privacyMadePrivate = [
-  {
-    label: 'Private witness',
-    body: 'Score, credit limit, default count, repayment-history inputs, and salt stay inside the proof witness.',
-  },
-  {
-    label: 'Eligibility details',
-    body: 'The borrower proves the policy checks without revealing the values behind the reputation root.',
-  },
-  {
-    label: 'Purpose text',
-    body: 'The narrative purpose stays offchain; the request only carries a purpose hash.',
+    name: 'Agent reputation',
+    body: 'Repayments improve future credit access. Late or missing repayments reduce what lenders are willing to fund.',
   },
 ]
 
-export const privacyKeptPublic = [
+export const privacyFeatures = [
   {
-    label: 'Proof output',
-    body: 'Eligible for this request, request id, amount, policy threshold, reputation root, nullifier, and expiry.',
+    label: 'Private reputation witness',
+    body: 'Score, credit limit, default count, repayment-history inputs, and salt stay out of public request data.',
   },
   {
-    label: 'Verifier result',
-    body: 'The Groth16/BLS12-381 receipt records valid or invalid, and the contract stores the nullifier for replay protection.',
+    label: 'Local lender strategy',
+    body: 'Fee thresholds, exposure limits, and risk preferences stay inside the lender agent unless intentionally disclosed.',
   },
   {
-    label: 'Settlement',
-    body: 'XLM transfers, borrower and lender addresses, public repayment events, and request amount remain public.',
+    label: 'Sensitive request context',
+    body: 'Agents can keep detailed purpose text offchain while sharing enough context for lenders to evaluate the request.',
+  },
+]
+
+export const publicFeatures = [
+  {
+    label: 'Loan terms',
+    body: 'Request amount, repayment terms, status, borrower address, and lender address stay visible to the market.',
+  },
+  {
+    label: 'Eligibility result',
+    body: 'The public decision shows whether the borrower qualifies for the request without exposing every private input.',
+  },
+  {
+    label: 'Settlement history',
+    body: 'Funding, repayment, fee, and reputation events remain observable so network activity can be audited.',
   },
 ]
 

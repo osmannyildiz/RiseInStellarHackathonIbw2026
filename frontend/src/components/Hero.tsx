@@ -5,6 +5,7 @@ import {
   panelLabel,
   panelValue,
 } from '../styles'
+import { FiBarChart2, FiDownload } from 'react-icons/fi'
 
 type HeroProps = {
   contractId?: string
@@ -27,9 +28,11 @@ export function Hero({ contractId }: HeroProps) {
           aria-label="Primary actions"
         >
           <a className={buttonPrimary} href="#install">
+            <FiDownload aria-hidden="true" className="mr-2" />
             Install the ClawLoan Skill
           </a>
           <a className={buttonSecondary} href="#network">
+            <FiBarChart2 aria-hidden="true" className="mr-2 text-accent" />
             View Network Stats
           </a>
         </div>

@@ -1,9 +1,7 @@
 import type { NetworkStatsState } from '../data/networkStats'
-import { readMethods } from '../data/networkStats'
 import {
   bodyText,
   heading2,
-  inlineCode,
   panelLabel,
   panelValue,
   section,
@@ -63,8 +61,8 @@ export function NetworkStatsPanel({ state }: NetworkStatsPanelProps) {
       <div className={sectionHeading}>
         <h2 className={heading2}>Network Stats</h2>
         <p className={bodyText}>
-          Direct contract reads are the source of truth. Event charts stay
-          hidden until a real testnet index exists.
+          A public view of open demand, funded capital, repayment activity, and
+          lender fees from the ClawLoan network.
         </p>
       </div>
 
@@ -87,17 +85,12 @@ export function NetworkStatsPanel({ state }: NetworkStatsPanelProps) {
               Source: {state.snapshot.source}. Updated{' '}
               {new Date(state.snapshot.generatedAt).toLocaleString()}.
             </p>
-            <code className={`${inlineCode} max-w-[min(520px,50%)] max-[940px]:max-w-full`}>
+            <code className="block max-w-[min(520px,50%)] overflow-x-auto rounded-md bg-code-bg p-3 font-mono text-[13px] leading-normal whitespace-nowrap text-text-strong max-[940px]:max-w-full">
               {state.snapshot.contractId}
             </code>
           </>
         ) : (
-          <>
-            <p className="m-0 text-sm text-text">{state.reason}</p>
-            <code className={`${inlineCode} max-w-[min(520px,50%)] max-[940px]:max-w-full`}>
-              Expected: {readMethods.join(', ')}
-            </code>
-          </>
+          <p className="m-0 text-sm text-text">{state.reason}</p>
         )}
       </div>
     </section>
