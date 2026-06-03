@@ -1,4 +1,5 @@
 import { BORROWER_ID, DEMO, LENDER_ID } from "./constants.mjs";
+import { createEligibilityAttestation, markAttestationNonceUsed } from "./attestation.mjs";
 import { currentUnixTime } from "./demo-state.mjs";
 import { amountDueAt, xlm } from "./money.mjs";
 import { activeLenderExposure, selectBestRequest } from "./policy.mjs";
@@ -35,18 +36,36 @@ export function postDemoLoanRequest(state, options = {}) {
     };
   }
 
+  const requestId = state.nextLoanRequestId;
+  const purposeHash = `local-demo-purpose-${now}`;
+  const requireEligibilityAttestation =
+    Boolean(options.requireEligibilityAttestation || options.privacyRun || state.lenderPolicy.requireEligibilityAttestation);
+  const requestDraft = {
+    id: requestId,
+    borrowerId,
+    borrowerAddress: borrower.address,
+    amountXlm,
+    purposeHash,
+  };
+  const attestationResult = requireEligibilityAttestation
+    ? createEligibilityAttestation(state, requestDraft, options)
+    : { ok: true, attestation: null };
+  if (!attestationResult.ok) {
+    return { ok: false, reason: attestationResult.reason };
+  }
+
   const loanRequest = {
     id: state.nextLoanRequestId++,
     borrowerId,
     borrowerAddress: borrower.address,
     amountXlm,
     feeModel: { ...state.feeModel },
-    purposeHash: `local-demo-purpose-${now}`,
+    purposeHash,
     privacyMode: {
       hidePurpose: true,
-      requireAttestation: false,
+      requireEligibilityAttestation,
     },
-    eligibilityAttestation: null,
+    eligibilityAttestation: attestationResult.attestation,
     status: "Open",
     createdAt: now,
     fundedLoanId: null,
@@ -60,6 +79,8 @@ export function postDemoLoanRequest(state, options = {}) {
     loanRequestId: loanRequest.id,
     borrowerId,
     amountXlm,
+    privacyMode: loanRequest.privacyMode,
+    attestationHash: loanRequest.eligibilityAttestation?.attestationHash || null,
   });
 
   return { ok: true, reused: false, loanRequest };
@@ -117,6 +138,7 @@ export function runLenderHeartbeatOnce(state, options = {}) {
   request.status = "Funded";
   request.fundedLoanId = loanId;
   state.loans.push(loan);
+  markAttestationNonceUsed(state, request);
   lender.balanceXlm = xlm(lender.balanceXlm - request.amountXlm);
   state.agents[request.borrowerId].balanceXlm = xlm(state.agents[request.borrowerId].balanceXlm + request.amountXlm);
   state.reputation[request.borrowerId].openBorrowedAmountXlm = xlm(

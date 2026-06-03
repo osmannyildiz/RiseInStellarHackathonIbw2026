@@ -24,6 +24,9 @@ export function formatLenderHeartbeat(result) {
     lines.push(`- Funding transaction: ${result.txHash}`);
     lines.push(`- Loan id: #${result.loan.id}`);
     lines.push(`- Loan status: ${result.loan.status}`);
+    if (heartbeat.bestRequest?.eligibilityAttestation) {
+      lines.push(`- Eligibility Attestation: verified ${heartbeat.bestRequest.eligibilityAttestation.statementHash}`);
+    }
   }
 
   return lines.join("\n");
@@ -67,9 +70,15 @@ export function formatPostRequest(result) {
     `- Loan Request id: #${result.loanRequest.id}`,
     `- Borrower: ${result.loanRequest.borrowerAddress}`,
     `- Amount: ${formatXlm(result.loanRequest.amountXlm)}`,
+    `- Privacy mode: purpose ${result.loanRequest.privacyMode.hidePurpose ? "hashed offchain" : "public"}, eligibility attestation ${result.loanRequest.privacyMode.requireEligibilityAttestation ? "required" : "not required"}`,
+    result.loanRequest.eligibilityAttestation
+      ? `- Eligibility Attestation: ${result.loanRequest.eligibilityAttestation.statementHash}`
+      : null,
     `- Status: ${result.loanRequest.status}`,
     `- Reason: ${result.reason || "Known-good demo request created."}`,
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 export function formatRepayment(result) {
@@ -121,4 +130,3 @@ export function formatRecovery(state) {
     .filter(Boolean)
     .join("\n");
 }
-

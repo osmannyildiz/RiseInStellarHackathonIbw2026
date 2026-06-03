@@ -1,4 +1,5 @@
 import { LENDER_ID } from "./constants.mjs";
+import { verifyEligibilityAttestation } from "./attestation.mjs";
 import { spendable } from "./money.mjs";
 
 export function activeLenderExposure(state, lenderId = LENDER_ID) {
@@ -44,8 +45,8 @@ export function evaluateRequest(state, request, lenderId = LENDER_ID) {
   if (reputation.score < policy.minReputationScore) {
     return reject(`Borrower score ${reputation.score} is below min_reputation_score ${policy.minReputationScore}.`);
   }
-  if (request.privacyMode?.requireAttestation || policy.requireEligibilityAttestation) {
-    const attestationResult = verifyAttestation(request, reputation, policy);
+  if (requestRequiresAttestation(request, policy)) {
+    const attestationResult = verifyEligibilityAttestation(state, request, reputation, policy);
     if (!attestationResult.ok) {
       return reject(attestationResult.reason);
     }
@@ -92,21 +93,12 @@ function feeModelIsValid(feeModel) {
   );
 }
 
-function verifyAttestation(request, reputation, policy) {
-  const attestation = request.eligibilityAttestation;
-  if (!attestation) {
-    return { ok: false, reason: `Request #${request.id} requires an Eligibility Attestation, but none is attached.` };
-  }
-  if (attestation.expiresAt <= Math.floor(Date.now() / 1000)) {
-    return { ok: false, reason: `Eligibility Attestation for request #${request.id} is expired.` };
-  }
-  if (attestation.borrowerId !== request.borrowerId || attestation.requestId !== request.id) {
-    return { ok: false, reason: `Eligibility Attestation is not bound to borrower ${request.borrowerId} and request #${request.id}.` };
-  }
-  if (attestation.minScore > reputation.score || attestation.minScore < policy.minReputationScore) {
-    return { ok: false, reason: "Eligibility Attestation does not satisfy the policy reputation threshold." };
-  }
-  return { ok: true };
+function requestRequiresAttestation(request, policy) {
+  return Boolean(
+    request.privacyMode?.requireEligibilityAttestation ||
+      request.privacyMode?.requireAttestation ||
+      policy.requireEligibilityAttestation,
+  );
 }
 
 function reject(reason) {
@@ -116,4 +108,3 @@ function reject(reason) {
 function wait(reason) {
   return { result: "wait", decision: "wait", reason };
 }
-

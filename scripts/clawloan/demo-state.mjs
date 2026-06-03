@@ -35,6 +35,7 @@ export function createDefaultState() {
       maxSingleLoanAmountXlm: DEMO.maxSingleLoanXlm,
       maxTotalExposureXlm: DEMO.maxTotalExposureXlm,
       minReputationScore: DEMO.minReputationScore,
+      maxDefaults: 0,
       minFeeBps: DEMO.baseFeeBps,
       maxDurationSeconds: DEMO.lateThresholdSeconds,
       allowRepeatBorrower: true,
@@ -75,6 +76,11 @@ export function createDefaultState() {
       totalFeesPaidXlm: 0,
       totalRepaymentSeconds: 0,
     },
+    attestationIssuer: {
+      id: "local-reputation-helper",
+      address: "GLOCALREPUTATIONHELPER000000000000000000000000000001",
+    },
+    usedAttestationNonces: [],
     eventLog: [],
     nextLoanRequestId: 1,
     nextLoanId: 1,
@@ -84,4 +90,3 @@ export function createDefaultState() {
 export function currentUnixTime() {
   return Math.floor(Date.now() / 1000);
 }
-

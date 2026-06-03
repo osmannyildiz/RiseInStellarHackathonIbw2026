@@ -33,6 +33,21 @@ export const tracks = [
   },
 ]
 
+export const privacyFacts = [
+  {
+    label: 'Hidden from lender UI',
+    body: 'Full repayment history, exact prior loan amounts, detailed late-payment timeline, and readable purpose text.',
+  },
+  {
+    label: 'Revealed for policy',
+    body: 'A signed eligibility statement that score, credit capacity, default bound, expiry, nonce, and request binding pass.',
+  },
+  {
+    label: 'Still public',
+    body: 'Borrower and lender addresses, token movement, contract events, and facts known to the local attestation issuer.',
+  },
+]
+
 export const docsLinks = [
   {
     label: 'Skill',

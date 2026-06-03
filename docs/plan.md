@@ -193,6 +193,14 @@ Exit criteria:
 - The pitch can explain public storage limits.
 - The product still clearly fits the Hack Privacy track without claiming full private settlement.
 
+Phase 5 implemented outcome:
+
+- Added a local Eligibility Attestation helper path for the privacy run.
+- Borrower demo requests can require an Eligibility Attestation and attach a reference with `attestationHash`, `statementHash`, issuer, nonce, expiry, and a narrow offchain statement.
+- Lender heartbeat verification rejects missing, expired, replayed, mismatched, hash-invalid, and policy-insufficient attestations before funding.
+- Contract tests cover required, expired, and stored Eligibility Attestation references. The contract still stores/verifies only the reference shape and expiry; signature and statement checks remain offchain by design.
+- Landing page copy now explains what is hidden from the lender-facing UI, what is revealed for policy, and what remains public on Stellar/Soroban.
+
 ## Phase 6: Testnet Deployment And Integration
 
 Goal: make the project demonstrably real on Stellar testnet.

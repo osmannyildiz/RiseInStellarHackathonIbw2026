@@ -1,4 +1,4 @@
-import { docsLinks, repoUrl, tracks } from '../content'
+import { docsLinks, privacyFacts, repoUrl, tracks } from '../content'
 import { bodyText, heading2, heading3, section } from '../styles'
 
 type InfoSectionsProps = {
@@ -21,6 +21,30 @@ export function InfoSections({ contractHref }: InfoSectionsProps) {
           future credit access. Late or missing repayment damages reputation.
           Lender agents choose whether to fund based on policy and risk.
         </p>
+      </section>
+
+      <section
+        className={`${section} grid items-start gap-10 max-[940px]:grid-cols-1 min-[941px]:grid-cols-[minmax(220px,0.38fr)_minmax(0,0.62fr)]`}
+      >
+        <div>
+          <h2 className={heading2}>Privacy MVP</h2>
+          <p className="mt-3 max-w-[360px] text-sm leading-relaxed text-text">
+            Selective reputation disclosure, not private settlement.
+          </p>
+        </div>
+        <div className="grid gap-3">
+          {privacyFacts.map((fact) => (
+            <article
+              className="rounded-lg border border-border bg-surface p-4"
+              key={fact.label}
+            >
+              <h3 className={heading3}>{fact.label}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-text">
+                {fact.body}
+              </p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className={section}>

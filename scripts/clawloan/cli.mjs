@@ -163,8 +163,12 @@ Commands:
 Options:
   --state <path>       JSON state path. Defaults to generated/clawloan-demo-state.json.
   --dry-run           Print the heartbeat decision without saving state.
+  --privacy-run       Post a request that requires an Eligibility Attestation.
+  --require-eligibility-attestation
+                      Require and attach a local Eligibility Attestation.
+  --attestation-ttl-seconds <n>
+                      Attestation validity window. Defaults to 300.
   --count <n>         Loop iteration count. 0 means run until stopped.
   --interval-ms <n>   Delay between loop iterations.
 `);
 }
-

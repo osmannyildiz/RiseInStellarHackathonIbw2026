@@ -40,6 +40,16 @@ fn privacy_mode(require_eligibility_attestation: bool) -> PrivacyMode {
     }
 }
 
+fn eligibility_attestation(fixture: &Fixture, expires_at: u64) -> Attestation {
+    Attestation::Present(EligibilityAttestation {
+        attestation_hash: hash(&fixture.env, 9),
+        statement_hash: hash(&fixture.env, 10),
+        issuer: fixture.admin.clone(),
+        nonce: hash(&fixture.env, 11),
+        expires_at,
+    })
+}
+
 fn setup() -> Fixture {
     let env = Env::default();
     env.ledger().set_timestamp(1_000);
@@ -224,6 +234,35 @@ fn posting_checks_amount_fee_credit_and_attestation() {
         &Attestation::None,
     );
     assert_eq!(missing_attestation, Err(Ok(Error::AttestationRequired)));
+
+    let expired_attestation = fixture.client.try_post_loan_request(
+        &fixture.borrower,
+        &BORROW_AMOUNT,
+        &fee_model(),
+        &hash(&fixture.env, 4),
+        &privacy_mode(true),
+        &eligibility_attestation(&fixture, 1_000),
+    );
+    assert_eq!(expired_attestation, Err(Ok(Error::AttestationExpired)));
+
+    let attested_request = fixture.client.post_loan_request(
+        &fixture.borrower,
+        &BORROW_AMOUNT,
+        &fee_model(),
+        &hash(&fixture.env, 4),
+        &privacy_mode(true),
+        &eligibility_attestation(&fixture, 1_300),
+    );
+    let stored = fixture.client.get_loan_request(&attested_request).unwrap();
+    assert_eq!(stored.privacy_mode.require_attestation, true);
+    assert!(matches!(
+        stored.eligibility_attestation,
+        Attestation::Present(_)
+    ));
+
+    fixture
+        .client
+        .cancel_loan_request(&fixture.borrower, &attested_request);
 
     let request_id = post_request(&fixture);
     fixture

@@ -203,7 +203,7 @@ Never fund a Loan Request unless all checks pass:
 - Fee model base fee is at or above `min_fee_bps`.
 - Fee model is valid: `base_fee_bps <= max_fee_bps`, `step_seconds > 0`, and `max_fee_bps <= 10000`.
 - Borrower reputation score is at or above `min_reputation_score`, or a required Eligibility Attestation verifies the same eligibility offchain.
-- The attestation is unexpired, nonce-bound, and bound to the borrower and request when an attestation is required.
+- The attestation is unexpired, nonce-bound, not replayed, and bound to the borrower, purpose hash, amount, and request when an attestation is required.
 
 Ask the operator before:
 
