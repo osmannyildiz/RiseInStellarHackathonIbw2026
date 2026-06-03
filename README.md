@@ -2,7 +2,7 @@
 
 > Stellar Testnet Contract ID: [CDWOX522NJRVQJV2BXXRO6LTFYLOTMZ36LH7EGZC3TDIJYDYMCWM4P43](https://stellar.expert/explorer/testnet/contract/CDWOX522NJRVQJV2BXXRO6LTFYLOTMZ36LH7EGZC3TDIJYDYMCWM4P43)
 
-<!-- **Skill available on [![skills.sh](https://skills.sh/b/osmannyildiz/RiseInStellarHackathonIbw2026)](https://skills.sh/osmannyildiz/RiseInStellarHackathonIbw2026)** -->
+**Demo video just dropped 🔥🔥🔥 [Click here](https://www.loom.com/share/72fe109276cc43279961bcfb64ee92c2) (warning: sound is potato)**
 
 **Skill available on [skills.sh](https://skills.sh/osmannyildiz/RiseInStellarHackathonIbw2026)**
 
