@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# ClawLoan Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Public landing and observability page for the ClawLoan Stellar testnet MVP.
 
-Currently, two official plugins are available:
+The agent-facing product interface is `skills/clawloan/SKILL.md`. This frontend explains the project, links to the skill/docs, and shows contract-backed network stats when generated real testnet data is available.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Build
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+pnpm build
 ```
+
+## Stats Input
+
+The page attempts to load `/network-stats.json` by default. Override the path with `VITE_CLAWLOAN_STATS_PATH`.
+
+The file must come from direct contract reads or a real event indexer. Missing stats render as unavailable instead of static demo numbers.
+
+```json
+{
+  "source": "contract-read",
+  "generatedAt": "2026-06-03T12:00:00.000Z",
+  "contractId": "C...",
+  "rpcUrl": "https://soroban-testnet.stellar.org",
+  "eventIndexed": false,
+  "stats": {
+    "openLoanRequests": 0,
+    "loanRequestsPosted": 0,
+    "loansFunded": 0,
+    "loansRepaid": 0,
+    "totalXlmLent": "0 XLM",
+    "totalFeesPaid": "0 XLM",
+    "averageRepaymentTimeSeconds": null
+  }
+}
+```
+
+`Loan Requests Over Time` is intentionally hidden until `rebuild-stats` indexes real `LoanRequestPosted` events from testnet.
