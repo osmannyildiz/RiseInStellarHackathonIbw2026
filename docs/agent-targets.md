@@ -32,13 +32,29 @@ Recommended order:
 
 The project should not claim broad agent interoperability until at least two agents complete the same Loan Request, funding, and repayment flow on Stellar testnet.
 
+## Phase 0 Setup Validation
+
+Workspace scan on June 3, 2026 found no local OpenClaw, Hermes Agent, PicoClaw, or `HEARTBEAT.md` runtime files in this repository. That means Phase 0 can lock target order, required features, and validation gates, but cannot honestly mark any runtime as tested from this workspace yet.
+
+Implementation rule:
+
+- keep the ClawLoan skill runtime-portable;
+- route contract reads and writes through helper commands rather than target-specific APIs;
+- do not depend on OpenClaw-only heartbeat behavior until OpenClaw passes the checklist below;
+- do not claim Hermes or PicoClaw support until each completes the same testnet borrow, fund, repay lifecycle.
+
+Minimum live-demo fallback:
+
+- If only one runtime is validated, run one Borrower Agent and one Lender Agent as separate configured identities in that runtime.
+- If no runtime is validated in time, use the helper commands directly while showing the skill instructions and decision logs as the agent interface contract.
+
 ## Compatibility Notes
 
 | Agent | Status | What To Validate |
 | --- | --- | --- |
-| OpenClaw | Candidate primary target. | Skill loading, `HEARTBEAT.md` behavior, command execution, wallet config, decision logging. |
-| Hermes Agent | Candidate secondary target. | Skill loading, scheduled or operator-triggered heartbeat, helper script execution, wallet config, decision logging. |
-| PicoClaw | Candidate stretch target. | Skill installation, skill discovery, heartbeat behavior, command execution, and current project maturity. |
+| OpenClaw | Candidate primary target; not locally validated yet. | Skill loading, `HEARTBEAT.md` behavior, command execution, wallet config, decision logging. |
+| Hermes Agent | Candidate secondary target; not locally validated yet. | Skill loading, scheduled or operator-triggered heartbeat, helper script execution, wallet config, decision logging. |
+| PicoClaw | Stretch target; not locally validated yet. | Skill installation, skill discovery, heartbeat behavior, command execution, and current project maturity. |
 
 ## Skill Packaging Implication
 

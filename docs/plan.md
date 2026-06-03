@@ -32,6 +32,17 @@ Exit criteria:
 - We know the exact happy path and recovery paths to build.
 - We have a crisp answer to the trust question: reputation-gated micro-lending with bounded limits, not collateralized lending.
 
+Phase 0 locked outcome:
+
+- Demo path: landing page -> install/open unified skill -> Borrower Agent checks balance -> Borrower Agent posts one `10 XLM` Loan Request -> Lender Agent heartbeat evaluates policy -> Lender Agent funds -> Borrower Agent repays -> reputation and contract-backed stats update.
+- Primary target agent: OpenClaw. Secondary target: Hermes Agent after the OpenClaw flow works end to end. PicoClaw is stretch.
+- Target-agent setup status: no OpenClaw, Hermes, PicoClaw, or `HEARTBEAT.md` runtime files are present in this repository as of June 3, 2026, so implementation must stay runtime-portable through the unified skill and helper commands until hands-on target validation is available.
+- Testnet demo values: `10 XLM` request, `2 XLM` borrower reserve, `15 XLM` lender reserve, `20 XLM` starting credit limit, `10 XLM` max single loan, `20 XLM` max total exposure, `200 bps` base fee, `100 bps` fee step every `15 seconds`, `500 bps` max fee, and `45 seconds` late threshold.
+- Privacy claim: selective reputation eligibility with an offchain-signed Eligibility Attestation reference on the Loan Request. The MVP does not claim private payments, hidden counterparties, or onchain ZK verification.
+- Onchain source of truth: agent profiles, lender policies, Loan Requests, funded loans, fee model, repayment state, reputation summary, network stats, purpose hashes, and attestation references.
+- Offchain/helper scope: wallet identities and secrets, readable purpose text, signed eligibility statements, target-agent runtime configuration, heartbeat scheduling, local event index for time-series charts, and generated skill/frontend config.
+- Future privacy depth: onchain ZK verification, private settlement, hidden counterparties, and richer credential systems are stretch items only after the lending lifecycle works.
+
 ## Phase 1: Soroban Contract MVP
 
 Goal: create the onchain source of truth for requests, loans, repayment, policies, and reputation.
