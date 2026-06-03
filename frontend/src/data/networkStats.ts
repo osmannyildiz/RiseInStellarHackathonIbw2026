@@ -1,3 +1,5 @@
+import { loadOnchainNetworkStats } from './onchainNetworkStats'
+
 export type StatSource = 'contract-read' | 'event-index'
 
 export type NetworkStats = {
@@ -24,6 +26,13 @@ export type NetworkStatsState =
   | { status: 'unavailable'; reason: string }
 
 const DEFAULT_STATS_PATH = '/network-stats.json'
+const DEFAULT_CONTRACT_ID = 'CDWOX522NJRVQJV2BXXRO6LTFYLOTMZ36LH7EGZC3TDIJYDYMCWM4P43'
+const DEFAULT_RPC_URL = 'https://soroban-testnet.stellar.org'
+const DEFAULT_READ_SOURCE_ACCOUNT =
+  'GA77IKJEPCZOB2GLCFVHRHUEM7TFU5YBON55VVTIKMGESIC6ZPZFDV7B'
+
+export const getConfiguredContractId = (): string =>
+  import.meta.env.VITE_CLAWLOAN_CONTRACT_ID ?? DEFAULT_CONTRACT_ID
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null
@@ -103,7 +112,7 @@ const parseSnapshot = (value: unknown): NetworkSnapshot | null => {
   }
 }
 
-export const loadNetworkStats = async (): Promise<NetworkStatsState> => {
+const loadSnapshotNetworkStats = async (): Promise<NetworkStatsState> => {
   const statsPath = import.meta.env.VITE_CLAWLOAN_STATS_PATH ?? DEFAULT_STATS_PATH
 
   try {
@@ -129,6 +138,26 @@ export const loadNetworkStats = async (): Promise<NetworkStatsState> => {
       status: 'unavailable',
       reason: 'Unable to load the latest network snapshot.',
     }
+  }
+}
+
+export const loadNetworkStats = async (): Promise<NetworkStatsState> => {
+  const contractId = getConfiguredContractId()
+  const rpcUrl = import.meta.env.VITE_CLAWLOAN_RPC_URL ?? DEFAULT_RPC_URL
+  const sourceAccount =
+    import.meta.env.VITE_CLAWLOAN_READ_SOURCE_ACCOUNT ??
+    DEFAULT_READ_SOURCE_ACCOUNT
+
+  try {
+    const snapshot = await loadOnchainNetworkStats({
+      contractId,
+      rpcUrl,
+      sourceAccount,
+    })
+
+    return { status: 'ready', snapshot }
+  } catch {
+    return loadSnapshotNetworkStats()
   }
 }
 

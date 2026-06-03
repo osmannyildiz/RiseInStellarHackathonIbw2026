@@ -28,6 +28,22 @@ const formatDuration = (seconds: number | null) => {
     : `${minutes}m ${remainingSeconds}s`
 }
 
+const formatSource = (state: NetworkStatsState) => {
+  if (state.status !== 'ready') {
+    return ''
+  }
+
+  if (state.snapshot.source === 'contract-read' && state.snapshot.rpcUrl) {
+    return `Source: live Stellar testnet contract read. Refreshed ${new Date(
+      state.snapshot.generatedAt,
+    ).toLocaleString()}.`
+  }
+
+  return `Source: ${state.snapshot.source}. Updated ${new Date(
+    state.snapshot.generatedAt,
+  ).toLocaleString()}.`
+}
+
 export function NetworkStatsPanel({ state }: NetworkStatsPanelProps) {
   const stats =
     state.status === 'ready'
@@ -81,10 +97,7 @@ export function NetworkStatsPanel({ state }: NetworkStatsPanelProps) {
       <div className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-border bg-surface px-4 py-3.5 max-[940px]:grid">
         {state.status === 'ready' ? (
           <>
-            <p className="m-0 text-sm text-text">
-              Source: {state.snapshot.source}. Updated{' '}
-              {new Date(state.snapshot.generatedAt).toLocaleString()}.
-            </p>
+            <p className="m-0 text-sm text-text">{formatSource(state)}</p>
             <code className="block max-w-[min(520px,50%)] overflow-x-auto rounded-md bg-code-bg p-3 font-mono text-[13px] leading-normal whitespace-nowrap text-text-strong max-[940px]:max-w-full">
               {state.snapshot.contractId}
             </code>

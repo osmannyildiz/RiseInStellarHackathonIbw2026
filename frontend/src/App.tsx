@@ -4,7 +4,11 @@ import { Hero } from './components/Hero'
 import { InfoSections } from './components/InfoSections'
 import { InstallSection } from './components/InstallSection'
 import { NetworkStatsPanel } from './components/NetworkStatsPanel'
-import { loadNetworkStats, type NetworkStatsState } from './data/networkStats'
+import {
+  getConfiguredContractId,
+  loadNetworkStats,
+  type NetworkStatsState,
+} from './data/networkStats'
 
 const testnetContractUrl = (contractId: string) =>
   `https://stellar.expert/explorer/testnet/contract/${contractId}`
@@ -32,7 +36,7 @@ function App() {
   const configuredContractId =
     networkStats.status === 'ready'
       ? networkStats.snapshot.contractId
-      : import.meta.env.VITE_CLAWLOAN_CONTRACT_ID
+      : getConfiguredContractId()
 
   const contractId =
     typeof configuredContractId === 'string' && configuredContractId.length > 0
