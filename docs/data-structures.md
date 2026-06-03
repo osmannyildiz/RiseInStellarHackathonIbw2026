@@ -22,11 +22,13 @@ pub enum DataKey {
     Agent(Address),
     LenderPolicy(Address),
     AgentReputation(Address),
+    NetworkStats,
     LoanRequest(u64),
     Loan(u64),
     LoanRequestCounter,
     LoanCounter,
     ActiveLoanRequestIds,
+    ActiveLoanIds,
     AgentLoanRequestIds(Address),
     AgentLoanIds(Address),
 }
@@ -38,9 +40,10 @@ pub enum DataKey {
 - `Agent(Address)` stores the public agent profile.
 - `LenderPolicy(Address)` stores lender-side guardrails for autonomous investment.
 - `AgentReputation(Address)` stores borrower repayment stats.
+- `NetworkStats` stores simple aggregate stats for the landing page.
 - `LoanRequest(u64)` stores an open or closed Loan Request.
 - `Loan(u64)` stores the lifecycle of a funded Loan Request.
-- `ActiveLoanRequestIds`, `AgentLoanRequestIds`, and `AgentLoanIds` are useful for the MVP UI. If they become too large later, indexing can move offchain through events.
+- `ActiveLoanRequestIds`, `ActiveLoanIds`, `AgentLoanRequestIds`, and `AgentLoanIds` are useful for the MVP UI. If they become too large later, indexing can move offchain through events.
 
 ## Config
 
@@ -52,6 +55,7 @@ pub struct Config {
     pub min_request_amount: i128,
     pub max_request_amount: i128,
     pub default_starting_credit_limit: i128,
+    pub late_threshold_seconds: u64,
     pub reputation_success_increment: u32,
     pub reputation_late_penalty: u32,
     pub reputation_default_penalty: u32,
@@ -145,7 +149,6 @@ pub struct LoanRequest {
     pub borrower: Address,
     pub amount: i128,
     pub fee_model: FeeModel,
-    pub min_lender_reputation: u32,
     pub purpose_hash: BytesN<32>,
     pub privacy_mode: PrivacyMode,
     pub eligibility_attestation: Option<EligibilityAttestation>,
@@ -164,8 +167,6 @@ pub enum LoanRequestStatus {
 ```
 
 A Loan Request describes what the borrower wants and how the lender can earn a fee if the borrower repays. It does not store long purpose text directly. The UI can show purpose text from offchain data and use `purpose_hash` as the verifiable reference.
-
-`min_lender_reputation` is optional product depth and can be omitted from the first implementation if it does not serve the demo.
 
 ## Loan
 
@@ -189,7 +190,6 @@ pub struct Loan {
 pub enum LoanStatus {
     Active,
     Repaid,
-    Late,
     Defaulted,
 }
 ```
@@ -200,7 +200,7 @@ The current amount due is derived from:
 principal + time_based_fee(principal, fee_model, funded_at, current_time)
 ```
 
-The contract does not need to store an exact deadline. The loan can remain active while the repayment amount grows up to the configured cap. Reputation is affected by how long repayment takes and whether repayment happens at all.
+The contract does not need to store an exact deadline. The loan can remain active while the repayment amount grows up to the configured cap. Late repayment is derived from `funded_at + late_threshold_seconds` and affects reputation when `repay_loan` runs. Missing repayment can be recorded through the admin-only `mark_defaulted` recovery function.
 
 ## Reputation
 
@@ -221,13 +221,38 @@ pub struct Reputation {
 
 The first reputation model should stay simple:
 
-- New agents start with a small `current_credit_limit`.
-- Successful repayment increases `score` and may increase `current_credit_limit`.
-- Late repayment increases `late_repayments` and may reduce future access.
-- Missing repayment increases `defaults` and can block borrowing.
+- New agents start with `score = 50` and `current_credit_limit = default_starting_credit_limit`.
+- Posting a Loan Request fails if `open_borrowed_amount + amount > current_credit_limit`.
+- Funding a Loan Request increases `open_borrowed_amount` by principal.
+- Repayment decreases `open_borrowed_amount` by principal and updates totals.
+- Repayment before `late_threshold_seconds` increases `successful_repayments`, applies `reputation_success_increment`, and can increase `current_credit_limit` by the principal up to `max_request_amount`.
+- Repayment at or after `late_threshold_seconds` increases `late_repayments`, applies `reputation_late_penalty`, and does not increase credit limit.
+- `mark_defaulted` increases `defaults`, applies `reputation_default_penalty`, and sets the loan status to `Defaulted`.
 - Lender Policies can require a minimum `score`.
 
 This supports the trust story without requiring collateral or an external trust-score protocol.
+
+## Network Stats
+
+```rust
+#[contracttype]
+pub struct NetworkStats {
+    pub loan_requests_posted: u64,
+    pub loans_funded: u64,
+    pub loans_repaid: u64,
+    pub total_xlm_lent: i128,
+    pub total_fees_paid: i128,
+    pub total_repayment_seconds: u64,
+}
+```
+
+`NetworkStats` gives the landing page direct contract-backed numbers without requiring an event indexer for the first build. Average repayment time is derived as:
+
+```text
+total_repayment_seconds / loans_repaid
+```
+
+The Loan Requests Over Time chart still requires indexed events. If no event indexer exists, the frontend should hide that chart or label it unavailable.
 
 ## Privacy Mode
 
@@ -297,16 +322,81 @@ ReputationUpdated {
 
 ## First MVP Functions Implied By These Structures
 
-The data model implies these contract actions:
+The first contract should expose these actions:
 
-- Register or update an agent profile.
-- Set a Lender Policy.
-- Post a Loan Request.
-- Cancel an open Loan Request.
-- Fund an open Loan Request.
-- Calculate the current repayment amount for a loan.
-- Repay an active loan.
-- Read agent reputation.
-- Read open Loan Requests and loan status for the UI.
+```rust
+pub fn __constructor(env: Env, config: Config);
+
+pub fn register_agent(
+    env: Env,
+    agent: Address,
+    display_name: String,
+    role: AgentRole,
+    public_metadata_hash: BytesN<32>,
+);
+
+pub fn set_lender_policy(env: Env, lender: Address, policy: LenderPolicy);
+
+pub fn post_loan_request(
+    env: Env,
+    borrower: Address,
+    amount: i128,
+    fee_model: FeeModel,
+    purpose_hash: BytesN<32>,
+    privacy_mode: PrivacyMode,
+    eligibility_attestation: Option<EligibilityAttestation>,
+) -> u64;
+
+pub fn cancel_loan_request(env: Env, borrower: Address, loan_request_id: u64);
+pub fn fund_loan_request(env: Env, lender: Address, loan_request_id: u64) -> u64;
+pub fn current_amount_due(env: Env, loan_id: u64) -> i128;
+pub fn repay_loan(env: Env, borrower: Address, loan_id: u64);
+pub fn mark_defaulted(env: Env, admin: Address, loan_id: u64);
+
+pub fn get_config(env: Env) -> Config;
+pub fn get_agent(env: Env, agent: Address) -> Option<AgentProfile>;
+pub fn get_lender_policy(env: Env, lender: Address) -> Option<LenderPolicy>;
+pub fn get_reputation(env: Env, agent: Address) -> Reputation;
+pub fn get_network_stats(env: Env) -> NetworkStats;
+pub fn get_loan_request(env: Env, loan_request_id: u64) -> Option<LoanRequest>;
+pub fn get_loan(env: Env, loan_id: u64) -> Option<Loan>;
+pub fn list_open_loan_request_ids(env: Env) -> Vec<u64>;
+pub fn list_active_loan_ids(env: Env) -> Vec<u64>;
+pub fn list_agent_loan_request_ids(env: Env, agent: Address) -> Vec<u64>;
+pub fn list_agent_loan_ids(env: Env, agent: Address) -> Vec<u64>;
+```
+
+## Authorization Rules
+
+- `register_agent`: `agent.require_auth()`.
+- `set_lender_policy`: `lender.require_auth()`.
+- `post_loan_request`: `borrower.require_auth()`.
+- `cancel_loan_request`: borrower must own the Loan Request and call `borrower.require_auth()`.
+- `fund_loan_request`: `lender.require_auth()`.
+- `repay_loan`: borrower must own the Loan and call `borrower.require_auth()`.
+- `mark_defaulted`: admin-only.
+
+## Error Cases
+
+```rust
+#[contracterror]
+pub enum Error {
+    AlreadyInitialized = 1,
+    NotAuthorized = 2,
+    AgentNotFound = 3,
+    LoanRequestNotFound = 4,
+    LoanNotFound = 5,
+    InvalidAmount = 6,
+    InvalidFeeModel = 7,
+    CreditLimitExceeded = 8,
+    LoanRequestNotOpen = 9,
+    CannotFundOwnRequest = 10,
+    PolicyDisabled = 11,
+    PolicyRejected = 12,
+    LoanNotActive = 13,
+    RepaymentInsufficient = 14,
+    TooEarlyToDefault = 15,
+}
+```
 
 The first implementation should avoid advanced matching, auctions, collateral, external trust scoring, or complex risk pricing. The data model should prove the central story: agents can request XLM, autonomously lend XLM under a policy, repay with a time-based fee, and build reputation from repayment behavior.

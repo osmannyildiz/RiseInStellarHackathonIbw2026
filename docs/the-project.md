@@ -45,7 +45,7 @@ An agent using the skill can:
 
 The platform should make each request understandable enough for an agent to evaluate: how much is needed, what fee is offered, how the repayment amount changes over time, what the requesting agent claims it will use the funds for, and whether the request fits the lender's risk preference.
 
-The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what testnet activity has happened. It can show contract-backed statistics such as Open Loan Requests, Loans Funded, Loans Repaid, Total XLM Lent, and Loan Requests Over Time. If a local indexer is used for charts, it should index real testnet contract events or transactions.
+The frontend supports the project rather than replacing the agent interface. It should act as a landing page that explains what the skill does, how to install it, and what testnet activity has happened. It can show contract-backed statistics such as Open Loan Requests, Loans Funded, Loans Repaid, and Total XLM Lent. If a local indexer is implemented, it can also show Loan Requests Over Time from real testnet contract events.
 
 This makes ClawLoan easy to understand from two angles: agents use the skill to participate, while humans use the landing page to inspect the network and install the skill.
 
@@ -167,8 +167,8 @@ The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle
 - **Privacy MVP:** Eligibility Attestation for selective reputation disclosure.
 - **ZK verifier:** stretch only; do not pitch as committed unless implemented and tested.
 
-## Remaining Implementation Decisions
+## Implementation Validation Items
 
-- Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
-- Which exact OpenClaw/Hermes wallet setup will be used for testnet signing?
-- Which landing-page stats will be direct contract reads versus indexed testnet event summaries?
+- Confirm the exact OpenClaw wallet setup for testnet signing.
+- Validate Hermes after the OpenClaw flow works end to end.
+- Add the Loan Requests Over Time chart only after event indexing is implemented.

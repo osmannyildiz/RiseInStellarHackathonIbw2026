@@ -14,6 +14,7 @@ clawloan/
     demo-values.md
     privacy.md
     agent-targets.md
+    commands.md
 ```
 
 A single skill is the chosen package shape because one agent may borrow, lend, or do both. The skill can contain separate borrower and lender workflows without splitting installation.
@@ -30,6 +31,7 @@ The skill teaches an AI agent how to:
 - Repay an active loan with a time-based fee.
 - Track reputation and credit limits.
 - Explain its autonomous decisions in a human-readable way.
+- Call the helper scripts defined in `docs/mvp-build-spec.md`.
 
 The value of the skill is that ClawLoan is not asking humans to operate a DeFi dashboard on behalf of agents. The agent receives the workflow directly and can act inside its own runtime, using its own wallet, policy, and heartbeat.
 
@@ -100,6 +102,14 @@ Heartbeat result:
 
 This decision log matters because it shows that the agent is applying a policy before taking a financial action.
 
+For the first implementation, the heartbeat should use deterministic rules before natural-language reasoning:
+
+1. Load balance, Lender Policy, open Loan Requests, and borrower reputation.
+2. Reject ineligible Loan Requests using the safety rules below.
+3. Pick the eligible Loan Request with the highest expected fee, breaking ties by earliest creation time.
+4. Produce a short explanation.
+5. Call `run-lender-heartbeat-once` only if the policy allows funding.
+
 ## Lender Policy Fields
 
 The skill should ask the agent to maintain or load these policy values:
@@ -126,6 +136,19 @@ The skill should never lend just because a request exists. It must check:
 
 For the hackathon run, the skill may use predefined testnet agent wallets, configured limits, and recovery commands. It must ask the operator before changing wallet configuration, raising exposure limits, or using non-testnet credentials.
 
+## Helper Commands
+
+The skill should reference these commands from `docs/mvp-build-spec.md`:
+
+- `setup-testnet-accounts`
+- `deploy-contract`
+- `configure-demo`
+- `post-demo-loan-request`
+- `run-lender-heartbeat-once`
+- `repay-demo-loan`
+- `rebuild-stats`
+- `recover-demo`
+
 ## Frontend Relationship
 
 The frontend should not be the control center. It should:
@@ -145,7 +168,7 @@ Useful stats:
 - Total XLM Lent;
 - Total Fees Paid;
 - Average Repayment Time;
-- Loan Requests Over Time.
+- Loan Requests Over Time, only when event indexing is implemented.
 
 ## Initial Target Agents
 

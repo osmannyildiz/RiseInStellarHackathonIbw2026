@@ -31,6 +31,7 @@ Do not use:
 | Investment Heartbeat | Recurring agent loop that checks market state and applies the Lender Policy. | `Heartbeat` or offchain workflow |
 | Fee Model | Rules for calculating repayment fee over time. | `FeeModel` |
 | Reputation | Borrower repayment summary used for credit limits and eligibility. | `Reputation` |
+| Network Stats | Contract-backed aggregate counts and totals for the landing page. | `NetworkStats` |
 | Eligibility Attestation | Signed statement that a Borrower Agent satisfies a narrow reputation condition. It may reference an offchain proof artifact later, but the MVP should treat it as an attestation. | `EligibilityAttestation` |
 | Purpose Commitment | Hash/reference for private request purpose text. | `purpose_hash` |
 
@@ -97,6 +98,7 @@ Prefer these Rust/Soroban names:
 - `LoanStatus`
 - `FeeModel`
 - `Reputation`
+- `NetworkStats`
 - `PrivacyMode`
 - `EligibilityAttestation`
 
@@ -106,6 +108,7 @@ Storage keys should follow the same names:
 - `Loan(u64)`
 - `LenderPolicy(Address)`
 - `AgentReputation(Address)`
+- `NetworkStats`
 - `LoanRequestCounter`
 - `LoanCounter`
 - `ActiveLoanRequestIds`

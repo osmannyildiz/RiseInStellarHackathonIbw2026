@@ -24,7 +24,7 @@ Deliverables:
 - Use selective reputation eligibility as the live privacy claim.
 - Decide what will be onchain, what will be offchain, and what will be clearly labeled as future privacy depth.
 - Use one unified skill package.
-- Use `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, `docs/agent-targets.md`, and `docs/testnet-runbook.md` as the working docs for those decisions.
+- Use `docs/mvp-build-spec.md`, `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, `docs/agent-targets.md`, and `docs/testnet-runbook.md` as the working docs for those decisions.
 
 Exit criteria:
 
@@ -39,7 +39,7 @@ Goal: create the onchain source of truth for requests, loans, repayment, policie
 Deliverables:
 
 - Replace the hello-world contract with the lending contract.
-- Define contract types from `docs/data-structures.md`.
+- Define contract types from `docs/data-structures.md` and behavior from `docs/mvp-build-spec.md`.
 - Add core functions:
   - Register or update an agent.
   - Set a Lender Policy.
@@ -52,6 +52,7 @@ Deliverables:
   - Read request and loan status.
 - Implement tiered time-based repayment fees.
 - Implement progressive credit limits and simple reputation updates.
+- Implement contract errors and authorization rules from `docs/mvp-build-spec.md`.
 - Emit events for agent registration, policy updates, request posting, funding, repayment, and reputation changes.
 - Add focused contract tests for the happy path and the obvious failure paths.
 
@@ -82,7 +83,7 @@ Deliverables:
 - Add a heartbeat workflow for autonomous lender behavior.
 - Add safety rules: max exposure, max single loan, minimum reputation, minimum fee, and when to ask the operator for confirmation.
 - Add examples of borrower-agent and lender-agent prompts.
-- Add references for contract function names, expected arguments, configured testnet values, and recovery commands.
+- Add references for contract function names, expected arguments, configured testnet values, and recovery commands from `docs/mvp-build-spec.md`.
 - Validate the skill against the selected target agents.
 
 Exit criteria:
@@ -131,7 +132,7 @@ Deliverables:
   - Loans Funded.
   - Loans Repaid.
   - Total XLM Lent.
-  - Loan Requests Over Time.
+  - Loan Requests Over Time only after event indexing is implemented.
 - Link to contract address, repo, docs, and skill files.
 - Use `docs/landing-page.md` as the source plan.
 
@@ -241,9 +242,9 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 - Treat onchain ZK verification as stretch only.
 - Use contract-backed testnet stats; local indexes are acceptable only when built from real testnet activity.
 
-## Remaining Planning Questions
+## Resolved Implementation Questions
 
-- Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
-- Should the borrower repay automatically as part of the demo, or should its agent explain and trigger repayment after receiving funds?
-- How much of the heartbeat should be deterministic rules versus agent-generated reasoning?
-- What is the smallest testnet flow that still supports all three track claims?
+- Attestation issuer for MVP: local reputation helper script.
+- Borrower repayment for MVP: explicit operator-triggered borrower-agent action.
+- Heartbeat for MVP: deterministic policy filter first, agent explanation second.
+- Smallest testnet flow: one Borrower Agent, one Lender Agent, one Loan Request, one funding transaction, one repayment transaction, and contract-backed stats.

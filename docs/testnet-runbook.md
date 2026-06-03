@@ -14,7 +14,7 @@ ClawLoan should run as a Stellar testnet MVP. Presentation preparation should fo
 
 ### Account Setup
 
-Script or command group:
+Command: `setup-testnet-accounts`
 
 - create or load borrower and lender testnet accounts;
 - fund accounts from Friendbot or another testnet funding source;
@@ -24,7 +24,7 @@ Script or command group:
 
 ### Contract Deployment
 
-Script or command group:
+Command: `deploy-contract`
 
 - build the Soroban contract;
 - deploy to testnet;
@@ -32,9 +32,14 @@ Script or command group:
 - store contract ID and token address in a generated config file;
 - update skill references and frontend environment values.
 
+Command: `configure-demo`
+
+- write contract ID, token address, agent IDs, default fee model, and testnet values into generated config;
+- update the skill references and frontend environment values from the same source.
+
 ### Known-Good Flow
 
-Script or command group:
+Commands: `post-demo-loan-request`, `run-lender-heartbeat-once`, `repay-demo-loan`
 
 - register borrower and lender agents;
 - set the Lender Agent's Lender Policy;
@@ -48,6 +53,8 @@ Script or command group:
 ### Local Indexing
 
 If the landing page needs charts that are hard to build from direct contract reads, use a local event indexer.
+
+Command: `rebuild-stats`
 
 Rules:
 
@@ -69,6 +76,8 @@ Provide commands for:
 - rebuilding the local event index;
 - switching the frontend to a fresh contract deployment;
 - resetting testnet run state when needed.
+
+Command: `recover-demo`
 
 ## Runbook Shape
 

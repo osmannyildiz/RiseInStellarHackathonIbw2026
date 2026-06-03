@@ -81,7 +81,7 @@ Stellar records the request, funding, repayment, and reputation change.
 
 ### Network Stats
 
-Show statistics from contract events, contract read methods, or a local indexer built from real testnet events:
+Show statistics from contract read methods first:
 
 - Open Loan Requests;
 - Loan Requests Posted;
@@ -90,7 +90,7 @@ Show statistics from contract events, contract read methods, or a local indexer 
 - Total XLM Lent;
 - Total Fees Paid;
 - Average Repayment Time;
-- Loan Requests Over Time.
+- Loan Requests Over Time, only when event indexing is implemented.
 
 The stats should reinforce the business value:
 
@@ -130,14 +130,21 @@ Link to:
 
 ## Data Source
 
-The preferred source is indexed Soroban contract events:
+The first data source is contract read methods:
+
+- `get_network_stats`
+- `list_open_loan_request_ids`
+- `get_loan_request`
+- `get_loan`
+
+The event-indexed source is only needed for time-series charts:
 
 - `LoanRequestPosted`
 - `LoanRequestFunded`
 - `LoanRepaid`
 - `ReputationUpdated`
 
-The Loan Requests Over Time graph can group `LoanRequestPosted` events by ledger close time. If full event indexing is not ready, the MVP can fall back to contract read methods plus a local index built from real testnet transactions. Do not present static or invented data as live chain data.
+The Loan Requests Over Time graph can group `LoanRequestPosted` events by ledger close time. If event indexing is not ready, hide the graph or label it unavailable. Do not present static or invented data as live chain data.
 
 ## Non-Goals
 

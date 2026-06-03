@@ -144,8 +144,8 @@ The privacy demo can be simple:
 
 This gives the Privacy track a concrete story tied to the lending product, without overclaiming full confidential payments.
 
-## Open Privacy Decisions
+## Resolved Privacy Decisions
 
-- Who issues the Eligibility Attestation for the testnet flow: a local indexer script or a dedicated reputation agent?
-- Should private request purpose be shown as a hash-only commitment, or should the lender receive purpose text offchain?
-- How much proof detail should the landing page expose to be credible without confusing judges?
+- Eligibility Attestation issuer for MVP: local reputation helper script.
+- Private request purpose for MVP: store only `purpose_hash` onchain; optional purpose text can be shared offchain through the agent chat/log, not through contract storage.
+- Landing page explanation: show the attestation claim and limitation in plain language; do not show full repayment history or imply onchain ZK verification.
