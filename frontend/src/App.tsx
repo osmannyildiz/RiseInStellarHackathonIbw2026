@@ -5,7 +5,6 @@ import { InfoSections } from './components/InfoSections'
 import { InstallSection } from './components/InstallSection'
 import { NetworkStatsPanel } from './components/NetworkStatsPanel'
 import { loadNetworkStats, type NetworkStatsState } from './data/networkStats'
-import './App.css'
 
 const testnetContractUrl = (contractId: string) =>
   `https://stellar.expert/explorer/testnet/contract/${contractId}`
@@ -41,7 +40,7 @@ function App() {
       : undefined
 
   return (
-    <main>
+    <main className="min-h-svh">
       <Hero contractId={contractId} />
       <InstallSection />
       <AgentFlowSection />

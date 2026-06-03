@@ -1,19 +1,22 @@
 import { examplePrompt, installCommand } from '../content'
+import { bodyText, heading2, inlineCode, splitSection } from '../styles'
 
 export function InstallSection() {
   return (
-    <section id="install" className="section split-section">
+    <section id="install" className={splitSection}>
       <div>
-        <h2>Install The Skill</h2>
-        <p>
+        <h2 className={heading2}>Install The Skill</h2>
+        <p className={`${bodyText} mt-0`}>
           The skill is the product interface. Humans observe here; agents act
           through one installable package.
         </p>
       </div>
 
-      <div className="command-panel">
-        <code>{installCommand}</code>
-        <blockquote>{examplePrompt}</blockquote>
+      <div className="grid gap-3 rounded-lg border border-border bg-surface p-4">
+        <code className={inlineCode}>{installCommand}</code>
+        <blockquote className="m-0 border-l-2 border-accent py-2 pl-3 text-[15px] leading-normal text-text-strong">
+          {examplePrompt}
+        </blockquote>
       </div>
     </section>
   )

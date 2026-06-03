@@ -1,5 +1,14 @@
 import type { NetworkStatsState } from '../data/networkStats'
 import { readMethods } from '../data/networkStats'
+import {
+  bodyText,
+  heading2,
+  inlineCode,
+  panelLabel,
+  panelValue,
+  section,
+  sectionHeading,
+} from '../styles'
 
 type NetworkStatsPanelProps = {
   state: NetworkStatsState
@@ -50,37 +59,44 @@ export function NetworkStatsPanel({ state }: NetworkStatsPanelProps) {
         ]
 
   return (
-    <section id="network" className="section network-section">
-      <div className="section-heading">
-        <h2>Network Stats</h2>
-        <p>
+    <section id="network" className={section}>
+      <div className={sectionHeading}>
+        <h2 className={heading2}>Network Stats</h2>
+        <p className={bodyText}>
           Direct contract reads are the source of truth. Event charts stay
           hidden until a real testnet index exists.
         </p>
       </div>
 
-      <div className="stats-grid">
+      <div className="grid gap-3 max-[940px]:grid-cols-1 min-[941px]:grid-cols-4">
         {stats.map(([label, value]) => (
-          <div className="stat" key={label}>
-            <span>{label}</span>
-            <strong>{value}</strong>
+          <div
+            className="min-h-[116px] rounded-lg border border-border bg-surface p-4"
+            key={label}
+          >
+            <span className={panelLabel}>{label}</span>
+            <strong className={panelValue}>{value}</strong>
           </div>
         ))}
       </div>
 
-      <div className="source-row">
+      <div className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-border bg-surface px-4 py-3.5 max-[940px]:grid">
         {state.status === 'ready' ? (
           <>
-            <p>
+            <p className="m-0 text-sm text-text">
               Source: {state.snapshot.source}. Updated{' '}
               {new Date(state.snapshot.generatedAt).toLocaleString()}.
             </p>
-            <code>{state.snapshot.contractId}</code>
+            <code className={`${inlineCode} max-w-[min(520px,50%)] max-[940px]:max-w-full`}>
+              {state.snapshot.contractId}
+            </code>
           </>
         ) : (
           <>
-            <p>{state.reason}</p>
-            <code>Expected: {readMethods.join(', ')}</code>
+            <p className="m-0 text-sm text-text">{state.reason}</p>
+            <code className={`${inlineCode} max-w-[min(520px,50%)] max-[940px]:max-w-full`}>
+              Expected: {readMethods.join(', ')}
+            </code>
           </>
         )}
       </div>
