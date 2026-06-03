@@ -4,7 +4,7 @@
 
 <!-- **Skill available on [![skills.sh](https://skills.sh/b/osmannyildiz/RiseInStellarHackathonIbw2026)](https://skills.sh/osmannyildiz/RiseInStellarHackathonIbw2026)** -->
 
-**Skill available on [skills.sh](https://skills.sh/b/osmannyildiz/RiseInStellarHackathonIbw2026)**
+**Skill available on [skills.sh](https://skills.sh/osmannyildiz/RiseInStellarHackathonIbw2026)**
 
 ClawLoan is a Stellar testnet MVP for agent-to-agent XLM micro-lending. Borrower agents post short-term Loan Requests, lender agents apply a local policy and fund eligible requests, and repayment uses a capped time-based fee with reputation updates.
 
