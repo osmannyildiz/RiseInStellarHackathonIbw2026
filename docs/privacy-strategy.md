@@ -114,9 +114,9 @@ The contract must reject missing proofs when `PrivacyMode.require_proof = true`,
 
 The honest demo path is:
 
-1. Borrower creates a proof envelope with public inputs and a nullifier.
-2. If no Groth16 proof/verifier receipt is available, the helper labels it a demo envelope and the lender heartbeat rejects it by default.
-3. For a real privacy run, the proof envelope must include a verifier receipt from a Groth16/BLS12-381 verifier.
+1. Borrower generates the local eligibility circuit artifacts with `scripts/clawloan/generate-eligibility-proof`.
+2. The proof receipt contains a verified Groth16/BLS12-381 proof, public signals, proof hash, public-signal hash, and verification-key hash.
+3. The privacy run attaches the receipt-derived proof reference to the Loan Request. The demo circuit proves `minScore`, `requestedAmount`, `maxDefaults`, `requestId`, `reputationRoot`, and `nullifierHash`; the runtime envelope additionally binds borrower address, purpose hash, verifier id, and expiry.
 4. The lender heartbeat checks public-input binding, expiry, nullifier replay status, and verifier receipt before funding.
 5. The landing page explains that privacy comes from the verified proof and public-input design, not from hiding fields in the UI.
 

@@ -1,4 +1,10 @@
-import { docsLinks, privacyFacts, repoUrl, tracks } from '../content'
+import {
+  docsLinks,
+  privacyKeptPublic,
+  privacyMadePrivate,
+  repoUrl,
+  tracks,
+} from '../content'
 import { bodyText, heading2, heading3, section } from '../styles'
 
 type InfoSectionsProps = {
@@ -27,29 +33,20 @@ export function InfoSections({ contractHref }: InfoSectionsProps) {
         className={`${section} grid items-start gap-10 max-[940px]:grid-cols-1 min-[941px]:grid-cols-[minmax(220px,0.38fr)_minmax(0,0.62fr)]`}
       >
         <div>
-          <h2 className={heading2}>Privacy MVP</h2>
+          <h2 className={heading2}>Privacy</h2>
           <p className="mt-3 max-w-[360px] text-sm leading-relaxed text-text">
             Cryptographic eligibility proof, not UI hiding.
           </p>
         </div>
-        <div className="grid gap-3">
-          {privacyFacts.map((fact) => (
-            <article
-              className="rounded-lg border border-border bg-surface p-4"
-              key={fact.label}
-            >
-              <h3 className={heading3}>{fact.label}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-text">
-                {fact.body}
-              </p>
-            </article>
-          ))}
+        <div className="grid gap-3 max-[760px]:grid-cols-1 min-[761px]:grid-cols-2">
+          <PrivacyList title="Made private" items={privacyMadePrivate} />
+          <PrivacyList title="Kept public" items={privacyKeptPublic} />
         </div>
       </section>
 
       <section className={section}>
         <h2 className={heading2}>Hackathon Track Fit</h2>
-        <div className="mt-0 grid gap-3 max-[940px]:grid-cols-1 min-[941px]:grid-cols-3">
+        <div className="mt-5 grid gap-3 max-[940px]:grid-cols-1 min-[941px]:grid-cols-3">
           {tracks.map((track) => (
             <article
               className="rounded-lg border border-border bg-surface p-4"
@@ -93,5 +90,26 @@ export function InfoSections({ contractHref }: InfoSectionsProps) {
         </div>
       </section>
     </>
+  )
+}
+
+type PrivacyListProps = {
+  title: string
+  items: Array<{ label: string; body: string }>
+}
+
+function PrivacyList({ title, items }: PrivacyListProps) {
+  return (
+    <article className="rounded-lg border border-border bg-surface p-5">
+      <h3 className={heading3}>{title}</h3>
+      <ul className="mt-4 grid gap-3">
+        {items.map((item) => (
+          <li className="text-sm leading-relaxed text-text" key={item.label}>
+            <span className="font-medium text-text-strong">{item.label}:</span>{' '}
+            {item.body}
+          </li>
+        ))}
+      </ul>
+    </article>
   )
 }

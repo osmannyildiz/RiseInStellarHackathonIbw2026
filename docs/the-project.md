@@ -164,8 +164,8 @@ The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle
 - **Reputation model:** simple score, credit limit, repayment count, late count, default count, and open borrowed amount.
 - **Borrower need signal:** purpose text or purpose hash only, not a separate need score.
 - **Fee model:** tiered time-based fee with a maximum cap.
-- **Privacy MVP:** Eligibility Proof for ZK-based reputation eligibility.
-- **ZK verifier:** stretch only; do not pitch as committed unless implemented and tested.
+- **Privacy:** Eligibility Proof for ZK-based reputation eligibility.
+- **ZK verifier:** local Groth16/BLS12-381 receipt in the demo; audited verifier contract remains production hardening.
 
 ## Implementation Validation Items
 

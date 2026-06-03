@@ -29,7 +29,7 @@ Do not build these in the first implementation pass:
 | Loan type | Unsecured micro-loan. |
 | Repayment timing | No hard deadline. Fee grows by time step until capped. |
 | Default handling | No automatic default in the first contract. Admin can mark an active loan defaulted after `late_threshold_seconds`. |
-| Privacy MVP | Eligibility Proof reference stored on the Loan Request; verifier receipt checked before funding. |
+| Privacy | Eligibility Proof reference stored on the Loan Request; verifier receipt checked before funding. |
 | Proof verifier | Groth16/BLS12-381 verifier path using Stellar/Soroban cryptographic primitives. Demo envelopes are not privacy. |
 | Borrower repayment | Operator-triggered borrower-agent action for the first implementation. Do not auto-repay without an explicit agent/operator step. |
 | Heartbeat logic | Deterministic policy filter first. Agent-generated explanation is allowed only after the policy result is computed. |

@@ -1,0 +1,16 @@
+{
+  "score": "50",
+  "creditLimit": "20",
+  "defaults": "0",
+  "successfulRepayments": "0",
+  "lateRepayments": "0",
+  "totalBorrowed": "0",
+  "totalRepaid": "0",
+  "salt": "42424242",
+  "minScore": "50",
+  "requestedAmount": "10",
+  "maxDefaults": "0",
+  "requestId": "1",
+  "reputationRoot": "4242424200000000000000000000000000002000050",
+  "nullifierHash": "43424245"
+}

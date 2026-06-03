@@ -33,18 +33,33 @@ export const tracks = [
   },
 ]
 
-export const privacyFacts = [
+export const privacyMadePrivate = [
   {
     label: 'Private witness',
-    body: 'Repayment records, scoring inputs, prior amount details, and purpose preimages stay offchain unless they are already public elsewhere.',
+    body: 'Score, credit limit, default count, repayment-history inputs, and salt stay inside the proof witness.',
   },
   {
-    label: 'Public inputs',
-    body: 'The request carries a proof hash, public-input hash, reputation root, nullifier hash, verifier, expiry, amount, and policy thresholds.',
+    label: 'Eligibility details',
+    body: 'The borrower proves the policy checks without revealing the values behind the reputation root.',
   },
   {
-    label: 'Verifier boundary',
-    body: 'Privacy requires a verified Groth16/BLS12-381 proof. A local proof envelope is only a demo artifact, not privacy.',
+    label: 'Purpose text',
+    body: 'The narrative purpose stays offchain; the request only carries a purpose hash.',
+  },
+]
+
+export const privacyKeptPublic = [
+  {
+    label: 'Proof output',
+    body: 'Eligible for this request, request id, amount, policy threshold, reputation root, nullifier, and expiry.',
+  },
+  {
+    label: 'Verifier result',
+    body: 'The Groth16/BLS12-381 receipt records valid or invalid, and the contract stores the nullifier for replay protection.',
+  },
+  {
+    label: 'Settlement',
+    body: 'XLM transfers, borrower and lender addresses, public repayment events, and request amount remain public.',
   },
 ]
 

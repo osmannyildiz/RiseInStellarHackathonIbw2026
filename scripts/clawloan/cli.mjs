@@ -165,9 +165,11 @@ Options:
   --dry-run           Print the heartbeat decision without saving state.
   --privacy-run       Post a request that requires a cryptographic Eligibility Proof.
   --require-eligibility-proof
-                      Require and attach a local proof envelope.
+                      Require and attach a verified proof receipt, unless the demo bypass is enabled.
   --allow-demo-proof-envelope
                       Let local heartbeat accept a non-ZK demo proof envelope.
+  --proof-receipt <path>
+                      Verified Groth16/BLS12-381 receipt path. Defaults to zk/eligibility/build/proof-receipt.json.
   --proof-ttl-seconds <n>
                       Proof validity window. Defaults to 300.
   --count <n>         Loop iteration count. 0 means run until stopped.

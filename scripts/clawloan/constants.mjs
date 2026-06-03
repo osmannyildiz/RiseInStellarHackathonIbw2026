@@ -9,7 +9,7 @@ export const DEMO = {
   startingCreditLimitXlm: 20,
   maxSingleLoanXlm: 10,
   maxTotalExposureXlm: 20,
-  minReputationScore: 0,
+  minReputationScore: 50,
   baseFeeBps: 200,
   stepFeeBps: 100,
   stepSeconds: 15,
@@ -20,4 +20,3 @@ export const DEMO = {
 
 export const BORROWER_ID = "borrower-agent";
 export const LENDER_ID = "lender-agent";
-

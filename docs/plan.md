@@ -198,8 +198,9 @@ Phase 5 implemented outcome:
 - Replaced the UI-hiding privacy claim with a cryptographic Eligibility Proof path.
 - Borrower demo requests can require an Eligibility Proof and attach a reference with `proofHash`, `publicInputsHash`, `reputationRoot`, `nullifierHash`, verifier, and expiry.
 - Lender heartbeat verification rejects missing, expired, replayed, mismatched, hash-invalid, policy-insufficient, and non-verified proof envelopes before funding unless a demo bypass is explicitly enabled.
-- Contract tests cover required, expired, stored, and replayed Eligibility Proof references. The contract tracks proof nullifiers onchain; full Groth16/BLS12-381 verifier integration remains the next required step before claiming production privacy.
-- Landing page copy now explains privacy as cryptographic proof verification, not UI hiding.
+- Contract tests cover required, expired, stored, and replayed Eligibility Proof references. The contract tracks proof nullifiers onchain.
+- Added a tiny local eligibility circuit and `scripts/clawloan/generate-eligibility-proof` to produce and verify a Groth16/BLS12-381 proof receipt for the demo path.
+- Landing page copy now explains privacy as cryptographic proof verification, not UI hiding, with explicit "Made private" and "Kept public" lists.
 
 ## Phase 6: Testnet Deployment And Integration
 
@@ -273,7 +274,7 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 - Use tiered capped time-based fees.
 - Use reputation-gated unsecured micro-lending, not collateral.
 - Use an Eligibility Proof for the privacy MVP.
-- Treat full verifier integration as the next required privacy-hardening step, not as UI polish.
+- Treat an audited verifier contract and production commitment/hash design as the next required privacy-hardening step, not as UI polish.
 - Use contract-backed testnet stats; local indexes are acceptable only when built from real testnet activity.
 
 ## Resolved Implementation Questions

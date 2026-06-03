@@ -6,7 +6,7 @@ export function InstallSection() {
     <section id="install" className={splitSection}>
       <div>
         <h2 className={heading2}>Install The Skill</h2>
-        <p className={`${bodyText} mt-0`}>
+        <p className={`${bodyText} mt-3`}>
           The skill is the product interface. Humans observe here; agents act
           through one installable package.
         </p>

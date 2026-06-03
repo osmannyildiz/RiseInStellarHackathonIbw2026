@@ -1,9 +1,19 @@
 import { createHash, randomBytes } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
 import { DEMO } from "./constants.mjs";
 
 const DEFAULT_TTL_SECONDS = 300;
 const VERIFIER_ID = "groth16-bls12-381";
 const DEMO_VERIFIER_ADDRESS = "GDEMOZKVERIFIER000000000000000000000000000000000001";
+const DEFAULT_PROOF_RECEIPT_PATH = "zk/eligibility/build/proof-receipt.json";
+const PUBLIC_SIGNAL_ORDER = [
+  "minScore",
+  "requestedAmountXlm",
+  "maxDefaults",
+  "requestId",
+  "reputationRoot",
+  "nullifierHash",
+];
 
 export function createEligibilityProofEnvelope(state, requestDraft, options = {}) {
   const borrower = state.agents[requestDraft.borrowerId];
@@ -20,6 +30,14 @@ export function createEligibilityProofEnvelope(state, requestDraft, options = {}
   }
   if (!reputation) {
     return { ok: false, reason: `Borrower reputation is unavailable for ${requestDraft.borrowerId}.` };
+  }
+
+  const receipt = loadProofReceipt(state, requestDraft, options);
+  if (!receipt.ok && !options.allowDemoProofEnvelope) {
+    return {
+      ok: false,
+      reason: `${receipt.reason} Run scripts/clawloan/generate-eligibility-proof or pass --allow-demo-proof-envelope for a non-private fallback.`,
+    };
   }
 
   const privateWitness = {
@@ -40,37 +58,43 @@ export function createEligibilityProofEnvelope(state, requestDraft, options = {}
     schema: "clawloan/zk-eligibility/v1",
     verifierId: VERIFIER_ID,
     borrowerAddress: borrower.address,
-    requestId: requestDraft.id,
-    requestedAmountXlm: requestDraft.amountXlm,
+    requestId: receipt.ok ? Number(receipt.publicInputs.requestId) : requestDraft.id,
+    requestedAmountXlm: receipt.ok ? Number(receipt.publicInputs.requestedAmountXlm) : requestDraft.amountXlm,
     purposeHash: requestDraft.purposeHash,
-    minScore,
-    maxDefaults,
-    reputationRoot,
-    nullifierHash: hashHex(`${borrower.address}:${requestDraft.id}:${nonce}`),
+    minScore: receipt.ok ? Number(receipt.publicInputs.minScore) : minScore,
+    maxDefaults: receipt.ok ? Number(receipt.publicInputs.maxDefaults) : maxDefaults,
+    reputationRoot: receipt.ok ? receipt.publicInputs.reputationRoot : reputationRoot,
+    nullifierHash: receipt.ok ? receipt.publicInputs.nullifierHash : hashHex(`${borrower.address}:${requestDraft.id}:${nonce}`),
     expiresAt,
   };
   const publicInputsHash = hashHex(canonicalStatement(publicInputs));
-  const proofHash = hashHex(canonicalStatement({
-    publicInputsHash,
-    proofBytesHash: options.proofBytesHash || "demo-proof-bytes-missing",
-    verifierId: VERIFIER_ID,
-  }));
+  const proofHash = receipt.ok
+    ? receipt.receipt.proofHash
+    : hashHex(canonicalStatement({
+      publicInputsHash,
+      proofBytesHash: options.proofBytesHash || "demo-proof-bytes-missing",
+      verifierId: VERIFIER_ID,
+    }));
 
   return {
     ok: true,
     proof: {
       proofHash,
       publicInputsHash,
-      reputationRoot,
+      reputationRoot: publicInputs.reputationRoot,
       nullifierHash: publicInputs.nullifierHash,
       verifier: state.zkVerifier?.address || DEMO_VERIFIER_ADDRESS,
       expiresAt,
       publicInputs,
       verification: {
         method: VERIFIER_ID,
-        status: options.verifiedProof ? "verified" : "demo-envelope",
-        limitation: options.verifiedProof
-          ? "Groth16/BLS12-381 verifier receipt supplied by caller."
+        status: receipt.ok ? "verified" : "demo-envelope",
+        receiptPath: receipt.ok ? receipt.path : null,
+        receiptHash: receipt.ok ? hashHex(canonicalStatement(receipt.receipt)) : null,
+        circuitPublicSignalsHash: receipt.ok ? receipt.receipt.publicInputsHash : null,
+        verificationKeyHash: receipt.ok ? receipt.receipt.verificationKeyHash : null,
+        limitation: receipt.ok
+          ? "Groth16/BLS12-381 proof verified by the local demo verifier receipt."
           : "This is a commitment and public-input envelope only. It is not privacy until a real Groth16/BLS12-381 proof verifies against these inputs.",
       },
     },
@@ -157,6 +181,70 @@ export function markProofNullifierUsed(state, request) {
 
 function hashHex(value) {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function loadProofReceipt(state, requestDraft, options) {
+  if (options.verifiedProof) {
+    return {
+      ok: true,
+      path: "caller-supplied",
+      publicInputs: {
+        minScore: String(options.minScore ?? state.lenderPolicy.minReputationScore ?? DEMO.minReputationScore),
+        requestedAmountXlm: String(requestDraft.amountXlm),
+        maxDefaults: String(options.maxDefaults ?? state.lenderPolicy.maxDefaults ?? 0),
+        requestId: String(requestDraft.id),
+        reputationRoot: options.reputationRoot || hashHex(`caller-supplied:${requestDraft.id}`),
+        nullifierHash: options.nullifierHash || hashHex(`caller-supplied:${requestDraft.id}:${Date.now()}`),
+      },
+      receipt: {
+        proofHash: options.proofBytesHash || hashHex(`caller-supplied-proof:${requestDraft.id}`),
+        publicInputsHash: options.publicInputsHash || null,
+        verificationKeyHash: options.verificationKeyHash || null,
+      },
+    };
+  }
+
+  const receiptPath = options.proofReceipt || state.zkVerifier?.proofReceiptPath || DEFAULT_PROOF_RECEIPT_PATH;
+  if (!existsSync(receiptPath)) {
+    return { ok: false, reason: `Groth16/BLS12-381 proof receipt not found at ${receiptPath}.` };
+  }
+
+  try {
+    const receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
+    if (receipt.method !== VERIFIER_ID || receipt.status !== "verified") {
+      return { ok: false, reason: `Proof receipt ${receiptPath} is not a verified ${VERIFIER_ID} receipt.` };
+    }
+    if (!Array.isArray(receipt.publicSignals) || receipt.publicSignals.length < PUBLIC_SIGNAL_ORDER.length) {
+      return { ok: false, reason: `Proof receipt ${receiptPath} does not include the expected public signals.` };
+    }
+
+    const publicInputs = publicSignalsToInputs(receipt.publicSignals);
+    const mismatches = [];
+    comparePublicInput(mismatches, "requestId", publicInputs.requestId, requestDraft.id);
+    comparePublicInput(mismatches, "requestedAmountXlm", publicInputs.requestedAmountXlm, requestDraft.amountXlm);
+    comparePublicInput(mismatches, "minScore", publicInputs.minScore, options.minScore ?? state.lenderPolicy.minReputationScore ?? DEMO.minReputationScore);
+    comparePublicInput(mismatches, "maxDefaults", publicInputs.maxDefaults, options.maxDefaults ?? state.lenderPolicy.maxDefaults ?? 0);
+    if (mismatches.length > 0) {
+      return { ok: false, reason: `Proof receipt ${receiptPath} is not bound to this request: ${mismatches.join(", ")}.` };
+    }
+
+    return { ok: true, path: receiptPath, receipt, publicInputs };
+  } catch (error) {
+    return { ok: false, reason: `Could not read proof receipt ${receiptPath}: ${error.message}` };
+  }
+}
+
+function publicSignalsToInputs(publicSignals) {
+  return PUBLIC_SIGNAL_ORDER.reduce((result, key, index) => {
+    result[key] = String(publicSignals[index]);
+    return result;
+  }, {});
+}
+
+function comparePublicInput(mismatches, label, actual, expected) {
+  if (String(actual) !== String(expected)) {
+    mismatches.push(`${label} expected ${expected} got ${actual}`);
+  }
 }
 
 function canonicalStatement(value) {

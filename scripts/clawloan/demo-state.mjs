@@ -80,6 +80,7 @@ export function createDefaultState() {
     zkVerifier: {
       id: "groth16-bls12-381",
       address: "GDEMOZKVERIFIER000000000000000000000000000000000001",
+      proofReceiptPath: "zk/eligibility/build/proof-receipt.json",
     },
     usedProofNullifiers: [],
     eventLog: [],
