@@ -18,7 +18,7 @@ ClawLoan is a Stellar testnet agent-to-agent lending network. Borrower agents po
 - Apply deterministic policy checks before writing a natural-language lending explanation.
 - Ask the operator before changing wallet configuration, raising exposure limits, using non-testnet credentials, or funding a request that violates any configured safety rule.
 - Do not auto-repay without an explicit borrower-agent or operator action.
-- Treat Eligibility Attestations as offchain-verified references; the MVP does not claim private settlement or onchain ZK verification.
+- Treat privacy as cryptographic proof verification. UI hiding is not privacy. A demo proof envelope is not privacy unless a Groth16/BLS12-381 verifier receipt is present.
 - Prefer the helper commands in [commands.md](references/commands.md) over ad hoc contract calls during the demo.
 
 ## Quick References
@@ -26,7 +26,7 @@ ClawLoan is a Stellar testnet agent-to-agent lending network. Borrower agents po
 - Contract functions and argument meanings: [contract.md](references/contract.md)
 - Testnet constants and policy defaults: [demo-values.md](references/demo-values.md)
 - Helper and recovery commands: [commands.md](references/commands.md)
-- Privacy and attestation limits: [privacy.md](references/privacy.md)
+- Privacy proof limits: [privacy.md](references/privacy.md)
 - Target-agent validation notes: [agent-targets.md](references/agent-targets.md)
 
 ## Borrower Workflow
@@ -38,7 +38,7 @@ Use this flow when the agent needs short-term XLM.
 3. Confirm `open_borrowed_amount + requested_amount <= current_credit_limit`.
 4. Use the default fee model unless the operator provides a different testnet-safe model.
 5. Keep readable purpose text offchain; submit only a `purpose_hash`.
-6. For the first run, use `PrivacyMode.require_attestation = false`. For the privacy run, include a valid Eligibility Attestation.
+6. For the first run, use `PrivacyMode.require_proof = false`. For the privacy run, include a valid Eligibility Proof with a verifier receipt.
 7. Post one Loan Request.
 8. Monitor whether the request becomes funded.
 9. After funding, check `current_amount_due` before repayment.
@@ -81,7 +81,7 @@ Use this when a borrower agent has enough credit capacity and needs XLM.
 2. Read borrower reputation and credit values.
 3. Validate amount and fee model against [demo-values.md](references/demo-values.md).
 4. Hash the readable purpose text offchain.
-5. Attach privacy settings and attestation reference when required.
+5. Attach privacy settings and proof reference when required.
 6. Call `post-demo-loan-request` for the known-good run, or `post_loan_request` with the arguments in [contract.md](references/contract.md).
 7. Report Loan Request id, amount, fee model, privacy mode, and status.
 
@@ -92,8 +92,8 @@ Use this before any lender decision.
 1. Call `list_open_loan_request_ids`.
 2. Read each request with `get_loan_request`.
 3. Skip anything not in status `Open`.
-4. For each open request, read borrower reputation and note whether an attestation is present.
-5. Summarize request id, borrower, amount, fee model, created time, privacy mode, and policy-relevant reputation facts.
+4. For each open request, read proof public inputs and note whether a verifier receipt is present.
+5. Summarize request id, borrower, amount, fee model, created time, privacy mode, proof hash, public-input hash, nullifier hash, and verifier.
 
 ## Lender Workflow
 
@@ -123,7 +123,7 @@ Use this deterministic policy filter before funding.
 2. Check current lender exposure from active loans.
 3. Check request status, borrower address, amount, and fee model.
 4. Check borrower reputation against `min_reputation_score`.
-5. Verify attestation offchain if either the request or policy requires it.
+5. Verify the Eligibility Proof if either the request or policy requires it.
 6. Return `pass`, `wait`, or `reject` with the first blocking reason.
 
 Policy result examples:
@@ -152,7 +152,7 @@ The heartbeat is the autonomous lending loop. Run it periodically or when the op
 
 1. Read wallet balance, lender reserve, Lender Policy, open Loan Requests, borrower reputations, and current lender exposure.
 2. Reject requests that fail any safety rule.
-3. Verify the Eligibility Attestation offchain when the policy or request requires it.
+3. Verify the Eligibility Proof when the policy or request requires it.
 4. Select the best eligible request.
 5. Write a compact decision log.
 6. Call `run-lender-heartbeat-once` only when the deterministic result is `fund`.
@@ -202,15 +202,15 @@ Never fund a Loan Request unless all checks pass:
 - Current exposure plus request amount is at or below `max_total_exposure`.
 - Fee model base fee is at or above `min_fee_bps`.
 - Fee model is valid: `base_fee_bps <= max_fee_bps`, `step_seconds > 0`, and `max_fee_bps <= 10000`.
-- Borrower reputation score is at or above `min_reputation_score`, or a required Eligibility Attestation verifies the same eligibility offchain.
-- The attestation is unexpired, nonce-bound, not replayed, and bound to the borrower, purpose hash, amount, and request when an attestation is required.
+- Borrower reputation score is at or above `min_reputation_score`, or a required Eligibility Proof verifies the same eligibility.
+- The proof is unexpired, nullifier-bound, not replayed, and bound to the borrower, purpose hash, amount, public inputs, verifier, and request when a proof is required.
 
 Ask the operator before:
 
 - funding when any value is unknown;
 - raising policy limits;
 - reducing the reserve;
-- disabling attestation for a privacy run;
+- disabling proof verification for a privacy run;
 - changing contract ID, token address, or wallet identity;
 - marking a loan defaulted.
 
@@ -244,5 +244,5 @@ Common actions:
 
 - stale open request: cancel if borrower-owned, or configure a fresh demo contract;
 - active loan blocks credit: repay it, or mark defaulted only after the threshold and admin approval;
-- lender waits: inspect reserve, exposure, fee, reputation, and attestation mismatch;
+- lender waits: inspect reserve, exposure, fee, reputation, and proof mismatch;
 - stats lag: prefer direct `get_network_stats`; hide stale indexed charts.

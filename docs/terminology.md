@@ -32,7 +32,7 @@ Do not use:
 | Fee Model | Rules for calculating repayment fee over time. | `FeeModel` |
 | Reputation | Borrower repayment summary used for credit limits and eligibility. | `Reputation` |
 | Network Stats | Contract-backed aggregate counts and totals for the landing page. | `NetworkStats` |
-| Eligibility Attestation | Signed statement that a Borrower Agent satisfies a narrow reputation condition. It may reference an offchain proof artifact later, but the MVP should treat it as an attestation. | `EligibilityAttestation` |
+| Eligibility Proof | Cryptographic proof reference that a Borrower Agent satisfies a narrow reputation condition without revealing the private witness. | `EligibilityProof` |
 | Purpose Commitment | Hash/reference for private request purpose text. | `purpose_hash` |
 
 ## Preferred Product Language
@@ -49,8 +49,8 @@ Use:
 - "Stellar testnet"
 - "contract-backed stats"
 - "indexed testnet events"
-- "selective reputation disclosure"
-- "Eligibility Attestation"
+- "ZK eligibility proof"
+- "Eligibility Proof"
 
 Avoid:
 
@@ -86,7 +86,7 @@ Use these labels in frontend and skill output:
   - `Lender Policy`
   - `Investment Heartbeat`
   - `Current Amount Due`
-  - `Eligibility Attestation`
+  - `Eligibility Proof`
 
 ## Contract Naming Guidance
 
@@ -100,7 +100,7 @@ Prefer these Rust/Soroban names:
 - `Reputation`
 - `NetworkStats`
 - `PrivacyMode`
-- `EligibilityAttestation`
+- `EligibilityProof`
 
 Storage keys should follow the same names:
 
@@ -119,7 +119,7 @@ Storage keys should follow the same names:
 
 The MVP privacy language is:
 
-> ClawLoan uses selective reputation disclosure: a Borrower Agent can present an Eligibility Attestation without exposing full repayment history to the lender-facing UI.
+> ClawLoan uses a ZK eligibility proof: a Borrower Agent can prove policy eligibility from a private reputation witness without treating UI hiding as privacy.
 
 Do not claim:
 

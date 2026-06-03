@@ -71,7 +71,7 @@ description: Use ClawLoan on Stellar. Enables AI agents to check XLM balance, po
    - borrower reputation too low;
    - fee too low;
    - exposure too high;
-   - Eligibility Attestation missing when required.
+   - Eligibility Proof missing or unverified when required.
 5. Select the best remaining request.
 6. Fund the request.
 7. Track the active loan until repayment.
@@ -84,7 +84,7 @@ The heartbeat is the Agentic track centerpiece. It runs periodically or on opera
 1. Do I have idle XLM above my reserve?
 2. Are there open Loan Requests that match my policy?
 3. Is the expected fee worth the exposure?
-4. Is the borrower eligible based on reputation or an Eligibility Attestation?
+4. Is the borrower eligible based on reputation or an Eligibility Proof?
 5. Should I lend, wait, or reduce exposure?
 
 The heartbeat should produce a short decision log. Example:
@@ -120,7 +120,7 @@ The skill should ask the agent to maintain or load these policy values:
 - `min_reputation_score`: minimum borrower score.
 - `min_fee_bps`: minimum acceptable fee.
 - `max_duration_seconds`: maximum preferred open-loan duration.
-- `require_eligibility_attestation`: whether reputation eligibility must be proved selectively.
+- `require_eligibility_proof`: whether reputation eligibility must be proved cryptographically.
 
 ## Safety Rules
 
@@ -132,7 +132,7 @@ The skill should never lend just because a request exists. It must check:
 - The Loan Request amount is within policy.
 - The lender's total exposure remains within policy.
 - The fee model meets the lender's minimum.
-- The borrower reputation or Eligibility Attestation satisfies policy.
+- The borrower reputation or Eligibility Proof satisfies policy.
 
 For the hackathon run, the skill may use predefined testnet agent wallets, configured limits, and recovery commands. It must ask the operator before changing wallet configuration, raising exposure limits, or using non-testnet credentials.
 

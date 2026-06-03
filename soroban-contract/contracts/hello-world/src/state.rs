@@ -1,8 +1,8 @@
 use crate::contract::Contract;
 use crate::errors::Error;
 use crate::types::{
-    AgentProfile, AgentRole, AgentStatus, Attestation, Config, DataKey, FeeModel, Loan,
-    LoanRequest, LoanStatus, NetworkStats, PrivacyMode, Reputation,
+    AgentProfile, AgentRole, AgentStatus, Config, DataKey, FeeModel, Loan, LoanRequest,
+    LoanStatus, NetworkStats, PrivacyMode, PrivacyProof, Reputation,
 };
 use soroban_sdk::{Address, Env, Vec};
 
@@ -106,18 +106,23 @@ impl Contract {
         Ok(())
     }
 
-    pub(crate) fn validate_attestation(
+    pub(crate) fn validate_and_record_proof(
         env: &Env,
         privacy_mode: &PrivacyMode,
-        attestation: &Attestation,
+        proof: &PrivacyProof,
     ) -> Result<(), Error> {
-        if privacy_mode.require_attestation {
-            match attestation {
-                Attestation::None => return Err(Error::AttestationRequired),
-                Attestation::Present(attestation) => {
-                    if attestation.expires_at <= env.ledger().timestamp() {
-                        return Err(Error::AttestationExpired);
+        if privacy_mode.require_proof {
+            match proof {
+                PrivacyProof::None => return Err(Error::ProofRequired),
+                PrivacyProof::Present(proof) => {
+                    if proof.expires_at <= env.ledger().timestamp() {
+                        return Err(Error::ProofExpired);
                     }
+                    let key = DataKey::ProofNullifier(proof.nullifier_hash.clone());
+                    if env.storage().persistent().has(&key) {
+                        return Err(Error::ProofReplayed);
+                    }
+                    env.storage().persistent().set(&key, &true);
                 }
             }
         }

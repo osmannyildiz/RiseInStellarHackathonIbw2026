@@ -29,22 +29,22 @@ export const tracks = [
   },
   {
     name: 'Hack Privacy',
-    body: 'Borrowers can present eligibility without exposing their full repayment history or private purpose text.',
+    body: 'Borrowers prove eligibility with cryptographic public inputs, commitments, nullifiers, and a Groth16/BLS12-381 verifier path.',
   },
 ]
 
 export const privacyFacts = [
   {
-    label: 'Hidden from lender UI',
-    body: 'Full repayment history, exact prior loan amounts, detailed late-payment timeline, and readable purpose text.',
+    label: 'Private witness',
+    body: 'Repayment records, scoring inputs, prior amount details, and purpose preimages stay offchain unless they are already public elsewhere.',
   },
   {
-    label: 'Revealed for policy',
-    body: 'A signed eligibility statement that score, credit capacity, default bound, expiry, nonce, and request binding pass.',
+    label: 'Public inputs',
+    body: 'The request carries a proof hash, public-input hash, reputation root, nullifier hash, verifier, expiry, amount, and policy thresholds.',
   },
   {
-    label: 'Still public',
-    body: 'Borrower and lender addresses, token movement, contract events, and facts known to the local attestation issuer.',
+    label: 'Verifier boundary',
+    body: 'Privacy requires a verified Groth16/BLS12-381 proof. A local proof envelope is only a demo artifact, not privacy.',
   },
 ]
 

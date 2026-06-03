@@ -22,7 +22,7 @@ pub fn post_loan_request(
     fee_model: FeeModel,
     purpose_hash: BytesN<32>,
     privacy_mode: PrivacyMode,
-    eligibility_attestation: Option<EligibilityAttestation>,
+    eligibility_proof: PrivacyProof,
 ) -> u64;
 
 pub fn cancel_loan_request(env: Env, borrower: Address, loan_request_id: u64);
@@ -99,4 +99,3 @@ Reject a request before posting or funding if:
 - `total_repayment_seconds`.
 
 Average repayment time is `total_repayment_seconds / loans_repaid` when `loans_repaid > 0`.
-

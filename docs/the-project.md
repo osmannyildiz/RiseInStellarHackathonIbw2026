@@ -58,7 +58,7 @@ ClawLoan should be pitched and built around a functional Stellar testnet MVP:
 - A lender heartbeat that can evaluate open Loan Requests and act within configured testnet wallet limits.
 - Automation and convenience scripts that make the live run reliable, repeatable, and recoverable.
 - A landing page that explains the skill and shows contract-backed stats from testnet activity.
-- An Eligibility Attestation for selective reputation disclosure.
+- An Eligibility Proof for ZK-based reputation eligibility.
 
 ClawLoan should not claim these as MVP deliverables:
 
@@ -112,13 +112,13 @@ This creates a practical answer to the trust question: the first version is not 
 
 ## Privacy Angle
 
-The privacy track centers on selective disclosure for reputation and request context, not fully private payments. Soroban storage and token transfers are public in the MVP, so ClawLoan should not claim to hide all counterparties or settlement activity. The grounded privacy claim is that a borrower can disclose only the eligibility facts needed for a lending decision, while keeping unnecessary repayment-history detail and private purpose text out of public contract storage.
+The privacy track centers on cryptographic proof of reputation eligibility, not fully private payments or UI hiding. Soroban storage and token transfers are public in the MVP, so ClawLoan should not claim to hide all counterparties or settlement activity. The grounded privacy claim is that a borrower can prove policy eligibility from a private witness using commitments, nullifiers, and a Groth16/BLS12-381 verifier path.
 
-The product should selectively reveal:
+The product should keep private unless explicitly committed and proven:
 
 - Agent lending strategy, such as fee thresholds and risk limits, by keeping policy local to the lender skill unless voluntarily disclosed.
 - Sensitive request purpose or business context, while still sharing enough for a lender to evaluate the request.
-- Repayment or reputation evidence, where an agent can present eligibility without exposing its full history to the lender-facing UI.
+- Repayment or reputation evidence, where an agent can prove eligibility without publishing the private witness.
 
 The threat model is practical: competing agents should not get unnecessary access to another agent's full repayment history, private request purpose, or lending policy. The MVP does not prevent all chain analysis, and the pitch should say that clearly. Lenders still need enough verifiable information to make a responsible decision.
 
@@ -128,7 +128,7 @@ The threat model is practical: competing agents should not get unnecessary acces
 
 **Hack Agentic.** The core user is an AI agent. Agents use recurring Investment Heartbeats to check balances, inspect open Loan Requests, post Loan Requests, and lend when an opportunity matches their configured goals and safeguards. The lender agent's objective is to increase its XLM balance through bounded autonomous lending decisions.
 
-**Hack Privacy.** ClawLoan uses selective reputation eligibility so a borrower can show enough to qualify for funding without exposing full repayment history or every prior loan to the lender or public UI. The privacy story is narrow, relevant, and tied directly to the trust problem judges will ask about. Full private settlement is out of scope for the hackathon MVP.
+**Hack Privacy.** ClawLoan uses ZK reputation eligibility so a borrower can prove enough to qualify for funding without revealing the private reputation witness. The privacy story is narrow, relevant, and tied directly to the trust problem judges will ask about. Full private settlement is out of scope for the hackathon MVP.
 
 ## Jury Appeal
 
@@ -139,7 +139,7 @@ ClawLoan is designed to be easy to judge:
 - It has visible utility: idle agent balances can find fee opportunities, and underfunded agents can access working capital.
 - It has real autonomy: lender agents make bounded lending decisions through a heartbeat.
 - It has a credible trust model: progressive reputation-gated micro-lending, not hand-waved repayment.
-- It has a focused privacy claim: selective reputation disclosure instead of vague "private finance."
+- It has a focused privacy claim: proof-backed reputation eligibility instead of vague "private finance."
 - It has a live-run shape: a full loan can be created, funded, repaid, and reflected in stats during a five-minute presentation.
 
 ## Demo Narrative
@@ -164,7 +164,7 @@ The strongest demo moment is the lender heartbeat: the agent wakes up, sees idle
 - **Reputation model:** simple score, credit limit, repayment count, late count, default count, and open borrowed amount.
 - **Borrower need signal:** purpose text or purpose hash only, not a separate need score.
 - **Fee model:** tiered time-based fee with a maximum cap.
-- **Privacy MVP:** Eligibility Attestation for selective reputation disclosure.
+- **Privacy MVP:** Eligibility Proof for ZK-based reputation eligibility.
 - **ZK verifier:** stretch only; do not pitch as committed unless implemented and tested.
 
 ## Implementation Validation Items

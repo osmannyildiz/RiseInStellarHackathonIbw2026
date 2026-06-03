@@ -10,7 +10,7 @@ Use these values for the first Stellar testnet demo run unless the operator expl
 | Asset | Native XLM through the Stellar Asset Contract |
 | Borrower Agent | One configured testnet identity |
 | Lender Agent | One separate configured testnet identity |
-| Attestation issuer | Local reputation helper identity |
+| Proof verifier | Groth16/BLS12-381 verifier identity |
 
 ## Wallet Reserves
 
@@ -60,14 +60,14 @@ min_reputation_score = 0
 min_fee_bps = 200
 max_duration_seconds = 45
 allow_repeat_borrower = true
-require_eligibility_attestation = false
+require_eligibility_proof = false
 ```
 
 For the privacy run:
 
 ```text
 min_reputation_score = 50
-require_eligibility_attestation = true
+require_eligibility_proof = true
 ```
 
 ## First Happy Path
@@ -77,4 +77,3 @@ require_eligibility_attestation = true
 3. Lender funds only if policy passes.
 4. Borrower explicitly repays.
 5. Reputation and network stats update.
-

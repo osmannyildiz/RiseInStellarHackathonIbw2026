@@ -20,7 +20,7 @@ Use this profile for the first live run:
 | Asset | Native XLM through the Stellar Asset Contract |
 | Borrower Agent | One configured testnet identity |
 | Lender Agent | One separate configured testnet identity |
-| Attestation issuer | Local reputation helper identity |
+| Proof verifier | Groth16/BLS12-381 verifier identity |
 | Loan Request amount | `10 XLM` |
 | Borrower reserve | `2 XLM` |
 | Lender reserve | `15 XLM` |
@@ -34,7 +34,7 @@ Use this profile for the first live run:
 | Max fee | `500 bps` |
 | Late threshold | `45 seconds` |
 
-The first happy path can run without requiring an Eligibility Attestation so a fresh borrower is not blocked. The privacy run turns on `require_eligibility_attestation` and verifies the signed statement offchain before funding.
+The first happy path can run without requiring an Eligibility Proof so a fresh borrower is not blocked. The privacy run turns on `require_eligibility_proof` and verifies the proof/public inputs before funding. A demo proof envelope is not privacy unless a Groth16/BLS12-381 verifier receipt is present.
 
 ## Required Automation
 
@@ -111,7 +111,7 @@ Run this sequence before the live presentation and again during the demo if time
 
 | Step | Command or action | Expected output | Recovery |
 | --- | --- | --- | --- |
-| 1 | `setup-testnet-accounts` | Borrower, lender, and attestation issuer identities exist; borrower balance is above `2 XLM`; lender balance is above `25 XLM`. | Re-run Friendbot funding if available. If funding is rate-limited, switch to pre-funded testnet identities. |
+| 1 | `setup-testnet-accounts` | Borrower, lender, and proof verifier identities exist; borrower balance is above `2 XLM`; lender balance is above `25 XLM`. | Re-run Friendbot funding if available. If funding is rate-limited, switch to pre-funded testnet identities. |
 | 2 | `deploy-contract` | Contract builds, deploys to testnet, initializes config, and writes contract ID plus native token address to generated config. | If build fails, fix contract errors. If deploy fails or config is wrong, deploy a fresh contract and run `configure-demo`. |
 | 3 | `configure-demo` | Skill references and frontend environment point to the same contract ID, token address, agent addresses, fee model, and limits. | Re-run `configure-demo`; do not manually copy contract IDs into multiple files during the live run. |
 | 4 | `rebuild-stats` | Direct contract stats load; indexed charts are either populated from real events or marked unavailable. | If indexing fails, hide `Loan Requests Over Time` and continue with direct contract stats. |
@@ -126,16 +126,16 @@ Run this sequence before the live presentation and again during the demo if time
 
 After the plain happy path works:
 
-1. Set Lender Policy `min_reputation_score = 50` and `require_eligibility_attestation = true`.
-2. Generate a signed Eligibility Attestation statement for the borrower with the local reputation helper.
-3. Post a new Loan Request with `PrivacyMode.require_eligibility_attestation = true`.
+1. Set Lender Policy `min_reputation_score = 50` and `require_eligibility_proof = true`.
+2. Generate a Groth16/BLS12-381 Eligibility Proof or attach a verifier receipt for the borrower.
+3. Post a new Loan Request with `PrivacyMode.require_proof = true`.
 4. Run `run-lender-heartbeat-once`.
-5. Expected output: the heartbeat verifies the attestation offchain, reports that the borrower is eligible, and funds only if the statement is unexpired, nonce-bound, and policy-compatible.
+5. Expected output: the heartbeat verifies the proof public inputs and verifier receipt, reports that the borrower is eligible, and funds only if the proof is unexpired, nullifier-bound, and policy-compatible.
 
 Privacy recovery:
 
-- If attestation verification fails, regenerate the statement with the current Loan Request id or nonce.
-- If the statement expired, issue a fresh attestation.
+- If proof verification fails, regenerate the proof with the current Loan Request id and nonce.
+- If the proof expired, issue a fresh proof.
 - If the borrower reputation is below threshold, run the first happy path repayment or lower the threshold only for the first-run demo profile.
 
 ## Recovery Matrix
@@ -145,7 +145,7 @@ Privacy recovery:
 | Wrong contract ID in skill or frontend | Skill output and landing page show different contract IDs. | Run `configure-demo` from the generated deployment config. |
 | Stale open Loan Request | `recover-demo` lists old requests with status `Open`. | Cancel borrower-owned requests, or deploy/configure a fresh contract if cancellation is not available yet. |
 | Active loan blocks credit limit | Borrower cannot post because `open_borrowed_amount + amount` exceeds credit limit. | Repay active loan with `repay-demo-loan`; if intentionally abandoned and threshold passed, use admin `mark_defaulted`. |
-| Lender will not fund | Heartbeat decision log shows reserve, exposure, fee, reputation, or attestation mismatch. | Adjust only demo policy/config to the locked values, or post a known-good request. |
+| Lender will not fund | Heartbeat decision log shows reserve, exposure, fee, reputation, or proof mismatch. | Adjust only demo policy/config to the locked values, or post a known-good request. |
 | Loan Request already funded | `fund_loan_request` fails or request status is `Funded`. | Use the existing Loan id and continue to repayment; do not post duplicate requests unless resetting the run. |
 | Repayment amount changed during demo | `current_amount_due` is higher after a fee step. | Repay the current due amount; the increasing fee is expected behavior. |
 | Stats page lags | Direct contract read differs from indexed chart. | Prefer direct `get_network_stats`; rerun `rebuild-stats`; hide stale time-series charts. |

@@ -39,7 +39,8 @@ export function createDefaultState() {
       minFeeBps: DEMO.baseFeeBps,
       maxDurationSeconds: DEMO.lateThresholdSeconds,
       allowRepeatBorrower: true,
-      requireEligibilityAttestation: false,
+      requireEligibilityProof: false,
+      allowDemoProofEnvelope: false,
     },
     borrowerPolicy: {
       reserveXlm: DEMO.borrowerReserveXlm,
@@ -76,11 +77,11 @@ export function createDefaultState() {
       totalFeesPaidXlm: 0,
       totalRepaymentSeconds: 0,
     },
-    attestationIssuer: {
-      id: "local-reputation-helper",
-      address: "GLOCALREPUTATIONHELPER000000000000000000000000000001",
+    zkVerifier: {
+      id: "groth16-bls12-381",
+      address: "GDEMOZKVERIFIER000000000000000000000000000000000001",
     },
-    usedAttestationNonces: [],
+    usedProofNullifiers: [],
     eventLog: [],
     nextLoanRequestId: 1,
     nextLoanId: 1,

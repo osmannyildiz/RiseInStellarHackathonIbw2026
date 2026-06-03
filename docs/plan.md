@@ -1,6 +1,6 @@
 # Phased Plan
 
-This plan is for building a functional Stellar testnet MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous lending behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around selective reputation disclosure.
+This plan is for building a functional Stellar testnet MVP of ClawLoan: an agent-to-agent XLM lending platform with autonomous lending behavior, a short live loan lifecycle, reputation-gated trust, and a privacy story around ZK reputation eligibility.
 
 The main user interface is one installable `SKILL.md` file for agents. The frontend is a landing and observability page: it explains how to install/use the skill and visualizes contract-backed testnet statistics. Automation, seed scripts, local indexing, and recovery commands are part of the delivery because they make the real testnet flow reliable and error-tolerant.
 
@@ -21,7 +21,7 @@ Deliverables:
   8. Reputation and landing-page stats update after repayment, using contract data or indexed testnet events.
 - Pick the target agents and test their setup.
 - Pick testnet-safe XLM amounts and fee tiers.
-- Use selective reputation eligibility as the live privacy claim.
+- Use ZK reputation eligibility as the live privacy claim.
 - Decide what will be onchain, what will be offchain, and what will be clearly labeled as future privacy depth.
 - Use one unified skill package.
 - Use `docs/mvp-build-spec.md`, `docs/pitch.md`, `docs/skill-interface.md`, `docs/privacy-strategy.md`, `docs/landing-page.md`, `docs/agent-targets.md`, and `docs/testnet-runbook.md` as the working docs for those decisions.
@@ -38,8 +38,8 @@ Phase 0 locked outcome:
 - Primary target agent: OpenClaw. Secondary target: Hermes Agent after the OpenClaw flow works end to end. PicoClaw is stretch.
 - Target-agent setup status: no OpenClaw, Hermes, PicoClaw, or `HEARTBEAT.md` runtime files are present in this repository as of June 3, 2026, so implementation must stay runtime-portable through the unified skill and helper commands until hands-on target validation is available.
 - Testnet demo values: `10 XLM` request, `2 XLM` borrower reserve, `15 XLM` lender reserve, `20 XLM` starting credit limit, `10 XLM` max single loan, `20 XLM` max total exposure, `200 bps` base fee, `100 bps` fee step every `15 seconds`, `500 bps` max fee, and `45 seconds` late threshold.
-- Privacy claim: selective reputation eligibility with an offchain-signed Eligibility Attestation reference on the Loan Request. The MVP does not claim private payments, hidden counterparties, or onchain ZK verification.
-- Onchain source of truth: agent profiles, lender policies, Loan Requests, funded loans, fee model, repayment state, reputation summary, network stats, purpose hashes, and attestation references.
+- Privacy claim: ZK reputation eligibility with an Eligibility Proof reference on the Loan Request. The MVP does not claim private payments or hidden counterparties.
+- Onchain source of truth: agent profiles, lender policies, Loan Requests, funded loans, fee model, repayment state, reputation summary, network stats, purpose hashes, proof references, and proof nullifiers.
 - Offchain/helper scope: wallet identities and secrets, readable purpose text, signed eligibility statements, target-agent runtime configuration, heartbeat scheduling, local event index for time-series charts, and generated skill/frontend config.
 - Future privacy depth: onchain ZK verification, private settlement, hidden counterparties, and richer credential systems are stretch items only after the lending lifecycle works.
 
@@ -170,22 +170,22 @@ Exit criteria:
 
 ## Phase 5: Privacy Track MVP
 
-Goal: include a credible privacy component without pretending public Soroban storage is private.
+Goal: include a credible cryptographic privacy component without pretending UI hiding or public Soroban storage is private.
 
 Deliverables:
 
-- Implement the recommended first privacy feature: selective reputation eligibility.
+- Implement the recommended first privacy feature: ZK-based reputation eligibility.
 - Use `docs/privacy-strategy.md` as the source plan.
-- Borrower presents an Eligibility Attestation for a limited statement, such as:
+- Borrower presents an Eligibility Proof for a limited statement, such as:
   - reputation score is above the lender's threshold;
   - current credit limit is enough for the requested amount;
   - default count is zero or below an accepted threshold.
-- Avoid exposing full repayment history or all prior loan amounts to the lender-facing UI.
+- Do not present UI hiding as privacy. Private values must be kept out of public state/events and proven through cryptographic public inputs.
 - Represent privacy intent with `PrivacyMode`.
 - Keep sensitive narrative fields offchain and reference them with hashes.
-- Add a clear explanation of what is hidden, from whom, and what is still public.
-- Use an Eligibility Attestation path for the MVP and document the exact limitation.
-- Treat an onchain ZK verifier as stretch only after the core lending lifecycle works.
+- Add a clear explanation of the private witness, public inputs, verifier, nullifier, and what remains public.
+- Use an Eligibility Proof path for the MVP and document the exact limitation.
+- Use Stellar/Soroban cryptography primitives: SHA-256 commitments, nullifiers, and a Groth16/BLS12-381 verifier path.
 
 Exit criteria:
 
@@ -195,11 +195,11 @@ Exit criteria:
 
 Phase 5 implemented outcome:
 
-- Added a local Eligibility Attestation helper path for the privacy run.
-- Borrower demo requests can require an Eligibility Attestation and attach a reference with `attestationHash`, `statementHash`, issuer, nonce, expiry, and a narrow offchain statement.
-- Lender heartbeat verification rejects missing, expired, replayed, mismatched, hash-invalid, and policy-insufficient attestations before funding.
-- Contract tests cover required, expired, and stored Eligibility Attestation references. The contract still stores/verifies only the reference shape and expiry; signature and statement checks remain offchain by design.
-- Landing page copy now explains what is hidden from the lender-facing UI, what is revealed for policy, and what remains public on Stellar/Soroban.
+- Replaced the UI-hiding privacy claim with a cryptographic Eligibility Proof path.
+- Borrower demo requests can require an Eligibility Proof and attach a reference with `proofHash`, `publicInputsHash`, `reputationRoot`, `nullifierHash`, verifier, and expiry.
+- Lender heartbeat verification rejects missing, expired, replayed, mismatched, hash-invalid, policy-insufficient, and non-verified proof envelopes before funding unless a demo bypass is explicitly enabled.
+- Contract tests cover required, expired, stored, and replayed Eligibility Proof references. The contract tracks proof nullifiers onchain; full Groth16/BLS12-381 verifier integration remains the next required step before claiming production privacy.
+- Landing page copy now explains privacy as cryptographic proof verification, not UI hiding.
 
 ## Phase 6: Testnet Deployment And Integration
 
@@ -244,7 +244,7 @@ Deliverables:
 - Track-specific explanation:
   - Main Track: useful Stellar testnet MVP.
   - Hack Agentic: heartbeat-driven autonomous lending.
-  - Hack Privacy: selective reputation disclosure.
+  - Hack Privacy: ZK eligibility proof.
 
 Exit criteria:
 
@@ -261,7 +261,7 @@ Build in this order:
 3. Agent skill package.
 4. Heartbeat automation.
 5. Landing page and network stats.
-6. Privacy Eligibility Attestation path.
+6. Privacy Eligibility Proof path.
 7. Testnet deployment.
 8. Pitch and docs.
 
@@ -272,13 +272,13 @@ The main risk is trying to make privacy too ambitious before the lending lifecyc
 - Use one unified ClawLoan skill.
 - Use tiered capped time-based fees.
 - Use reputation-gated unsecured micro-lending, not collateral.
-- Use an Eligibility Attestation for the privacy MVP.
-- Treat onchain ZK verification as stretch only.
+- Use an Eligibility Proof for the privacy MVP.
+- Treat full verifier integration as the next required privacy-hardening step, not as UI polish.
 - Use contract-backed testnet stats; local indexes are acceptable only when built from real testnet activity.
 
 ## Resolved Implementation Questions
 
-- Attestation issuer for MVP: local reputation helper script.
+- Proof verifier for MVP: Groth16/BLS12-381 verifier path; local envelopes are demo-only and rejected by default.
 - Borrower repayment for MVP: explicit operator-triggered borrower-agent action.
 - Heartbeat for MVP: deterministic policy filter first, agent explanation second.
 - Smallest testnet flow: one Borrower Agent, one Lender Agent, one Loan Request, one funding transaction, one repayment transaction, and contract-backed stats.

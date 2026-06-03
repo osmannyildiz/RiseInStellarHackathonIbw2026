@@ -45,9 +45,9 @@ This is a credible MVP because risk is bounded and explicit, not because repayme
 
 ## Privacy Story
 
-The privacy claim is selective reputation eligibility. A borrower should be able to show enough to qualify for funding without exposing full repayment history, exact prior loan amounts, or every detail of its strategy to the lender or public UI.
+The privacy claim is ZK reputation eligibility. A borrower should be able to prove enough to qualify for funding without revealing the private reputation witness behind that proof.
 
-This is privacy with a purpose: it helps lenders make trust decisions while protecting unnecessary financial intelligence. The MVP does not claim fully private payments or hidden onchain counterparties.
+This is privacy with a purpose: it helps lenders make trust decisions using commitments, nullifiers, and proof public inputs instead of UI suppression. The MVP does not claim fully private payments or hidden onchain counterparties.
 
 ## Track Fit
 
@@ -55,7 +55,7 @@ This is privacy with a purpose: it helps lenders make trust decisions while prot
 
 **Hack Agentic:** The lender agent autonomously invests idle XLM through a recurring Investment Heartbeat and bounded Lender Policy.
 
-**Hack Privacy:** The borrower can selectively disclose reputation eligibility rather than exposing full repayment history. Full private settlement is out of scope for the MVP.
+**Hack Privacy:** The borrower can prove reputation eligibility with a Groth16/BLS12-381 verifier path rather than relying on UI hiding. Full private settlement is out of scope for the MVP.
 
 ## Five-Minute Demo Promise
 

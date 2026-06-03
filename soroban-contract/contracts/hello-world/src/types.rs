@@ -16,6 +16,7 @@ pub enum DataKey {
     ActiveLoanIds,
     AgentLoanRequestIds(Address),
     AgentLoanIds(Address),
+    ProofNullifier(BytesN<32>),
 }
 
 #[contracttype]
@@ -89,7 +90,7 @@ pub struct LoanRequest {
     pub fee_model: FeeModel,
     pub purpose_hash: BytesN<32>,
     pub privacy_mode: PrivacyMode,
-    pub eligibility_attestation: Attestation,
+    pub eligibility_proof: PrivacyProof,
     pub status: LoanRequestStatus,
     pub created_at: u64,
     pub funded_loan_id: Option<u64>,
@@ -157,22 +158,23 @@ pub struct NetworkStats {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PrivacyMode {
     pub hide_purpose: bool,
-    pub require_attestation: bool,
+    pub require_proof: bool,
 }
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub enum Attestation {
+pub enum PrivacyProof {
     None,
-    Present(EligibilityAttestation),
+    Present(EligibilityProof),
 }
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct EligibilityAttestation {
-    pub attestation_hash: BytesN<32>,
-    pub statement_hash: BytesN<32>,
-    pub issuer: Address,
-    pub nonce: BytesN<32>,
+pub struct EligibilityProof {
+    pub proof_hash: BytesN<32>,
+    pub public_inputs_hash: BytesN<32>,
+    pub reputation_root: BytesN<32>,
+    pub nullifier_hash: BytesN<32>,
+    pub verifier: Address,
     pub expires_at: u64,
 }

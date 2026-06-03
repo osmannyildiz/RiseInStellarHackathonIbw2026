@@ -105,7 +105,7 @@ Keep the track explanation concise:
 
 - Main Track: real Stellar testnet lending lifecycle using XLM.
 - Hack Agentic: autonomous Investment Heartbeat for lender agents.
-- Hack Privacy: selective reputation eligibility without exposing full repayment history.
+- Hack Privacy: ZK eligibility proof using commitments, nullifiers, and a Groth16/BLS12-381 verifier path. Do not frame UI hiding as privacy.
 
 This should be short and specific.
 

@@ -22,7 +22,8 @@ pub enum Error {
     NotLoanBorrower = 16,
     NotAdmin = 17,
     TooEarlyToDefault = 18,
-    AttestationRequired = 19,
-    AttestationExpired = 20,
+    ProofRequired = 19,
+    ProofExpired = 20,
     MathOverflow = 21,
+    ProofReplayed = 22,
 }

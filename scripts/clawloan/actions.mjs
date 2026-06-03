@@ -1,5 +1,5 @@
 import { BORROWER_ID, DEMO, LENDER_ID } from "./constants.mjs";
-import { createEligibilityAttestation, markAttestationNonceUsed } from "./attestation.mjs";
+import { createEligibilityProofEnvelope, markProofNullifierUsed } from "./proof.mjs";
 import { currentUnixTime } from "./demo-state.mjs";
 import { amountDueAt, xlm } from "./money.mjs";
 import { activeLenderExposure, selectBestRequest } from "./policy.mjs";
@@ -38,8 +38,8 @@ export function postDemoLoanRequest(state, options = {}) {
 
   const requestId = state.nextLoanRequestId;
   const purposeHash = `local-demo-purpose-${now}`;
-  const requireEligibilityAttestation =
-    Boolean(options.requireEligibilityAttestation || options.privacyRun || state.lenderPolicy.requireEligibilityAttestation);
+  const requireEligibilityProof =
+    Boolean(options.requireEligibilityProof || options.privacyRun || state.lenderPolicy.requireEligibilityProof);
   const requestDraft = {
     id: requestId,
     borrowerId,
@@ -47,11 +47,11 @@ export function postDemoLoanRequest(state, options = {}) {
     amountXlm,
     purposeHash,
   };
-  const attestationResult = requireEligibilityAttestation
-    ? createEligibilityAttestation(state, requestDraft, options)
-    : { ok: true, attestation: null };
-  if (!attestationResult.ok) {
-    return { ok: false, reason: attestationResult.reason };
+  const proofResult = requireEligibilityProof
+    ? createEligibilityProofEnvelope(state, requestDraft, options)
+    : { ok: true, proof: null };
+  if (!proofResult.ok) {
+    return { ok: false, reason: proofResult.reason };
   }
 
   const loanRequest = {
@@ -63,9 +63,9 @@ export function postDemoLoanRequest(state, options = {}) {
     purposeHash,
     privacyMode: {
       hidePurpose: true,
-      requireEligibilityAttestation,
+      requireEligibilityProof,
     },
-    eligibilityAttestation: attestationResult.attestation,
+    eligibilityProof: proofResult.proof,
     status: "Open",
     createdAt: now,
     fundedLoanId: null,
@@ -80,7 +80,7 @@ export function postDemoLoanRequest(state, options = {}) {
     borrowerId,
     amountXlm,
     privacyMode: loanRequest.privacyMode,
-    attestationHash: loanRequest.eligibilityAttestation?.attestationHash || null,
+    proofHash: loanRequest.eligibilityProof?.proofHash || null,
   });
 
   return { ok: true, reused: false, loanRequest };
@@ -90,6 +90,9 @@ export function runLenderHeartbeatOnce(state, options = {}) {
   const lenderId = options.lenderId || LENDER_ID;
   const lender = state.agents[lenderId];
   const policy = state.lenderPolicy;
+  if (options.allowDemoProofEnvelope) {
+    policy.allowDemoProofEnvelope = true;
+  }
   const now = currentUnixTime();
   const selection = selectBestRequest(state, lenderId);
   const selected = selection.selected;
@@ -138,7 +141,7 @@ export function runLenderHeartbeatOnce(state, options = {}) {
   request.status = "Funded";
   request.fundedLoanId = loanId;
   state.loans.push(loan);
-  markAttestationNonceUsed(state, request);
+  markProofNullifierUsed(state, request);
   lender.balanceXlm = xlm(lender.balanceXlm - request.amountXlm);
   state.agents[request.borrowerId].balanceXlm = xlm(state.agents[request.borrowerId].balanceXlm + request.amountXlm);
   state.reputation[request.borrowerId].openBorrowedAmountXlm = xlm(

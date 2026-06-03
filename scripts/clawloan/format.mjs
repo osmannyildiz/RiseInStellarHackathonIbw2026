@@ -24,8 +24,8 @@ export function formatLenderHeartbeat(result) {
     lines.push(`- Funding transaction: ${result.txHash}`);
     lines.push(`- Loan id: #${result.loan.id}`);
     lines.push(`- Loan status: ${result.loan.status}`);
-    if (heartbeat.bestRequest?.eligibilityAttestation) {
-      lines.push(`- Eligibility Attestation: verified ${heartbeat.bestRequest.eligibilityAttestation.statementHash}`);
+    if (heartbeat.bestRequest?.eligibilityProof) {
+      lines.push(`- Eligibility Proof: accepted ${heartbeat.bestRequest.eligibilityProof.publicInputsHash}`);
     }
   }
 
@@ -70,9 +70,9 @@ export function formatPostRequest(result) {
     `- Loan Request id: #${result.loanRequest.id}`,
     `- Borrower: ${result.loanRequest.borrowerAddress}`,
     `- Amount: ${formatXlm(result.loanRequest.amountXlm)}`,
-    `- Privacy mode: purpose ${result.loanRequest.privacyMode.hidePurpose ? "hashed offchain" : "public"}, eligibility attestation ${result.loanRequest.privacyMode.requireEligibilityAttestation ? "required" : "not required"}`,
-    result.loanRequest.eligibilityAttestation
-      ? `- Eligibility Attestation: ${result.loanRequest.eligibilityAttestation.statementHash}`
+    `- Privacy mode: purpose committed by hash, eligibility proof ${result.loanRequest.privacyMode.requireEligibilityProof ? "required" : "not required"}`,
+    result.loanRequest.eligibilityProof
+      ? `- Eligibility Proof public inputs: ${result.loanRequest.eligibilityProof.publicInputsHash}`
       : null,
     `- Status: ${result.loanRequest.status}`,
     `- Reason: ${result.reason || "Known-good demo request created."}`,

@@ -29,7 +29,7 @@ export function InfoSections({ contractHref }: InfoSectionsProps) {
         <div>
           <h2 className={heading2}>Privacy MVP</h2>
           <p className="mt-3 max-w-[360px] text-sm leading-relaxed text-text">
-            Selective reputation disclosure, not private settlement.
+            Cryptographic eligibility proof, not UI hiding.
           </p>
         </div>
         <div className="grid gap-3">

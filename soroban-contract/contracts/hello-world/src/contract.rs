@@ -4,8 +4,9 @@ use crate::events::{
     LoanRequestPosted, PolicyUpdated, ReputationChanged,
 };
 use crate::types::{
-    AgentProfile, AgentRole, AgentStatus, Attestation, Config, DataKey, FeeModel, LenderPolicy,
+    AgentProfile, AgentRole, AgentStatus, Config, DataKey, FeeModel, LenderPolicy,
     Loan, LoanRequest, LoanRequestStatus, LoanStatus, NetworkStats, PrivacyMode, Reputation,
+    PrivacyProof,
 };
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, MuxedAddress, String, Vec};
 
@@ -98,14 +99,13 @@ impl Contract {
         fee_model: FeeModel,
         purpose_hash: BytesN<32>,
         privacy_mode: PrivacyMode,
-        eligibility_attestation: Attestation,
+        eligibility_proof: PrivacyProof,
     ) -> Result<u64, Error> {
         borrower.require_auth();
 
         let config = Self::config(&env);
         Self::require_role(&env, &borrower, false, true)?;
         Self::validate_amount_and_fee(&config, amount, &fee_model)?;
-        Self::validate_attestation(&env, &privacy_mode, &eligibility_attestation)?;
 
         let reputation = Self::ensure_reputation(&env, borrower.clone());
         let exposure = reputation
@@ -117,6 +117,7 @@ impl Contract {
         }
 
         let request_id = Self::next_counter(&env, DataKey::LoanRequestCounter)?;
+        Self::validate_and_record_proof(&env, &privacy_mode, &eligibility_proof)?;
         let request = LoanRequest {
             id: request_id,
             borrower: borrower.clone(),
@@ -124,7 +125,7 @@ impl Contract {
             fee_model,
             purpose_hash,
             privacy_mode,
-            eligibility_attestation,
+            eligibility_proof,
             status: LoanRequestStatus::Open,
             created_at: env.ledger().timestamp(),
             funded_loan_id: None,

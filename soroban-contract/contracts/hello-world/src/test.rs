@@ -33,19 +33,20 @@ fn fee_model() -> FeeModel {
     }
 }
 
-fn privacy_mode(require_eligibility_attestation: bool) -> PrivacyMode {
+fn privacy_mode(require_eligibility_proof: bool) -> PrivacyMode {
     PrivacyMode {
         hide_purpose: true,
-        require_attestation: require_eligibility_attestation,
+        require_proof: require_eligibility_proof,
     }
 }
 
-fn eligibility_attestation(fixture: &Fixture, expires_at: u64) -> Attestation {
-    Attestation::Present(EligibilityAttestation {
-        attestation_hash: hash(&fixture.env, 9),
-        statement_hash: hash(&fixture.env, 10),
-        issuer: fixture.admin.clone(),
-        nonce: hash(&fixture.env, 11),
+fn eligibility_proof(fixture: &Fixture, expires_at: u64, nullifier_byte: u8) -> PrivacyProof {
+    PrivacyProof::Present(EligibilityProof {
+        proof_hash: hash(&fixture.env, 9),
+        public_inputs_hash: hash(&fixture.env, 10),
+        reputation_root: hash(&fixture.env, 11),
+        nullifier_hash: hash(&fixture.env, nullifier_byte),
+        verifier: fixture.admin.clone(),
         expires_at,
     })
 }
@@ -123,7 +124,7 @@ fn post_request(fixture: &Fixture) -> u64 {
         &fee_model(),
         &hash(&fixture.env, 3),
         &privacy_mode(false),
-        &Attestation::None,
+        &PrivacyProof::None,
     )
 }
 
@@ -197,7 +198,7 @@ fn happy_path_funds_repay_and_updates_reputation_and_stats() {
 }
 
 #[test]
-fn posting_checks_amount_fee_credit_and_attestation() {
+fn posting_checks_amount_fee_credit_and_proof() {
     let fixture = setup();
 
     let too_large = fixture.client.try_post_loan_request(
@@ -206,7 +207,7 @@ fn posting_checks_amount_fee_credit_and_attestation() {
         &fee_model(),
         &hash(&fixture.env, 4),
         &privacy_mode(false),
-        &Attestation::None,
+        &PrivacyProof::None,
     );
     assert_eq!(too_large, Err(Ok(Error::InvalidAmount)));
 
@@ -221,48 +222,58 @@ fn posting_checks_amount_fee_credit_and_attestation() {
         },
         &hash(&fixture.env, 4),
         &privacy_mode(false),
-        &Attestation::None,
+        &PrivacyProof::None,
     );
     assert_eq!(invalid_fee, Err(Ok(Error::InvalidFeeModel)));
 
-    let missing_attestation = fixture.client.try_post_loan_request(
+    let missing_proof = fixture.client.try_post_loan_request(
         &fixture.borrower,
         &BORROW_AMOUNT,
         &fee_model(),
         &hash(&fixture.env, 4),
         &privacy_mode(true),
-        &Attestation::None,
+        &PrivacyProof::None,
     );
-    assert_eq!(missing_attestation, Err(Ok(Error::AttestationRequired)));
+    assert_eq!(missing_proof, Err(Ok(Error::ProofRequired)));
 
-    let expired_attestation = fixture.client.try_post_loan_request(
+    let expired_proof = fixture.client.try_post_loan_request(
         &fixture.borrower,
         &BORROW_AMOUNT,
         &fee_model(),
         &hash(&fixture.env, 4),
         &privacy_mode(true),
-        &eligibility_attestation(&fixture, 1_000),
+        &eligibility_proof(&fixture, 1_000, 12),
     );
-    assert_eq!(expired_attestation, Err(Ok(Error::AttestationExpired)));
+    assert_eq!(expired_proof, Err(Ok(Error::ProofExpired)));
 
-    let attested_request = fixture.client.post_loan_request(
+    let proof_request = fixture.client.post_loan_request(
         &fixture.borrower,
         &BORROW_AMOUNT,
         &fee_model(),
         &hash(&fixture.env, 4),
         &privacy_mode(true),
-        &eligibility_attestation(&fixture, 1_300),
+        &eligibility_proof(&fixture, 1_300, 12),
     );
-    let stored = fixture.client.get_loan_request(&attested_request).unwrap();
-    assert_eq!(stored.privacy_mode.require_attestation, true);
+    let stored = fixture.client.get_loan_request(&proof_request).unwrap();
+    assert_eq!(stored.privacy_mode.require_proof, true);
     assert!(matches!(
-        stored.eligibility_attestation,
-        Attestation::Present(_)
+        stored.eligibility_proof,
+        PrivacyProof::Present(_)
     ));
+
+    let replayed_proof = fixture.client.try_post_loan_request(
+        &fixture.borrower,
+        &BORROW_AMOUNT,
+        &fee_model(),
+        &hash(&fixture.env, 4),
+        &privacy_mode(true),
+        &eligibility_proof(&fixture, 1_300, 12),
+    );
+    assert_eq!(replayed_proof, Err(Ok(Error::ProofReplayed)));
 
     fixture
         .client
-        .cancel_loan_request(&fixture.borrower, &attested_request);
+        .cancel_loan_request(&fixture.borrower, &proof_request);
 
     let request_id = post_request(&fixture);
     fixture
@@ -274,7 +285,7 @@ fn posting_checks_amount_fee_credit_and_attestation() {
         &fee_model(),
         &hash(&fixture.env, 4),
         &privacy_mode(false),
-        &Attestation::None,
+        &PrivacyProof::None,
     );
     assert_eq!(over_credit, Err(Ok(Error::CreditLimitExceeded)));
 }

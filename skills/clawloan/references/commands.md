@@ -8,7 +8,7 @@ The Phase 3 heartbeat commands are implemented under `scripts/`. They currently 
 
 ### `setup-testnet-accounts`
 
-Creates or loads borrower, lender, and attestation issuer testnet identities, funds them where possible, verifies balances, and writes wallet identifiers into generated config.
+Creates or loads borrower, lender, and proof verifier testnet identities, funds them where possible, verifies balances, and writes wallet identifiers into generated config.
 
 Safety:
 
@@ -56,7 +56,7 @@ Local command:
 scripts/run-lender-heartbeat-once
 ```
 
-Reads balance, open Loan Requests, Lender Policy, borrower reputation, and current exposure. Applies deterministic policy checks, verifies attestation if required, and funds the best eligible request.
+Reads balance, open Loan Requests, Lender Policy, borrower reputation, and current exposure. Applies deterministic policy checks, verifies proof if required, and funds the best eligible request.
 
 Expected output:
 
@@ -144,7 +144,7 @@ Use recovery guidance:
 | Wrong contract ID | Run `configure-demo`. |
 | Stale open Loan Request | Cancel borrower-owned request or use a fresh configured contract. |
 | Active loan blocks credit | Run `repay-demo-loan`; default only after threshold and admin approval. |
-| Lender will not fund | Inspect reserve, exposure, fee, reputation, and attestation mismatch. |
+| Lender will not fund | Inspect reserve, exposure, fee, reputation, and proof mismatch. |
 | Request already funded | Continue with the existing Loan id. |
 | Repayment amount changed | Repay the current due amount. |
 | Stats lag | Prefer `get_network_stats`; rerun `rebuild-stats`. |

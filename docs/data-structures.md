@@ -11,7 +11,7 @@ The structures below are written in Rust-like Soroban terms, but this is still a
 - Amounts are stored as `i128`, matching Soroban token contract conventions.
 - Time-based fees use ledger timestamps in seconds.
 - The first MVP is unsecured micro-lending: no collateral data structure is required.
-- The privacy MVP starts with purpose commitments and reputation Eligibility Attestations. It does not claim to hide public token transfers or public contract counterparties.
+- The privacy MVP starts with purpose commitments, reputation roots, proof nullifiers, and Eligibility Proof references. It does not claim to hide public token transfers or public contract counterparties.
 
 ## Storage Keys
 
@@ -151,7 +151,7 @@ pub struct LoanRequest {
     pub fee_model: FeeModel,
     pub purpose_hash: BytesN<32>,
     pub privacy_mode: PrivacyMode,
-    pub eligibility_attestation: Option<EligibilityAttestation>,
+    pub eligibility_proof: PrivacyProof,
     pub status: LoanRequestStatus,
     pub created_at: u64,
     pub funded_loan_id: Option<u64>,
@@ -262,24 +262,31 @@ Soroban contract storage is public. The MVP privacy mode must not claim to hide 
 #[contracttype]
 pub struct PrivacyMode {
     pub hide_purpose: bool,
-    pub require_eligibility_attestation: bool,
+    pub require_proof: bool,
 }
 
 #[contracttype]
-pub struct EligibilityAttestation {
-    pub attestation_hash: BytesN<32>,
-    pub statement_hash: BytesN<32>,
-    pub issuer: Address,
-    pub nonce: BytesN<32>,
+pub enum PrivacyProof {
+    None,
+    Present(EligibilityProof),
+}
+
+#[contracttype]
+pub struct EligibilityProof {
+    pub proof_hash: BytesN<32>,
+    pub public_inputs_hash: BytesN<32>,
+    pub reputation_root: BytesN<32>,
+    pub nullifier_hash: BytesN<32>,
+    pub verifier: Address,
     pub expires_at: u64,
 }
 ```
 
-This is an attestation reference, not a full privacy implementation. It gives the product a place to express selective disclosure for purpose and reputation.
+This is a proof reference, not a UI-hiding mechanism. `public_inputs_hash` binds the policy statement, `reputation_root` commits to the private witness, and `nullifier_hash` prevents replay.
 
-For the MVP, the contract can keep public fields where required and use hashes or Eligibility Attestations for sensitive context. The pitch can explain the intended direction: agents reveal enough to evaluate and settle a Loan, while avoiding unnecessary disclosure of wallet balance, strategy, purpose, or full repayment history.
+For the MVP, the contract can keep public fields where required and use hashes or Eligibility Proofs for sensitive context. Privacy exists only for values kept out of public state/events and proven inside a cryptographic witness.
 
-`EligibilityAttestation` supports the selective reputation privacy story. In the MVP, it points to a signed eligibility statement verified by the lender skill or helper script before funding. `statement_hash` binds the attestation to a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `issuer`, `nonce`, and `expires_at` make issuer tracking and replay protection explicit. A true onchain ZK verifier is stretch work, not required for the MVP.
+`EligibilityProof` supports the privacy story. It points to a Groth16/BLS12-381 proof and verifier receipt for a narrow claim, such as "borrower credit limit is high enough and defaults are below the lender threshold." `public_inputs_hash`, `reputation_root`, `nullifier_hash`, `verifier`, and `expires_at` make proof binding and replay protection explicit.
 
 ## Events
 
@@ -344,7 +351,7 @@ pub fn post_loan_request(
     fee_model: FeeModel,
     purpose_hash: BytesN<32>,
     privacy_mode: PrivacyMode,
-    eligibility_attestation: Option<EligibilityAttestation>,
+    eligibility_proof: PrivacyProof,
 ) -> u64;
 
 pub fn cancel_loan_request(env: Env, borrower: Address, loan_request_id: u64);

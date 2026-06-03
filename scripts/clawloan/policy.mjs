@@ -1,5 +1,5 @@
 import { LENDER_ID } from "./constants.mjs";
-import { verifyEligibilityAttestation } from "./attestation.mjs";
+import { verifyEligibilityProof } from "./proof.mjs";
 import { spendable } from "./money.mjs";
 
 export function activeLenderExposure(state, lenderId = LENDER_ID) {
@@ -45,17 +45,17 @@ export function evaluateRequest(state, request, lenderId = LENDER_ID) {
   if (reputation.score < policy.minReputationScore) {
     return reject(`Borrower score ${reputation.score} is below min_reputation_score ${policy.minReputationScore}.`);
   }
-  if (requestRequiresAttestation(request, policy)) {
-    const attestationResult = verifyEligibilityAttestation(state, request, reputation, policy);
-    if (!attestationResult.ok) {
-      return reject(attestationResult.reason);
+  if (requestRequiresProof(request, policy)) {
+    const proofResult = verifyEligibilityProof(state, request, reputation, policy);
+    if (!proofResult.ok) {
+      return reject(proofResult.reason);
     }
   }
 
   return {
     result: "pass",
     decision: "fund",
-    reason: `Request #${request.id} passes reserve, exposure, fee, reputation, and attestation checks.`,
+    reason: `Request #${request.id} passes reserve, exposure, fee, reputation, and proof checks.`,
     availableXlm: available,
     exposureXlm: exposure,
   };
@@ -93,11 +93,11 @@ function feeModelIsValid(feeModel) {
   );
 }
 
-function requestRequiresAttestation(request, policy) {
+function requestRequiresProof(request, policy) {
   return Boolean(
-    request.privacyMode?.requireEligibilityAttestation ||
-      request.privacyMode?.requireAttestation ||
-      policy.requireEligibilityAttestation,
+    request.privacyMode?.requireEligibilityProof ||
+      request.privacyMode?.requireProof ||
+      policy.requireEligibilityProof,
   );
 }
 
