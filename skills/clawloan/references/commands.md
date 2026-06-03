@@ -2,6 +2,8 @@
 
 Use these project-level commands when they are implemented in the local environment. They are the intended interface for agents because they keep wallet config, contract IDs, and demo values synchronized.
 
+The Phase 3 heartbeat commands are implemented under `scripts/`. They currently use a local demo-state adapter at `generated/clawloan-demo-state.json` unless `--state <path>` is supplied. Treat that adapter as agent-heartbeat automation state, not live chain data. Testnet contract-backed invocation remains part of the later deployment/integration phase.
+
 ## Setup And Configuration
 
 ### `setup-testnet-accounts`
@@ -31,6 +33,12 @@ Writes contract ID, token address, agent IDs, default fee model, and testnet val
 
 ### `post-demo-loan-request`
 
+Local command:
+
+```bash
+scripts/post-demo-loan-request
+```
+
 Registers borrower if needed and posts the known-good `10 XLM` Loan Request with the default fee model, purpose hash, and first-run privacy settings.
 
 Expected output:
@@ -42,6 +50,12 @@ Expected output:
 
 ### `run-lender-heartbeat-once`
 
+Local command:
+
+```bash
+scripts/run-lender-heartbeat-once
+```
+
 Reads balance, open Loan Requests, Lender Policy, borrower reputation, and current exposure. Applies deterministic policy checks, verifies attestation if required, and funds the best eligible request.
 
 Expected output:
@@ -51,7 +65,51 @@ Expected output:
 - selected Loan Request id, if any;
 - funding transaction hash and Loan id when funded.
 
+### `run-lender-heartbeat-loop`
+
+Local command:
+
+```bash
+scripts/run-lender-heartbeat-loop --interval-ms 15000
+```
+
+Runs the lender heartbeat repeatedly. Add `--count <n>` for a bounded run, or leave count at `0` to run until stopped by the agent runtime/operator.
+
+### `run-borrower-heartbeat-once`
+
+Local command:
+
+```bash
+scripts/run-borrower-heartbeat-once
+```
+
+Checks borrower balance, open Loan Requests, active loans, and repayment obligations. If balance is below the configured low-balance threshold, no active loan exists, no open request exists, and borrower auto-posting is enabled, it posts one bounded demo Loan Request. It does not auto-repay.
+
+Expected output:
+
+- borrower balance and reserve;
+- active loan count;
+- open request count;
+- post/wait/track repayment decision;
+- current amount due for active loans.
+
+### `run-borrower-heartbeat-loop`
+
+Local command:
+
+```bash
+scripts/run-borrower-heartbeat-loop --interval-ms 15000
+```
+
+Runs the borrower heartbeat repeatedly. Add `--count <n>` for a bounded run, or leave count at `0` to run until stopped.
+
 ### `repay-demo-loan`
+
+Local command:
+
+```bash
+scripts/repay-demo-loan
+```
 
 Reads active borrower loan, calculates `current_amount_due`, repays the loan, and verifies status and reputation updates.
 
@@ -70,6 +128,12 @@ Expected output:
 Reads direct contract stats and rebuilds any local event index from real testnet activity. If event indexing is unavailable, keep time-series charts hidden or marked unavailable.
 
 ### `recover-demo`
+
+Local command:
+
+```bash
+scripts/recover-demo
+```
 
 Lists contract config, open Loan Requests, active loans, and likely recovery actions.
 
@@ -100,4 +164,3 @@ When helper commands are unavailable, use direct reads from [contract.md](contra
 - `get_loan`;
 - `get_reputation`;
 - `current_amount_due`.
-

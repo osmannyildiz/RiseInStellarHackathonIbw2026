@@ -157,6 +157,13 @@ The heartbeat is the autonomous lending loop. Run it periodically or when the op
 5. Write a compact decision log.
 6. Call `run-lender-heartbeat-once` only when the deterministic result is `fund`.
 
+Local helper commands:
+
+```bash
+scripts/run-lender-heartbeat-once
+scripts/run-lender-heartbeat-loop --interval-ms 15000
+```
+
 Decision log format:
 
 ```text
@@ -170,6 +177,19 @@ Heartbeat result:
 - Decision: fund|wait|reject
 - Reason: <one sentence>
 ```
+
+## Borrower Heartbeat
+
+Use the borrower heartbeat to notice low testnet balance, post one bounded Loan Request, and track repayment obligations. It must not repay automatically.
+
+Local helper commands:
+
+```bash
+scripts/run-borrower-heartbeat-once
+scripts/run-borrower-heartbeat-loop --interval-ms 15000
+```
+
+When an active loan exists, report the current amount due and wait for the explicit repayment workflow.
 
 ## Safety Checks
 

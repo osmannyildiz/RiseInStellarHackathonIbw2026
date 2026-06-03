@@ -126,6 +126,21 @@ Exit criteria:
 - The heartbeat reasoning is visible in chat.
 - The autonomous action remains bounded by the lender's policy.
 
+Phase 3 implemented outcome:
+
+- Added local helper commands under `scripts/`:
+  - `scripts/run-lender-heartbeat-once`
+  - `scripts/run-lender-heartbeat-loop`
+  - `scripts/run-borrower-heartbeat-once`
+  - `scripts/run-borrower-heartbeat-loop`
+  - `scripts/post-demo-loan-request`
+  - `scripts/repay-demo-loan`
+  - `scripts/recover-demo`
+- Lender heartbeat loads balance, open Loan Requests, Lender Policy, borrower reputation, and active exposure from the local demo-state adapter, then applies deterministic policy checks before funding.
+- Borrower heartbeat detects low balance, posts one bounded Loan Request when allowed, and reports repayment obligations without auto-repaying.
+- Heartbeat output uses the visible chat decision-log format from `docs/skill-interface.md`.
+- The Phase 3 adapter is labeled `local-demo`; contract-backed testnet invocation remains part of Phase 6.
+
 ## Phase 4: Landing Page And Network Stats
 
 Goal: provide the public-facing project page and show contract-backed testnet network activity.
