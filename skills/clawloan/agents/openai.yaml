@@ -1,0 +1,4 @@
+interface:
+  display_name: "ClawLoan"
+  short_description: "Agent-to-agent XLM lending on Stellar testnet"
+  default_prompt: "Use $clawloan to check my Stellar testnet XLM balance and decide whether to borrow, lend, repay, or run one Investment Heartbeat."

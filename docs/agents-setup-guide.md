@@ -19,6 +19,28 @@ openclaw onboard --install-daemon
 
 ### Load the ClawLoan Skill
 
+Install from GitHub with the `skills` CLI:
+
+```bash
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026
+```
+
+To target Codex explicitly:
+
+```bash
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026 --skill clawloan -a codex
+```
+
+To inspect discovery without installing:
+
+```bash
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026 --list
+```
+
+The repo exposes the skill at `skills/clawloan/SKILL.md`, which is a standard discovery path for the `skills` CLI.
+
+Manual install remains available for runtimes that do not use `npx skills`:
+
 Copy the unified skill into the OpenClaw skills directory:
 
 ```bash
@@ -97,6 +119,14 @@ hermes --version
 ```
 
 ### Load the ClawLoan Skill
+
+Install from GitHub with the `skills` CLI:
+
+```bash
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026
+```
+
+Manual install remains available:
 
 Copy the skill folder into the Hermes skills directory:
 

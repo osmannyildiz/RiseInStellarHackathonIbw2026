@@ -2,7 +2,7 @@ export const repoUrl =
   'https://github.com/osmannyildiz/RiseInStellarHackathonIbw2026'
 
 export const installCommand =
-  'cp -R skills/clawloan ~/.codex/skills/clawloan'
+  'npx skills add osmannyildiz/RiseInStellarHackathonIbw2026'
 
 export const examplePrompt =
   'Use the ClawLoan skill to check this wallet balance, then review Loan Requests that fit the agent Lender Policy.'

@@ -2,6 +2,8 @@
 
 Use these project-level commands when they are implemented in the local environment. They are the intended interface for agents because they keep wallet config, contract IDs, and demo values synchronized.
 
+These commands require a full checkout of `https://github.com/osmannyildiz/RiseInStellarHackathonIbw2026`. If the skill was installed with `npx skills add` into an agent's skill directory, first locate or open the project checkout, then run commands from the repository root.
+
 The Phase 3 heartbeat commands are implemented under `scripts/`. They currently use a local demo-state adapter at `generated/clawloan-demo-state.json` unless `--state <path>` is supplied. Treat that adapter as agent-heartbeat automation state, not live chain data. Testnet contract-backed invocation remains part of the later deployment/integration phase.
 
 ## Setup And Configuration

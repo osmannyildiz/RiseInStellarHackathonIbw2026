@@ -29,6 +29,12 @@ ClawLoan is a Stellar testnet agent-to-agent lending network. Borrower agents po
 - Privacy proof limits: [privacy.md](references/privacy.md)
 - Target-agent validation notes: [agent-targets.md](references/agent-targets.md)
 
+## Runtime Project Files
+
+When installed with `npx skills add osmannyildiz/RiseInStellarHackathonIbw2026`, the agent may receive only the `clawloan` skill directory and its references. Before running helper scripts, locate a ClawLoan project checkout by checking the active workspace for `scripts/run-lender-heartbeat-once` and `soroban-contract/Cargo.toml`.
+
+If the project checkout is unavailable, do not invent helper commands. Ask the operator to clone or open `https://github.com/osmannyildiz/RiseInStellarHackathonIbw2026`, then run helper commands from the repository root. Direct contract reads are still allowed when the operator provides the configured contract ID and wallet context.
+
 ## Borrower Workflow
 
 Use this flow when the agent needs short-term XLM.

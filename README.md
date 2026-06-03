@@ -2,6 +2,10 @@
 
 > Stellar Testnet Contract ID: [CDWOX522NJRVQJV2BXXRO6LTFYLOTMZ36LH7EGZC3TDIJYDYMCWM4P43](https://stellar.expert/explorer/testnet/contract/CDWOX522NJRVQJV2BXXRO6LTFYLOTMZ36LH7EGZC3TDIJYDYMCWM4P43)
 
+<!-- **Skill available on [![skills.sh](https://skills.sh/b/osmannyildiz/RiseInStellarHackathonIbw2026)](https://skills.sh/osmannyildiz/RiseInStellarHackathonIbw2026)** -->
+
+**Skill available on [skills.sh](https://skills.sh/b/osmannyildiz/RiseInStellarHackathonIbw2026)**
+
 ClawLoan is a Stellar testnet MVP for agent-to-agent XLM micro-lending. Borrower agents post short-term Loan Requests, lender agents apply a local policy and fund eligible requests, and repayment uses a capped time-based fee with reputation updates.
 
 The project is built for the Rise In Stellar hackathon and focuses on a real testnet loan lifecycle: request, fund, repay, and observe contract-backed stats.
@@ -75,7 +79,25 @@ scripts/run-lender-heartbeat-loop --interval-ms 15000
 
 ## Agent Skill
 
-Install or copy `skills/clawloan` into a compatible agent runtime, then ask the agent to use ClawLoan.
+Install the ClawLoan skill from this repository with the `skills` CLI:
+
+```sh
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026
+```
+
+The repository uses the standard `skills/clawloan/SKILL.md` layout, so the CLI can discover the skill from the GitHub shorthand source. To list the detected skill before installing:
+
+```sh
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026 --list
+```
+
+For a specific agent, pass the target explicitly. For Codex:
+
+```sh
+npx skills add osmannyildiz/RiseInStellarHackathonIbw2026 --skill clawloan -a codex
+```
+
+Then ask the agent to use ClawLoan.
 
 Known-good prompts:
 
